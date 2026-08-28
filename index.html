@@ -378,13 +378,21 @@
     border-radius:8px; padding:7px 13px; text-decoration:none; transition:all .15s ease;}
   .routine-link:hover{border-color:var(--ink-soft);}
 
-  /* ---------- lien de playlist en tête de page ---------- */
-  .hero-link{display:inline-flex; align-items:center; gap:8px; margin-top:20px;
-    font-family:"Spline Sans Mono",monospace; font-size:13px; font-weight:700;
+  /* ---------- pistes de batterie, par tempo ---------- */
+  .tempo-lab{margin-top:22px; font-size:13.5px; color:var(--ink-soft);}
+  .tempo-bar{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;}
+  .tempo-btn{display:inline-flex; align-items:baseline; gap:3px; text-decoration:none;
+    font-family:"Spline Sans Mono",monospace; font-size:14px; font-weight:700;
     color:var(--ink); background:var(--card); border:1px solid var(--line);
-    border-radius:999px; padding:9px 16px; text-decoration:none;
-    transition:transform .15s ease, box-shadow .15s ease;}
-  .hero-link:hover{transform:translateY(-1px); box-shadow:0 6px 18px rgba(33,27,20,.08);}
+    border-radius:10px; padding:7px 11px; transition:all .12s ease;}
+  .tempo-btn u{font-size:9.5px; font-weight:700; color:var(--ink-soft);
+    text-decoration:none; letter-spacing:.04em;}
+  .tempo-btn:hover{border-color:var(--c-F); color:var(--c-F); transform:translateY(-1px);}
+  .tempo-btn:hover u{color:var(--c-F);}
+  .tempo-btn.key{border-color:var(--c-F); box-shadow:inset 0 0 0 1px var(--c-F);}
+  .tempo-note{margin-top:10px; font-size:12.5px; color:var(--ink-soft);}
+  .tempo-note b{color:var(--ink);}
+  .tempo-note a{color:var(--ink-soft); text-underline-offset:3px;}
 
   /* ---------- lien vidéo d'une section de tablature ---------- */
   .play-link{margin-left:auto; font-family:"Spline Sans Mono",monospace;
@@ -819,7 +827,10 @@
   <div class="wrap">
     <div class="eyebrow">Fiche de révision · basse</div>
     <h1>La routine, les exercices,<br>le manche.</h1>
-    <a class="hero-link" href="https://www.youtube.com/playlist?list=PLt_W1IWJABR2R5GL_TjkCrv6oTkeWkLMH" target="_blank" rel="noopener">🥁 Playlist batterie — les pistes à jouer par-dessus</a>
+    <div class="tempo-lab">🥁 Pistes de batterie — une piste par tempo, à lancer avant de jouer</div>
+    <div class="tempo-bar" id="tempo-bar" role="list" aria-label="Pistes de batterie, par tempo"></div>
+    <div class="tempo-note">Exercice #2 : départ à <b>60</b>, objectif <b>120</b>. ·
+      <a href="https://www.youtube.com/playlist?list=PLt_W1IWJABR2R5GL_TjkCrv6oTkeWkLMH" target="_blank" rel="noopener">la playlist complète</a></div>
   </div>
 </header>
 
@@ -2110,7 +2121,47 @@ function bar2(c1,s1,f1,n1, c2,s2,f2,n2, a,b){
 }
 
 /* ------------------------------------------------------------
-   1. Les exercices avancés de main d'attaque
+   1. Les pistes de batterie, une par tempo
+   ------------------------------------------------------------ */
+const PLAYLIST = 'PLt_W1IWJABR2R5GL_TjkCrv6oTkeWkLMH';
+/* [bpm, identifiant de la vidéo] — l'ordre est celui de la playlist */
+const TEMPOS = [
+  [60,'6DcCeDKc8Wc'],
+  [65,'75RoNkYICn0'],
+  [70,'4D_PIdck4WI'],
+  [75,'EY7BhDgULL0'],
+  [80,'p82BlVxdXQs'],
+  [85,'QffZ_hN91Z4'],
+  [90,'vxEntxsTnFA'],
+  [95,'Nyb4-HCx0pQ'],
+  [100,'kpBklCCoxeQ'],
+  [105,'9C1npW_l6_k'],
+  [110,'52THMuFev9c'],
+  [115,'keGZaCmMbfc'],
+  [120,'vRbegEwnp9o'],
+  [130,'x5Smvy9gS9Y'],
+  [140,'YQ4KPs8flWE'],
+  [150,'JVN7nrk3azo'],
+  [160,'lLpdMSR1UqI'],
+  [180,'P7zS3xmAjeE']
+];
+/* les deux tempos que la routine cite : départ et objectif de l'exercice #2 */
+const TEMPOS_CLES = [60, 120];
+
+const tempoBar = document.getElementById('tempo-bar');
+TEMPOS.forEach(([bpm, id], i)=>{
+  const a = document.createElement('a');
+  a.className = 'tempo-btn' + (TEMPOS_CLES.includes(bpm) ? ' key' : '');
+  a.href = `https://www.youtube.com/watch?v=${id}&list=${PLAYLIST}&index=${i+1}`;
+  a.target = '_blank'; a.rel = 'noopener';
+  a.setAttribute('role', 'listitem');
+  a.setAttribute('aria-label', `Piste de batterie à ${bpm} battements par minute`);
+  a.innerHTML = `${bpm}<u>bpm</u>`;
+  tempoBar.appendChild(a);
+});
+
+/* ------------------------------------------------------------
+   2. Les exercices avancés de main d'attaque
    ------------------------------------------------------------ */
 /* mesure à 6/4 : six notes, chacune jouée deux fois.
    notes = [ [corde, case, note, doigt] ] — doigt null = corde à vide */
@@ -2234,7 +2285,7 @@ for (const ex of PLUCK){
 }
 
 /* ------------------------------------------------------------
-   2. Les notes sur le manche — composant partagé, accordage basse
+   3. Les notes sur le manche — composant partagé, accordage basse
    ------------------------------------------------------------ */
 buildFretboard({
   svg:'fretboard-basse',
@@ -2251,7 +2302,7 @@ buildFretboard({
 });
 
 /* ------------------------------------------------------------
-   3. Exercice de croches continues
+   4. Exercice de croches continues
    ------------------------------------------------------------ */
 const CROCHES = [
   { id:'s1', url:'https://www.youtube.com/watch?v=tKw1XWmX6Io&list=PLC717tTqpYtQ&index=1', titre:'Section 1', sub:'mesures 1 à 8 · à jouer deux fois',

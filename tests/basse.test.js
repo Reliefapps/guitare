@@ -104,14 +104,33 @@ test("les sections retirées ne sont plus dans la page", () => {
   assert.equal(doc.querySelectorAll('#croches .status-table, #croches .warn').length, 0);
 });
 
-test("la playlist batterie est en tête de page", () => {
+test("les 18 pistes de batterie sont en tête de page, une par tempo", () => {
   const { doc } = load();
   openTab(doc, 'basse');
-  const a = doc.querySelector('#page-basse .hero .hero-link');
-  assert.ok(a, 'lien de playlist absent du chapô');
-  assert.equal(isVisible(a), true);
-  assert.equal(a.getAttribute('href'),
+  const btns = [...doc.querySelectorAll('#page-basse .hero #tempo-bar .tempo-btn')];
+  const BPM = [60,65,70,75,80,85,90,95,100,105,110,115,120,130,140,150,160,180];
+  assert.deepEqual(btns.map(a => a.textContent.replace('bpm','')), BPM.map(String));
+  btns.forEach((a, i) => {
+    assert.equal(isVisible(a), true, BPM[i] + ' bpm : bouton non visible');
+    assert.equal(a.target, '_blank');
+    assert.equal(a.rel, 'noopener');
+    /* chaque bouton pointe la bonne vidéo, dans la bonne playlist, au bon rang */
+    assert.match(a.getAttribute('href'),
+      new RegExp('^https://www\\.youtube\\.com/watch\\?v=[\\w-]{11}' +
+                 '&list=PLt_W1IWJABR2R5GL_TjkCrv6oTkeWkLMH&index=' + (i + 1) + '$'));
+    assert.match(a.getAttribute('aria-label'), new RegExp('^Piste de batterie à ' + BPM[i] + ' '));
+  });
+  /* pas deux tempos sur la même vidéo */
+  const ids = btns.map(a => a.getAttribute('href').match(/v=([\w-]{11})/)[1]);
+  assert.equal(new Set(ids).size, 18, 'des vidéos sont dupliquées');
+  /* les deux valeurs vérifiées à la main */
+  assert.equal(ids[0], '6DcCeDKc8Wc');
+  assert.equal(ids[2], '4D_PIdck4WI');
+  /* les tempos cités par la routine sont mis en avant */
+  assert.deepEqual(btns.filter(a => a.classList.contains('key'))
+    .map(a => a.textContent.replace('bpm','')), ['60', '120']);
+  /* la playlist entière reste accessible */
+  const pl = doc.querySelector('#page-basse .tempo-note a');
+  assert.equal(pl.getAttribute('href'),
     'https://www.youtube.com/playlist?list=PLt_W1IWJABR2R5GL_TjkCrv6oTkeWkLMH');
-  assert.equal(a.target, '_blank');
-  assert.equal(a.rel, 'noopener');
 });

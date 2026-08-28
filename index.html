@@ -871,7 +871,7 @@
       </div>
     </div>
     <div class="callout">
-      <b>Rappels pratiques :</b> brancher une <b>enceinte</b> sur l'ordinateur pour les pistes de batterie — le téléphone ne suffit pas · utiliser un navigateur qui <b>bloque les pubs</b> pour les pistes YouTube.
+      <b>Rappels pratiques :</b> brancher une <b>enceinte</b> sur l'ordinateur pour les pistes de batterie — le téléphone ne suffit pas · les pistes s'ouvrent dans une <b>fenêtre à part</b>, à garder à côté de la fiche · pour éviter les pubs, <b>ouvre cette page dans Brave</b> : les pistes s'ouvriront dans Brave aussi.
     </div>
   </div>
 </section>
@@ -2121,6 +2121,30 @@ function bar2(c1,s1,f1,n1, c2,s2,f2,n2, a,b){
 }
 
 /* ------------------------------------------------------------
+   Ouvrir une piste dans une fenêtre séparée plutôt qu'un onglet.
+   Une page web ne choisit pas le navigateur : la fenêtre s'ouvre dans
+   celui où la fiche est ouverte. Ouvre la fiche dans Brave et les pistes
+   s'ouvriront dans Brave. La fenêtre est nommée, donc changer de tempo
+   remplace la piste au lieu d'empiler les fenêtres.
+   Si le navigateur refuse la popup, le lien reprend son cours normal
+   (nouvel onglet) — on ne casse jamais le clic.
+   ------------------------------------------------------------ */
+function enFenetre(a){
+  a.addEventListener('click', (e)=>{
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;  /* on laisse
+       l'utilisateur forcer un onglet s'il le veut */
+    let w = null;
+    try {
+      w = window.open(a.href, 'piste-batterie',
+        'popup=yes,noopener,width=900,height=560,left=120,top=120');
+    } catch (err) { w = null; }
+    if (!w) return;
+    e.preventDefault();
+    try { w.focus(); } catch (err) {}
+  });
+}
+
+/* ------------------------------------------------------------
    1. Les pistes de batterie, une par tempo
    ------------------------------------------------------------ */
 const PLAYLIST = 'PLt_W1IWJABR2R5GL_TjkCrv6oTkeWkLMH';
@@ -2148,6 +2172,9 @@ const TEMPOS = [
 /* les deux tempos que la routine cite : départ et objectif de l'exercice #2 */
 const TEMPOS_CLES = [60, 120];
 
+const lienPlaylist = document.querySelector('.tempo-note a');
+if (lienPlaylist) enFenetre(lienPlaylist);
+
 const tempoBar = document.getElementById('tempo-bar');
 TEMPOS.forEach(([bpm, id], i)=>{
   const a = document.createElement('a');
@@ -2157,6 +2184,7 @@ TEMPOS.forEach(([bpm, id], i)=>{
   a.setAttribute('role', 'listitem');
   a.setAttribute('aria-label', `Piste de batterie à ${bpm} battements par minute`);
   a.innerHTML = `${bpm}<u>bpm</u>`;
+  enFenetre(a);
   tempoBar.appendChild(a);
 });
 
@@ -2341,6 +2369,8 @@ for (const sec of CROCHES){
   block.innerHTML = `<div class="tab-head"><span class="tab-title">${sec.titre}</span>
     <span class="tab-sub">${sec.sub}</span>
     ${sec.url ? `<a class="play-link" href="${sec.url}" target="_blank" rel="noopener">▶ jouer par-dessus</a>` : ''}</div>`;
+  const play = block.querySelector('.play-link');
+  if (play) enFenetre(play);
   for (const ligne of sec.lignes){
     const sc = document.createElement('div');
     sc.className = 'tab-scroll';

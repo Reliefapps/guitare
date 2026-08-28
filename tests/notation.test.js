@@ -9,14 +9,23 @@ const NOTE_COLORS = { C:'#0E9594', D:'#8E44AD', E:'#2E8B57', F:'#DE4229',
 const CORDES = ['G','D','A','E'];          /* de haut en bas */
 const SOLFEGE = /^(do|ré|re|mi|fa|sol|la|si)$/i;
 
-/* le contenu ajouté le 28 août 2026 — c'est lui qui doit rester en lettres */
-const NOUVEAU = ['#routine', '#main-attaque', '#pluck-avance', '#notes-manche',
-                 '#croches .status-table', '#croches .warn', '#page-basse .roadmap'];
+/* le contenu ajouté à partir du cours du 28 août 2026 */
+const NOUVEAU = ['#routine', '#pluck-avance', '#notes-manche', '#page-basse .roadmap'];
+
+/* hauteur d'un nom de note écrit, altérations comprises */
+function hauteur(nom){
+  let h = CHROMA.indexOf(nom[0]);
+  for (const c of nom.slice(1)){
+    if (c === '#' || c === '♯') h += 1;
+    if (c === 'b' || c === '♭') h -= 1;
+  }
+  return ((h % 12) + 12) % 12;
+}
 
 /* les notes d'une tablature, relues depuis le SVG : position → corde,
-   contenu → case. On recalcule la note et on la compare à l'affichage. */
+   contenu → case. On recalcule la hauteur et on la compare à l'affichage. */
 function lireTablature(svg){
-  const notes = [...svg.querySelectorAll('text')]
+  return [...svg.querySelectorAll('text')]
     .filter(t => t.getAttribute('text-anchor') === 'middle'
               && +t.getAttribute('font-size') === 12.5
               && /^\d+$/.test(t.textContent)
@@ -27,11 +36,8 @@ function lireTablature(svg){
       fret: +t.textContent,
       fill: t.getAttribute('fill'),
     }))
-    .sort((a, b) => a.x - b.x);
-  return notes.map(n => ({
-    ...n,
-    attendue: CHROMA[(CHROMA.indexOf(n.corde) + n.fret) % 12],
-  }));
+    .sort((a, b) => a.x - b.x)
+    .map(n => ({ ...n, hauteur: (CHROMA.indexOf(n.corde) + n.fret) % 12 }));
 }
 
 test('les nouveaux contenus nomment les notes en lettres, jamais en solfège', () => {
@@ -41,7 +47,7 @@ test('les nouveaux contenus nomment les notes en lettres, jamais en solfège', (
   for (const sel of NOUVEAU){
     const racine = doc.querySelector(sel);
     assert.ok(racine, 'zone introuvable : ' + sel);
-    for (const n of racine.querySelectorAll('b, strong, .mono, .prio-badge, .roadmap-chain span')){
+    for (const n of racine.querySelectorAll('b, strong, .mono, .prio-badge, .seq-chord, .roadmap-chain span')){
       const txt = n.textContent.trim();
       /* on ne teste que les jetons courts : c'est là que vivent les noms de notes */
       if (txt.length <= 4 && SOLFEGE.test(txt)) suspects.push(sel + ' → « ' + txt + ' »');
@@ -71,9 +77,13 @@ test('chaque note des tablatures est colorée selon la note réellement jouée',
   assert.ok(svgs.length > 0);
   for (const svg of svgs){
     for (const n of lireTablature(svg)){
-      const lettre = n.attendue[0];
-      assert.equal(n.fill, NOTE_COLORS[lettre],
-        `corde ${n.corde} case ${n.fret} = ${n.attendue} : couleur ${n.fill} au lieu de ${NOTE_COLORS[lettre]}`);
+      const lettre = Object.keys(NOTE_COLORS).find(L => NOTE_COLORS[L] === n.fill);
+      assert.ok(lettre, `corde ${n.corde} case ${n.fret} : couleur inconnue ${n.fill}`);
+      /* la lettre affichée doit désigner la note jouée, à une altération près
+         (B♭ et A♯ sont la même note, écrites différemment) */
+      const ecart = Math.min(...[0, 1, 11].map(d => (hauteur(lettre) + d) % 12 === n.hauteur ? 0 : 1));
+      assert.equal(ecart, 0,
+        `corde ${n.corde} case ${n.fret} = ${CHROMA[n.hauteur]} : colorée comme un ${lettre}`);
     }
   }
 });
@@ -81,9 +91,8 @@ test('chaque note des tablatures est colorée selon la note réellement jouée',
 test('chaque note est jouée deux fois dans les exercices 1 et 2', () => {
   const { doc } = load();
   openTab(doc, 'basse');
-  for (const svg of doc.querySelectorAll('#pluck-list .tab-scroll svg')){
+  for (const svg of doc.querySelectorAll('#px-p1 .tab-scroll svg, #px-p2 .tab-scroll svg')){
     const notes = lireTablature(svg);
-    /* 12 croches par mesure */
     assert.equal(notes.length % 12, 0, 'mesures à 12 croches attendues');
     for (let i = 0; i < notes.length; i += 2){
       assert.equal(notes[i].corde, notes[i+1].corde, 'la répétition change de corde');
@@ -95,26 +104,52 @@ test('chaque note est jouée deux fois dans les exercices 1 et 2', () => {
 test('les légendes de notes correspondent aux tablatures', () => {
   const { doc } = load();
   openTab(doc, 'basse');
-  for (const bloc of doc.querySelectorAll('#px-p1, #px-p2')){
+  for (const bloc of doc.querySelectorAll('#px-p1, #px-p2, #px-p3, #px-p4')){
     const svgs = [...bloc.querySelectorAll('.tab-scroll svg')];
+    const double = bloc.id === 'px-p1' || bloc.id === 'px-p2';
     svgs.forEach(svg => {
       /* la légende suit immédiatement sa ligne de tablature */
       const legende = svg.closest('.tab-scroll').nextElementSibling;
-      assert.ok(legende && legende.classList.contains('tab-note'), 'légende manquante');
-      const affichees = [...legende.querySelectorAll('b')]
-        .map(b => b.textContent.trim().replace('♯', '#'));
+      assert.ok(legende && legende.classList.contains('tab-note'),
+        bloc.id + ' : légende manquante');
+      const affichees = [...legende.querySelectorAll('b')].map(b => hauteur(b.textContent.trim()));
       const jouees = lireTablature(svg)
-        .filter((_, i) => i % 2 === 0)      /* chaque note est écrite deux fois */
-        .map(n => n.attendue);
-      assert.deepEqual(affichees, jouees);
+        .filter((_, i) => !double || i % 2 === 0)   /* dans 1 et 2, chaque note est écrite deux fois */
+        .map(n => n.hauteur);
+      assert.deepEqual(affichees, jouees, bloc.id + ' : légende et tablature divergent');
     });
   }
 });
 
-test('les cordes annoncées pour le pouce sont bien E, A, D et G', () => {
+test('exercice #3 : la quarte puis la quinte sur chaque paire de cordes', () => {
   const { doc } = load();
   openTab(doc, 'basse');
-  const txt = doc.querySelector('#main-attaque').textContent;
-  assert.match(txt, /cordes\s+E\s+et\s+A/);
-  assert.match(txt, /pour jouer\s+D\s+et\s+G/);
+  const notes = lireTablature(doc.querySelector('#px-p3 .tab-scroll svg'));
+  assert.equal(notes.length, 16, 'deux mesures de huit croches');
+  for (let g = 0; g < notes.length; g += 4){
+    const [a, b, c, d] = notes.slice(g, g + 4);
+    assert.equal(a.hauteur, c.hauteur, 'la fondamentale revient en 3ᵉ position');
+    assert.equal((b.hauteur - a.hauteur + 12) % 12, 5, 'quarte juste attendue');
+    assert.equal((d.hauteur - a.hauteur + 12) % 12, 7, 'quinte juste attendue');
+    assert.equal(a.corde, c.corde);
+    assert.notEqual(a.corde, b.corde, 'la paire doit changer de corde');
+    assert.equal(b.corde, d.corde);
+  }
+});
+
+test("exercice #4 : on saute une corde, et la 2ᵉ mesure est deux cases plus bas", () => {
+  const { doc } = load();
+  openTab(doc, 'basse');
+  const notes = lireTablature(doc.querySelector('#px-p4 .tab-scroll svg'));
+  assert.equal(notes.length, 16, 'deux mesures de huit croches');
+  const rang = { G: 0, D: 1, A: 2, E: 3 };
+  for (let i = 0; i < notes.length; i += 2){
+    assert.equal(Math.abs(rang[notes[i].corde] - rang[notes[i+1].corde]), 2,
+      'chaque paire doit sauter une corde');
+  }
+  /* mesure 2 = mesure 1, deux cases plus bas, sur les mêmes cordes */
+  for (let i = 0; i < 8; i++){
+    assert.equal(notes[8+i].corde, notes[i].corde);
+    assert.equal(notes[8+i].fret, notes[i].fret - 2);
+  }
 });

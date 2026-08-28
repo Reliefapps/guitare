@@ -14,16 +14,6 @@ test('la routine affiche ses deux cartes et leurs liens internes', () => {
   liens.forEach(h => assert.ok(doc.getElementById(h.slice(1)), h + ' ne mène nulle part'));
 });
 
-test("la main d'attaque liste la position et les 5 erreurs à éviter", () => {
-  const { doc } = load();
-  openTab(doc, 'basse');
-  const position = doc.querySelectorAll('#main-attaque .routine-card .focus li');
-  assert.equal(position.length, 10);
-  const erreurs = doc.querySelectorAll('#main-attaque .warn ol li');
-  assert.equal(erreurs.length, 5);
-  assert.equal(isVisible(doc.querySelector('#main-attaque .warn')), true);
-});
-
 test('les 4 exercices avancés sont rendus et visibles', () => {
   const { doc } = load();
   openTab(doc, 'basse');
@@ -41,19 +31,30 @@ test('les 4 exercices avancés sont rendus et visibles', () => {
     /Ne jamais répéter le même doigt/);
 });
 
-test('les exercices 1 et 2 portent leurs tablatures, 3 et 4 leur emplacement à transcrire', () => {
+test('les quatre exercices portent leurs tablatures', () => {
   const { doc } = load();
   openTab(doc, 'basse');
   const svg = id => [...doc.querySelectorAll('#' + id + ' .tab-scroll svg')];
   assert.equal(svg('px-p1').length, 1, 'exercice #1 : une mesure');
   assert.equal(svg('px-p2').length, 2, 'exercice #2 : quatre accords sur deux lignes');
-  assert.equal(svg('px-p3').length, 0);
-  assert.equal(svg('px-p4').length, 0);
-  for (const id of ['px-p3','px-p4']){
-    const slot = doc.querySelector('#' + id + ' .todo-slot');
-    assert.ok(slot, id + ' : emplacement de tablature manquant');
-    assert.match(slot.textContent, /02_PluckingHand\.pdf.*page 8/);
-    assert.equal(isVisible(slot), true);
+  assert.equal(svg('px-p3').length, 1, 'exercice #3 : la cellule de deux mesures');
+  assert.equal(svg('px-p4').length, 1, 'exercice #4 : les deux mesures');
+  /* plus aucun emplacement en attente de transcription */
+  assert.equal(doc.querySelectorAll('#pluck-list .todo-slot').length, 0);
+  assert.ok(!doc.getElementById('pluck-list').textContent.includes('02_PluckingHand'));
+});
+
+test('les exercices 3 et 4 sont en 4/4, huit croches par mesure', () => {
+  const { doc } = load();
+  openTab(doc, 'basse');
+  for (const id of ['px-p3', 'px-p4']){
+    const svg = doc.querySelector('#' + id + ' .tab-scroll svg');
+    const et = [...svg.querySelectorAll('text')].filter(t => t.textContent === 'et');
+    assert.equal(et.length, 8, id + ' : 2 mesures × 4 contretemps');
+    const temps = [...svg.querySelectorAll('text')]
+      .filter(t => +t.getAttribute('font-size') === 10 && /^[1-9]$/.test(t.textContent))
+      .map(t => t.textContent);
+    assert.deepEqual(temps, ['1','2','3','4','1','2','3','4']);
   }
 });
 
@@ -154,19 +155,24 @@ test('la méthode des notes sur le manche compte ses 12 étapes', () => {
   assert.match(etapes[9].textContent, /15 jours/);
 });
 
-test("les croches affichent l'état d'avancement et ce que Santiago a dit", () => {
+test('chaque section de croches renvoie à sa vidéo', () => {
   const { doc } = load();
   openTab(doc, 'basse');
-  const lignes = [...doc.querySelectorAll('#croches .status-table tbody tr')];
-  assert.equal(lignes.length, 4);
-  lignes.forEach(tr => assert.match(tr.querySelector('.ok').textContent, /validé/));
-  assert.deepEqual(lignes.map(tr => tr.children[1].textContent.trim()), [
-    'C – Bm – Em – D – G', 'Em – D – Am – B7', 'A – D – E – A', 'Dm – G – C – E',
+  const liens = [...doc.querySelectorAll('#croches .tab-block .play-link')];
+  assert.equal(liens.length, 4);
+  assert.deepEqual(liens.map(a => a.getAttribute('href')), [
+    'https://www.youtube.com/watch?v=tKw1XWmX6Io&list=PLC717tTqpYtQ&index=1',
+    'https://www.youtube.com/watch?v=-SCGU44hXRE&list=PLC717tTqpYtQ&index=2',
+    'https://www.youtube.com/watch?v=Lc6dYEfX7sc&list=PLC717tTqpYtQ&index=3',
+    'https://www.youtube.com/watch?v=xpMtFiDqAZI&list=PLC717tTqpYtQ&index=4',
   ]);
-  const santiago = doc.querySelector('#croches .warn');
-  assert.equal(isVisible(santiago), true);
-  assert.equal(santiago.querySelectorAll('ol li').length, 3);
-  assert.match(doc.querySelector('#croches .status-note').textContent, /échauffement/);
+  /* chaque lien est bien dans le bloc de la section correspondante */
+  liens.forEach((a, i) => {
+    assert.equal(a.closest('.tab-block').id, 'cr-s' + (i + 1));
+    assert.equal(isVisible(a), true);
+    assert.equal(a.target, '_blank');
+    assert.equal(a.rel, 'noopener');
+  });
 });
 
 test('la suite du programme est listée en bas de page', () => {

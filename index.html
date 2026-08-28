@@ -378,6 +378,20 @@
     border-radius:8px; padding:7px 13px; text-decoration:none; transition:all .15s ease;}
   .routine-link:hover{border-color:var(--ink-soft);}
 
+  /* ---------- lien de playlist en tête de page ---------- */
+  .hero-link{display:inline-flex; align-items:center; gap:8px; margin-top:20px;
+    font-family:"Spline Sans Mono",monospace; font-size:13px; font-weight:700;
+    color:var(--ink); background:var(--card); border:1px solid var(--line);
+    border-radius:999px; padding:9px 16px; text-decoration:none;
+    transition:transform .15s ease, box-shadow .15s ease;}
+  .hero-link:hover{transform:translateY(-1px); box-shadow:0 6px 18px rgba(33,27,20,.08);}
+
+  /* ---------- lien vidéo d'une section de tablature ---------- */
+  .play-link{margin-left:auto; font-family:"Spline Sans Mono",monospace;
+    font-size:11.5px; font-weight:700; color:var(--c-F); text-decoration:none;
+    border:1px solid var(--line); border-radius:999px; padding:4px 11px; white-space:nowrap;}
+  .play-link:hover{border-color:var(--c-F); background:color-mix(in srgb, var(--c-F) 7%, transparent);}
+
   /* ---------- encadré d'avertissement ---------- */
   .warn{margin-top:18px; padding:14px 18px 14px 16px; border:1px solid var(--c-F);
     border-left-width:4px; border-radius:12px;
@@ -804,21 +818,18 @@
 <header class="hero">
   <div class="wrap">
     <div class="eyebrow">Fiche de révision · basse</div>
-    <h1>La routine, la main<br>d'attaque, le manche.</h1>
-    <p class="lead">Dix minutes par jour, tous les jours : les arpèges en croches et les notes sur le manche. Puis le fond — la posture de la main d'attaque, les croches continues, le tempo et l'araignée.</p>
-    <div class="tuning">Accordage standard, de la corde grave à l'aiguë : <b>Mi La Ré Sol</b> <span class="mono">(E A D G)</span></div>
+    <h1>La routine, les exercices,<br>le manche.</h1>
+    <a class="hero-link" href="https://www.youtube.com/playlist?list=PLt_W1IWJABR2R5GL_TjkCrv6oTkeWkLMH" target="_blank" rel="noopener">🥁 Playlist batterie — les pistes à jouer par-dessus</a>
   </div>
 </header>
 
 <nav class="sticky" aria-label="Sommaire">
   <div class="wrap">
     <a href="#routine">1 · La routine quotidienne</a>
-    <a href="#main-attaque">2 · La main d'attaque</a>
-    <a href="#pluck-avance">3 · Les exercices avancés</a>
-    <a href="#notes-manche">4 · Les notes sur le manche</a>
-    <a href="#croches">5 · Croches continues</a>
-    <a href="#tempo">6 · Tempo &amp; rythme</a>
-    <a href="#araignee">7 · L'araignée</a>
+    <a href="#pluck-avance">2 · Les exercices avancés</a>
+    <a href="#notes-manche">3 · Les notes sur le manche</a>
+    <a href="#croches">4 · Croches continues</a>
+    <a href="#araignee">5 · L'araignée</a>
   </div>
 </nav>
 
@@ -854,43 +865,10 @@
   </div>
 </section>
 
-<!-- ============ 2. LA MAIN D'ATTAQUE ============ -->
-<section id="main-attaque">
-  <div class="wrap">
-    <div class="sec-head"><span class="sec-num">2</span><h2>La main d'attaque</h2></div>
-    <p class="hint">La posture de la main droite, d'après le chapitre 1 de la méthode. Tout le son vient de là : la justesse de l'attaque, le volume, et la régularité quand ça accélère.</p>
-    <div class="routine-card">
-      <div class="routine-title">La position</div>
-      <ul class="focus">
-        <li><b>Avant-bras</b> posé sur le bord du corps de la basse près du chevalet, <b>ou</b> flottant au-dessus. Les deux sont valables.</li>
-        <li><b>Poignet</b> plié vers les cordes, presque à 90°. Inconfortable au début, naturel ensuite. Si l'avant-bras flotte, le poignet plie moins.</li>
-        <li><b>Pouce</b> aligné avec l'index, en ligne quasi droite — mais la main reste souple, jamais rigide.</li>
-        <li>Pouce <b>ancré sur le coin du micro</b>, côté manche. Variante : posé légèrement sur le corps, comme repère et non comme appui.</li>
-        <li>Le pouce reste sur le micro pour jouer les cordes <b>E</b> et <b>A</b>, puis <b>glisse</b> se poser sur la corde de <b>E</b> pour jouer <b>D</b> et <b>G</b>. Un glissé, jamais un saut.</li>
-        <li><b>Doigts tendus</b>, pas recourbés.</li>
-        <li>On attaque avec la <b>pulpe basse</b> du doigt, pas la pointe — la pointe donne un son maigre.</li>
-        <li>On pousse la corde <b>vers le corps</b> de la basse. C'est l'inverse de la guitare, et c'est ce qui donne le volume.</li>
-        <li>Le bras avance légèrement vers les cordes aiguës et recule pour revenir, <b>en suivant le pouce</b>. Ça garde une distance constante entre pouce et index.</li>
-        <li>Alternance stricte <b>index–majeur</b>, jamais deux fois le même doigt. Travailler aussi en partant du majeur (<b>M–I</b>).</li>
-      </ul>
-    </div>
-    <div class="warn">
-      <div class="warn-title">Les erreurs à éviter</div>
-      <ol>
-        <li><b>Pouce flottant</b> sans point d'ancrage — la main devient instable, le son perd sa constance.</li>
-        <li><b>Tirer la corde vers le haut</b> comme à la guitare — son fin, attaque faible.</li>
-        <li><b>Doigts recourbés</b> — l'attaque tombe au mauvais endroit.</li>
-        <li><b>Pouce trop écarté</b> des autres doigts — on perd le contrôle.</li>
-        <li><b>Jouer avec un seul doigt</b> — bloquant dès qu'on monte en vitesse.</li>
-      </ol>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 3. LES EXERCICES AVANCÉS ============ -->
+<!-- ============ 2. LES EXERCICES AVANCÉS ============ -->
 <section id="pluck-avance">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">3</span><h2>Les exercices avancés</h2></div>
+    <div class="sec-head"><span class="sec-num">2</span><h2>Les exercices avancés</h2></div>
     <p class="hint">Les exercices de main d'attaque du cours du 28 août 2026. Les deux premiers sont à travailler tous les jours ; les deux suivants si tu as le temps.</p>
     <div class="rule">
       <b>Ne jamais répéter le même doigt de la main d'attaque</b>, surtout au changement de corde. Alternance <b>index–majeur</b>, puis la même chose en <b>majeur–index</b>. Dans les exercices 1 et 2, chaque note est jouée <b>deux fois</b>.
@@ -899,10 +877,10 @@
   </div>
 </section>
 
-<!-- ============ 4. LES NOTES SUR LE MANCHE ============ -->
+<!-- ============ 3. LES NOTES SUR LE MANCHE ============ -->
 <section id="notes-manche">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">4</span><h2>Les notes sur le manche</h2></div>
+    <div class="sec-head"><span class="sec-num">3</span><h2>Les notes sur le manche</h2></div>
     <p class="hint">Notes naturelles jusqu'à la case 12 — après, tout recommence à l'identique. Active <b>les dièses</b> pour voir les notes intermédiaires, ou le <b>mode quiz</b> pour t'interroger. La méthode de Santiago est juste en dessous : <b>5 minutes par jour pendant 15 jours</b>.</p>
     <div class="board-panel">
       <div class="board-controls">
@@ -934,52 +912,19 @@
   </div>
 </section>
 
-<!-- ============ 5. CROCHES CONTINUES ============ -->
+<!-- ============ 4. CROCHES CONTINUES ============ -->
 <section id="croches">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">5</span><h2>Croches continues</h2></div>
+    <div class="sec-head"><span class="sec-num">4</span><h2>Croches continues</h2></div>
     <p class="hint">Huit croches par mesure, sans interruption, sur la <b>fondamentale</b> de chaque accord. Tout l'intérêt est là : le son ne doit jamais s'arrêter, y compris au moment du changement d'accord. Compte <b>« 1 et 2 et 3 et 4 et »</b> et joue au médiator alterné ou en butée index-majeur.</p>
     <div id="croches-list"></div>
-    <table class="status-table">
-      <thead><tr><th>#</th><th>Progression</th><th>État</th></tr></thead>
-      <tbody>
-        <tr><td>1</td><td><span class="mono">C – Bm – Em – D – G</span></td><td class="ok">✅ validé</td></tr>
-        <tr><td>2</td><td><span class="mono">Em – D – Am – B7</span></td><td class="ok">✅ validé</td></tr>
-        <tr><td>3</td><td><span class="mono">A – D – E – A</span></td><td class="ok">✅ validé</td></tr>
-        <tr><td>4</td><td><span class="mono">Dm – G – C – E</span></td><td class="ok">✅ validé</td></tr>
-      </tbody>
-    </table>
-    <p class="status-note">Les quatre progressions ont été validées en cours le <b>28 août 2026</b>. Ce ne sont plus des devoirs — elles restent bonnes comme <b>échauffement</b>.</p>
-    <div class="warn">
-      <div class="warn-title">Ce que Santiago a dit</div>
-      <ol>
-        <li><b>On ne joue que la fondamentale.</b> Les autres notes de l'accord, même justes, brouillent l'harmonie. La fondamentale, tout le temps.</li>
-        <li><b>Les barres de reprise</b> (double barre + deux points) veulent dire qu'on rejoue la section. Deux fois, systématiquement.</li>
-        <li><b>Les phrases vont par 4, 8 ou 16 mesures</b> (le blues fait 12). Le but est de le <b>sentir</b> arriver, pas de compter.</li>
-      </ol>
-    </div>
-    <div class="callout">
-      <b>Comment travailler :</b> métronome lent (60–70 bpm), une section à la fois, chaque section deux fois. Ce qui compte n'est pas la vitesse mais la régularité — surtout la croche qui tombe juste après le changement d'accord, c'est là que ça flanche.
-    </div>
   </div>
 </section>
 
-<!-- ============ 6. TEMPO & RYTHME ============ -->
-<section id="tempo">
-  <div class="wrap">
-    <div class="sec-head"><span class="sec-num">6</span><h2>Tempo &amp; rythme</h2></div>
-    <p class="hint">Les playlists à suivre en parallèle des exercices.</p>
-    <div class="vid-grid" id="vid-list"></div>
-    <div class="callout">
-      <b>À faire en jouant :</b> lance une vidéo, joue l'exercice de la section 1 par-dessus, et compte à voix haute. Entendre le tempo pendant qu'on joue est la seule façon de le sentir vraiment — sur la basse encore plus qu'ailleurs, c'est toi qui le portes.
-    </div>
-  </div>
-</section>
-
-<!-- ============ 7. L'ARAIGNÉE ============ -->
+<!-- ============ 5. L'ARAIGNÉE ============ -->
 <section id="araignee">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">7</span><h2>L'araignée</h2></div>
+    <div class="sec-head"><span class="sec-num">5</span><h2>L'araignée</h2></div>
     <p class="hint">L'exercice de déliement : <b>un doigt par case</b> (1 = index, 2 = majeur, 3 = annulaire, 4 = auriculaire) et les doigts déjà posés <b>restent en place</b>. On travaille en <b>position V</b> — index sur la case 5, auriculaire sur la case 8 — puis on remonte le manche case par case. Main droite en alternance stricte. C'est un exercice de précision, jamais de vitesse.</p>
     <div id="spider-list"></div>
     <div class="callout">
@@ -2173,6 +2118,12 @@ function bar6(chord, notes){
   return { chord, events: notes.map((n,i)=>({
     chord: i===0 ? chord : '', s:n[0], f:n[1], n:2, note:n[2], fg:n[3] })) };
 }
+/* mesure à 4/4 : huit croches, une note par croche.
+   notes = [ [corde, case, note, doigt] ] — doigt facultatif */
+function bar8(chord, notes){
+  return { chord, events: notes.map((n,i)=>({
+    chord: i===0 ? chord : '', s:n[0], f:n[1], n:1, note:n[2], fg:n[3] })) };
+}
 /* suite de noms de notes, colorée comme partout ailleurs */
 function noteSeq(names){
   return names.map(n =>
@@ -2207,12 +2158,28 @@ const PLUCK = [
     note:'<b>G et F ont la même forme</b> — les deux sont majeurs, F est simplement deux cases plus bas. Dans chaque arpège on joue <b>fondamentale · quinte · octave · tierce · octave · quinte</b>. C\'est la <b>tierce</b> qui distingue le mineur (Am) du majeur (G, F, E).' },
 
   { id:'p3', titre:'Exercice #3', sub:'Cordes alternées', option:true,
-    intro:'<b>4/4</b>, en croches. Doigts main gauche <b>1, 2, 1, 3</b>. Le motif enchaîne des paires sur deux cordes voisines, en montant : <b>quarte</b> puis <b>quinte</b> sur chaque paire de cordes. Départ <b>case 3</b> sur la corde de <b>E</b>.',
-    todo:'Tablature à transcrire depuis <b>02_PluckingHand.pdf</b>, page 8.' },
+    intro:'<b>4/4</b>, en croches. Le motif enchaîne des paires sur deux cordes voisines : <b>fondamentale · quarte · fondamentale · quinte</b>, puis on recommence une corde plus haut. Départ <b>case 3</b> sur la corde de <b>E</b>. On monte E/A → A/D → D/G, puis on redescend sur A/D.',
+    doigts:'<b>1, 2, 1, 3</b> à la main gauche — la méthode ne les note que sur le premier groupe, ils se reprennent à l\'identique sur chacun des quatre groupes.',
+    lignes:[[
+      bar8('', [['E',3,'G',1],['A',3,'C',2],['E',3,'G',1],['A',5,'D',3],
+                ['A',3,'C',1],['D',3,'F',2],['A',3,'C',1],['D',5,'G',3]]),
+      bar8('', [['D',3,'F',1],['G',3,'B♭',2],['D',3,'F',1],['G',5,'C',3],
+                ['A',3,'C',1],['D',3,'F',2],['A',3,'C',1],['D',5,'G',3]]),
+    ]],
+    legendes:[ noteSeq(['G','C','G','D','C','F','C','G']) + ' &nbsp;—&nbsp; ' + noteSeq(['F','B♭','F','C','C','F','C','G']) ],
+    note:'La méthode écrit cette cellule de deux mesures <b>deux fois</b>, entre barres de reprise.' },
 
   { id:'p4', titre:'Exercice #4', sub:'Sauts d\'octave', option:true,
-    intro:'<b>4/4</b>, en croches. Doigts main gauche <b>1</b> et <b>4</b>. Paires <b>fondamentale / octave</b> en sautant une corde, motif descendant (<b>5 → 3</b>).',
-    todo:'Tablature à transcrire depuis <b>02_PluckingHand.pdf</b>, page 8.' },
+    intro:'<b>4/4</b>, en croches. On <b>saute une corde</b> à chaque paire : E↔D, puis A↔G, puis on redescend G↔A et D↔E. Motif descendant — la deuxième mesure reprend la première <b>deux cases plus bas</b>.',
+    doigts:'La méthode n\'indique les doigts que sur les deux premières notes : <b>1</b> puis <b>4</b> — la forme d\'octave, index sur la fondamentale et auriculaire deux cases plus haut, deux cordes plus haut.',
+    lignes:[[
+      bar8('', [['E',5,'A',1],['D',7,'A',4],['A',7,'E'],['G',7,'D'],
+                ['G',5,'C'],['A',3,'C'],['D',5,'G'],['E',3,'G']]),
+      bar8('', [['E',3,'G'],['D',5,'G'],['A',5,'D'],['G',5,'C'],
+                ['G',3,'B♭'],['A',1,'B♭'],['D',3,'F'],['E',1,'F']]),
+    ]],
+    legendes:[ noteSeq(['A','A','E','D','C','C','G','G']) + ' &nbsp;—&nbsp; ' + noteSeq(['G','G','D','C','B♭','B♭','F','F']) ],
+    note:'Trois paires sur quatre sont des <b>octaves</b> (E5–D7, G5–A3, D5–E3) ; la deuxième garde la <b>même case</b> d\'une corde à l\'autre. Chaque mesure est écrite deux fois dans la méthode.' },
 ];
 
 const pluckList = document.getElementById('pluck-list');
@@ -2251,6 +2218,12 @@ for (const ex of PLUCK){
     nt.innerHTML = ex.note;
     block.appendChild(nt);
   }
+  if (ex.doigts){
+    const dg = document.createElement('div');
+    dg.className = 'tab-note';
+    dg.innerHTML = '<b>Doigtés :</b> ' + ex.doigts;
+    block.appendChild(dg);
+  }
   if (ex.tempo){
     const tp = document.createElement('div');
     tp.className = 'tab-note';
@@ -2281,17 +2254,17 @@ buildFretboard({
    3. Exercice de croches continues
    ------------------------------------------------------------ */
 const CROCHES = [
-  { id:'s1', titre:'Section 1', sub:'mesures 1 à 8 · à jouer deux fois',
+  { id:'s1', url:'https://www.youtube.com/watch?v=tKw1XWmX6Io&list=PLC717tTqpYtQ&index=1', titre:'Section 1', sub:'mesures 1 à 8 · à jouer deux fois',
     lignes:[
       [ bar1('C','A',3,'C'), bar1('C','A',3,'C'), bar1('Bm','A',2,'B'), bar1('Bm','A',2,'B') ],
       [ bar1('Em','D',2,'E'), bar1('Em','D',2,'E'), bar1('D','A',5,'D'), bar1('G','E',3,'G') ],
     ]},
-  { id:'s2', titre:'Section 2', sub:'mesures 9 à 16 · la 2ᵉ ligne reprend les mêmes accords plus haut sur le manche',
+  { id:'s2', url:'https://www.youtube.com/watch?v=-SCGU44hXRE&list=PLC717tTqpYtQ&index=2', titre:'Section 2', sub:'mesures 9 à 16 · la 2ᵉ ligne reprend les mêmes accords plus haut sur le manche',
     lignes:[
       [ bar1('Em','D',2,'E'), bar1('D','D',0,'D'), bar1('Am','A',0,'A'), bar1('B7','A',2,'B') ],
       [ bar1('Em','A',7,'E'), bar1('D','A',5,'D'), bar1('Am','E',5,'A'), bar1('B7','E',7,'B') ],
     ]},
-  { id:'s3', titre:'Section 3', sub:'mesures 17 à 28 · les deux premières lignes sont identiques',
+  { id:'s3', url:'https://www.youtube.com/watch?v=Lc6dYEfX7sc&list=PLC717tTqpYtQ&index=3', titre:'Section 3', sub:'mesures 17 à 28 · les deux premières lignes sont identiques',
     lignes:[
       [ bar2('A','A',0,'A', 'D','A',5,'D'), bar2('E','A',7,'E', 'D','A',5,'D'),
         bar1('C#m','A',4,'C'), bar1('C','A',3,'C') ],
@@ -2302,7 +2275,7 @@ const CROCHES = [
         bar1('F','D',3,'F'),
         bar2('E','D',2,'E', 'Bm','A',2,'B') ],
     ]},
-  { id:'s4', titre:'Section 4', sub:'mesures 29 à 34 · à jouer deux fois',
+  { id:'s4', url:'https://www.youtube.com/watch?v=xpMtFiDqAZI&list=PLC717tTqpYtQ&index=4', titre:'Section 4', sub:'mesures 29 à 34 · à jouer deux fois',
     lignes:[
       [ bar1('Dm','A',5,'D'), bar1('G','D',5,'G'), bar1('C','A',3,'C'), bar1('E','D',2,'E') ],
       [ bar1('Am','A',0,'A'), bar2('Bm','A',2,'B', 'Em','E',0,'E') ],
@@ -2315,7 +2288,8 @@ for (const sec of CROCHES){
   block.className = 'tab-block';
   block.id = 'cr-' + sec.id;
   block.innerHTML = `<div class="tab-head"><span class="tab-title">${sec.titre}</span>
-    <span class="tab-sub">${sec.sub}</span></div>`;
+    <span class="tab-sub">${sec.sub}</span>
+    ${sec.url ? `<a class="play-link" href="${sec.url}" target="_blank" rel="noopener">▶ jouer par-dessus</a>` : ''}</div>`;
   for (const ligne of sec.lignes){
     const sc = document.createElement('div');
     sc.className = 'tab-scroll';
@@ -2323,27 +2297,6 @@ for (const sec of CROCHES){
     block.appendChild(sc);
   }
   crochesList.appendChild(block);
-}
-
-/* ------------------------------------------------------------
-   4. Playlists
-   ------------------------------------------------------------ */
-const VIDEOS = [
-  { tag:'Playlist 1', titre:'Beats & rythmes', desc:'À suivre en jouant, pour caler le tempo et le comptage.',
-    url:'https://www.youtube.com/playlist?list=PLt_W1IWJABR2R5GL_TjkCrv6oTkeWkLMH' },
-  { tag:'Playlist 2', titre:'Beats & rythmes — suite', desc:'Deuxième série d\'exercices rythmiques.',
-    url:'https://youtube.com/playlist?list=PLC717tTqpYtQ' },
-];
-const vidList = document.getElementById('vid-list');
-for (const v of VIDEOS){
-  const a = document.createElement('a');
-  a.className = 'vid-card';
-  a.href = v.url; a.target = '_blank'; a.rel = 'noopener';
-  a.innerHTML = `<div class="vid-tag">${v.tag}</div>
-    <div class="vid-title">${v.titre}</div>
-    <div class="vid-desc">${v.desc}</div>
-    <div class="vid-url">${v.url}</div>`;
-  vidList.appendChild(a);
 }
 
 /* ------------------------------------------------------------
@@ -2430,14 +2383,12 @@ function navLink(href, html, lvl){
 }
 const lvl1 = {};
 lvl1['routine'] = navLink('#routine','1 · La routine quotidienne','lvl1');
-lvl1['main-attaque'] = navLink('#main-attaque','2 · La main d\'attaque','lvl1');
-lvl1['pluck-avance'] = navLink('#pluck-avance','3 · Les exercices avancés','lvl1');
+lvl1['pluck-avance'] = navLink('#pluck-avance','2 · Les exercices avancés','lvl1');
 PLUCK.forEach(x=> navLink('#px-'+x.id, x.titre + ' · ' + x.sub, 'lvl2'));
-lvl1['notes-manche'] = navLink('#notes-manche','4 · Les notes sur le manche','lvl1');
-lvl1['croches'] = navLink('#croches','5 · Croches continues','lvl1');
+lvl1['notes-manche'] = navLink('#notes-manche','3 · Les notes sur le manche','lvl1');
+lvl1['croches'] = navLink('#croches','4 · Croches continues','lvl1');
 CROCHES.forEach(s=> navLink('#cr-'+s.id, s.titre, 'lvl2'));
-lvl1['tempo'] = navLink('#tempo','6 · Tempo &amp; rythme','lvl1');
-lvl1['araignee'] = navLink('#araignee','7 · L\'araignée','lvl1');
+lvl1['araignee'] = navLink('#araignee','5 · L\'araignée','lvl1');
 SPIDERS.forEach(s=> navLink('#sp-'+s.id, s.titre, 'lvl2'));
 
 const spy = makeSpy((entries)=>{
@@ -2448,7 +2399,7 @@ const spy = makeSpy((entries)=>{
     }
   }
 }, { rootMargin:'-15% 0px -70% 0px' });
-for (const id of ['routine','main-attaque','pluck-avance','notes-manche','croches','tempo','araignee']) spy.observe(document.getElementById(id));
+for (const id of ['routine','pluck-avance','notes-manche','croches','araignee']) spy.observe(document.getElementById(id));
 
 })();
 </script>

@@ -13,7 +13,7 @@ Le site est organisé en quatre onglets :
 | Onglet | Contenu |
 | --- | --- |
 | 🎸 **Guitare** | Les notes sur le manche, les accords ouverts, les barrés (deux formes), les rythmiques, les exercices, les progressions et les arpèges. |
-| 🎵 **Basse** | La routine quotidienne, la posture de la main d'attaque, les exercices de croisement de cordes, les notes sur le manche, les croches continues, le tempo et l'araignée. |
+| 🎵 **Basse** | La routine quotidienne, les exercices de main d'attaque (croisement de cordes, arpèges, cordes alternées, sauts d'octave), les notes sur le manche, les croches continues et l'araignée. |
 | 🪘 **Malagueña** | Le morceau découpé en étapes, dans l'ordre où le travailler ; chaque étape renvoie à la bonne page de la partition. |
 | 📄 **Bibliothèque** | Les partitions consultables directement dans la page (visionneuse avec zoom, navigation au clavier et téléchargement). |
 

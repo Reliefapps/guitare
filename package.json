@@ -1,0 +1,12 @@
+{
+  "name": "guitare-fiches",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Fiches de travail guitare & basse — page unique.",
+  "scripts": {
+    "test": "node --test 'tests/**/*.test.js'"
+  },
+  "devDependencies": {
+    "jsdom": "^25.0.1"
+  }
+}

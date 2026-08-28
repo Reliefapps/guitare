@@ -13,12 +13,13 @@ Le site est organisé en quatre onglets :
 | Onglet | Contenu |
 | --- | --- |
 | 🎸 **Guitare** | Les notes sur le manche, les accords ouverts, les barrés (deux formes), les rythmiques, les exercices, les progressions et les arpèges. |
-| 🎵 **Basse** | Les exercices de fond : croches continues, tempo & rythme, l'araignée. |
+| 🎵 **Basse** | La routine quotidienne, la posture de la main d'attaque, les exercices de croisement de cordes, les notes sur le manche, les croches continues, le tempo et l'araignée. |
 | 🪘 **Malagueña** | Le morceau découpé en étapes, dans l'ordre où le travailler ; chaque étape renvoie à la bonne page de la partition. |
 | 📄 **Bibliothèque** | Les partitions consultables directement dans la page (visionneuse avec zoom, navigation au clavier et téléchargement). |
 
 Le fil conducteur : **une couleur par note**, la même partout — sur le manche,
-dans les diagrammes d'accords et dans les progressions.
+dans les diagrammes d'accords, dans les progressions et dans les tablatures.
+Les notes sont nommées en lettres (`A B C D E F G`) sur la fiche basse.
 
 ## Le projet
 
@@ -31,6 +32,18 @@ Pour travailler dessus, il suffit d'ouvrir le fichier dans un navigateur :
 
 ```sh
 open index.html
+```
+
+## Les tests
+
+Une poignée de tests jsdom vérifient que les sections sont bien **rendues et
+visibles** une fois l'onglet ouvert (pas seulement présentes dans le DOM), que
+les ancres et le scrollspy suivent, et que les tablatures sont cohérentes avec
+les notes qu'elles annoncent.
+
+```sh
+npm install   # une seule fois : jsdom
+npm test
 ```
 
 ## Le déploiement

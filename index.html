@@ -146,7 +146,7 @@
   .quiz-tip{display:none; margin:0 12px 10px; color:#C9BBA9; font-size:13px;}
   .quiz-tip.on{display:block;}
 
-  #fretboard text{user-select:none;}
+  #fretboard text, .fretboard-svg text{user-select:none;}
   .note-g{cursor:default;}
   .quiz .note-g{cursor:pointer;}
 
@@ -362,6 +362,87 @@
     color:var(--ink-soft); font-size:13px;}
 
 
+  /* ---------- routine quotidienne ---------- */
+  .routine-grid{display:grid; gap:14px; grid-template-columns:1fr;}
+  @media(min-width:720px){ .routine-grid{grid-template-columns:1fr 1fr;} }
+  .routine-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px 18px 14px;}
+  .routine-time{font-family:"Spline Sans Mono",monospace; font-size:11.5px; font-weight:700;
+    letter-spacing:.08em; text-transform:uppercase; color:var(--c-F);}
+  .routine-title{font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:17px;
+    margin:4px 0 8px;}
+  .routine-card .focus{margin-top:0;}
+  .routine-link{display:inline-block; margin-top:12px;
+    font-family:"Spline Sans Mono",monospace; font-size:12.5px; font-weight:700;
+    color:var(--ink); background:var(--paper); border:1px solid var(--line);
+    border-radius:8px; padding:7px 13px; text-decoration:none; transition:all .15s ease;}
+  .routine-link:hover{border-color:var(--ink-soft);}
+
+  /* ---------- encadré d'avertissement ---------- */
+  .warn{margin-top:18px; padding:14px 18px 14px 16px; border:1px solid var(--c-F);
+    border-left-width:4px; border-radius:12px;
+    background:color-mix(in srgb, var(--c-F) 5%, var(--card));}
+  .warn-title{font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:16px;
+    color:var(--c-F); margin-bottom:8px;}
+  .warn ol{margin:0 0 0 20px; display:grid; gap:6px; font-size:14px; color:var(--ink-soft);}
+  .warn ol b{color:var(--ink); font-weight:600;}
+
+  /* ---------- règle mise en avant ---------- */
+  .rule{margin-bottom:20px; padding:14px 16px; border-radius:12px;
+    background:var(--ink); color:#E8DCC9; font-size:14px;}
+  .rule b{color:#fff; font-weight:700;}
+
+  /* ---------- carte prioritaire ---------- */
+  .tab-block.prio{border-color:var(--c-F); box-shadow:0 0 0 3px color-mix(in srgb, var(--c-F) 12%, transparent);}
+  .prio-badge{font-family:"Spline Sans Mono",monospace; font-size:11px; font-weight:700;
+    letter-spacing:.08em; text-transform:uppercase; color:#fff; background:var(--c-F);
+    border-radius:999px; padding:3px 10px; white-space:nowrap;}
+
+  /* ---------- suites de notes sous les tablatures ---------- */
+  .seq{display:inline-flex; align-items:baseline; gap:8px; margin-right:22px;}
+  .seq-chord{font-family:"Spline Sans Mono",monospace; font-size:11.5px; font-weight:700;
+    background:var(--paper); border:1px solid var(--line); border-radius:6px;
+    padding:2px 8px; color:var(--ink);}
+
+  /* ---------- emplacement de tablature à venir ---------- */
+  .todo-slot{margin:10px 14px 4px; padding:16px; border:1px dashed var(--line);
+    border-radius:10px; font-size:13px; color:var(--ink-soft); text-align:center;}
+  .todo-slot b{color:var(--ink);}
+
+  /* ---------- méthode en étapes ---------- */
+  .steps{margin:18px 0 0 0; padding-left:0; list-style:none; counter-reset:st; display:grid; gap:9px;}
+  .steps li{counter-increment:st; position:relative; padding-left:36px; min-height:24px;
+    font-size:14.5px; color:var(--ink-soft);}
+  .steps li::before{content:counter(st); position:absolute; left:0; top:0;
+    font-family:"Spline Sans Mono",monospace; font-weight:700; font-size:12px;
+    width:24px; height:24px; border-radius:8px; display:flex; align-items:center;
+    justify-content:center; background:var(--card); border:1px solid var(--line); color:var(--ink);}
+  .steps li b{color:var(--ink); font-weight:600;}
+
+  /* ---------- tableau d'état ---------- */
+  .status-table{width:100%; border-collapse:collapse; margin-top:16px; font-size:14px;}
+  .status-table th, .status-table td{text-align:left; padding:9px 12px;
+    border-bottom:1px solid var(--line);}
+  .status-table th{font-family:"Spline Sans Mono",monospace; font-size:11.5px; font-weight:700;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft);}
+  .status-table td:first-child{font-family:"Spline Sans Mono",monospace; color:var(--ink-soft); width:1%;}
+  .status-table .ok{color:var(--c-E); font-weight:600; white-space:nowrap;}
+  .status-note{margin-top:12px; font-size:13.5px; color:var(--ink-soft);}
+  .status-note b{color:var(--ink);}
+
+  /* ---------- la suite du programme ---------- */
+  .roadmap{margin-top:34px; padding:18px 20px; background:var(--card);
+    border:1px solid var(--line); border-radius:var(--radius);}
+  .roadmap-title{font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:16px;
+    margin-bottom:10px;}
+  .roadmap-chain{display:flex; flex-wrap:wrap; gap:6px 4px; align-items:center;}
+  .roadmap-chain span{font-family:"Spline Sans Mono",monospace; font-size:12px;
+    background:var(--paper); border:1px solid var(--line); border-radius:999px;
+    padding:4px 10px; color:var(--ink-soft);}
+  .roadmap-chain i{color:#C9BFAE; font-style:normal; font-size:12px;}
+  .roadmap-todo{margin-top:14px; font-size:13.5px; color:var(--ink-soft);}
+  .roadmap-todo b{color:var(--ink);}
+
   /* ================= bibliothèque ================= */
   .doc-card{
     background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
@@ -454,11 +535,11 @@
   .etape-body b{color:var(--ink); font-weight:600;}
   .focus{margin:12px 0 0 0; padding-left:0; list-style:none; display:grid; gap:7px;}
   .focus li{
-    display:flex; gap:9px; align-items:flex-start; font-size:14px; color:var(--ink-soft);
+    position:relative; padding-left:15px; font-size:14px; color:var(--ink-soft);
   }
   .focus li::before{
-    content:''; width:6px; height:6px; border-radius:50%; background:var(--line);
-    flex:none; margin-top:8px;
+    content:''; position:absolute; left:0; top:8px;
+    width:6px; height:6px; border-radius:50%; background:var(--line);
   }
   .focus li b{color:var(--ink); font-weight:600;}
   .etape-tools{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; align-items:center;}
@@ -723,36 +804,170 @@
 <header class="hero">
   <div class="wrap">
     <div class="eyebrow">Fiche de révision · basse</div>
-    <h1>Croches continues,<br>tempo, araignée.</h1>
-    <p class="lead">Les exercices de fond : jouer des croches sans jamais s'arrêter, tenir le tempo, et délier les quatre doigts de la main gauche.</p>
+    <h1>La routine, la main<br>d'attaque, le manche.</h1>
+    <p class="lead">Dix minutes par jour, tous les jours : les arpèges en croches et les notes sur le manche. Puis le fond — la posture de la main d'attaque, les croches continues, le tempo et l'araignée.</p>
     <div class="tuning">Accordage standard, de la corde grave à l'aiguë : <b>Mi La Ré Sol</b> <span class="mono">(E A D G)</span></div>
   </div>
 </header>
 
 <nav class="sticky" aria-label="Sommaire">
   <div class="wrap">
-    <a href="#croches">1 · Croches continues</a>
-    <a href="#tempo">2 · Tempo &amp; rythme</a>
-    <a href="#araignee">3 · L'araignée</a>
+    <a href="#routine">1 · La routine quotidienne</a>
+    <a href="#main-attaque">2 · La main d'attaque</a>
+    <a href="#pluck-avance">3 · Les exercices avancés</a>
+    <a href="#notes-manche">4 · Les notes sur le manche</a>
+    <a href="#croches">5 · Croches continues</a>
+    <a href="#tempo">6 · Tempo &amp; rythme</a>
+    <a href="#araignee">7 · L'araignée</a>
   </div>
 </nav>
 
-<!-- ============ 1. CROCHES CONTINUES ============ -->
+<!-- ============ 1. LA ROUTINE QUOTIDIENNE ============ -->
+<section id="routine">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">1</span><h2>La routine quotidienne</h2></div>
+    <p class="hint">Le devoir de la semaine : <b>10 minutes minimum, tous les jours</b>. Deux blocs de cinq minutes, dans cet ordre. C'est court, donc c'est tenable — et c'est la régularité qui fait le travail, pas la durée.</p>
+    <div class="routine-grid">
+      <div class="routine-card">
+        <div class="routine-time">5 min · priorité</div>
+        <div class="routine-title">Exercice #2 · les arpèges en croches</div>
+        <ul class="focus">
+          <li>Départ à <b>60 bpm</b>, on monte progressivement. L'objectif est <b>120 bpm</b>, mais <b>pas en une semaine</b>.</li>
+          <li>Toujours avec une <b>piste de batterie</b>, jamais à sec.</li>
+          <li>Jeu <b>legato</b> : le son ne se coupe pas entre deux notes. Pas de staccato.</li>
+        </ul>
+        <a class="routine-link" href="#pluck-avance">Aller à l'exercice →</a>
+      </div>
+      <div class="routine-card">
+        <div class="routine-time">5 min · avant tout le reste</div>
+        <div class="routine-title">Révision des notes sur le manche</div>
+        <ul class="focus">
+          <li>À faire <b>avant</b> tout le reste, pendant <b>15 jours</b>.</li>
+          <li>À voix haute, corde par corde, en suivant la méthode.</li>
+        </ul>
+        <a class="routine-link" href="#notes-manche">Aller à la méthode →</a>
+      </div>
+    </div>
+    <div class="callout">
+      <b>Rappels pratiques :</b> brancher une <b>enceinte</b> sur l'ordinateur pour les pistes de batterie — le téléphone ne suffit pas · utiliser un navigateur qui <b>bloque les pubs</b> pour les pistes YouTube.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. LA MAIN D'ATTAQUE ============ -->
+<section id="main-attaque">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">2</span><h2>La main d'attaque</h2></div>
+    <p class="hint">La posture de la main droite, d'après le chapitre 1 de la méthode. Tout le son vient de là : la justesse de l'attaque, le volume, et la régularité quand ça accélère.</p>
+    <div class="routine-card">
+      <div class="routine-title">La position</div>
+      <ul class="focus">
+        <li><b>Avant-bras</b> posé sur le bord du corps de la basse près du chevalet, <b>ou</b> flottant au-dessus. Les deux sont valables.</li>
+        <li><b>Poignet</b> plié vers les cordes, presque à 90°. Inconfortable au début, naturel ensuite. Si l'avant-bras flotte, le poignet plie moins.</li>
+        <li><b>Pouce</b> aligné avec l'index, en ligne quasi droite — mais la main reste souple, jamais rigide.</li>
+        <li>Pouce <b>ancré sur le coin du micro</b>, côté manche. Variante : posé légèrement sur le corps, comme repère et non comme appui.</li>
+        <li>Le pouce reste sur le micro pour jouer les cordes <b>E</b> et <b>A</b>, puis <b>glisse</b> se poser sur la corde de <b>E</b> pour jouer <b>D</b> et <b>G</b>. Un glissé, jamais un saut.</li>
+        <li><b>Doigts tendus</b>, pas recourbés.</li>
+        <li>On attaque avec la <b>pulpe basse</b> du doigt, pas la pointe — la pointe donne un son maigre.</li>
+        <li>On pousse la corde <b>vers le corps</b> de la basse. C'est l'inverse de la guitare, et c'est ce qui donne le volume.</li>
+        <li>Le bras avance légèrement vers les cordes aiguës et recule pour revenir, <b>en suivant le pouce</b>. Ça garde une distance constante entre pouce et index.</li>
+        <li>Alternance stricte <b>index–majeur</b>, jamais deux fois le même doigt. Travailler aussi en partant du majeur (<b>M–I</b>).</li>
+      </ul>
+    </div>
+    <div class="warn">
+      <div class="warn-title">Les erreurs à éviter</div>
+      <ol>
+        <li><b>Pouce flottant</b> sans point d'ancrage — la main devient instable, le son perd sa constance.</li>
+        <li><b>Tirer la corde vers le haut</b> comme à la guitare — son fin, attaque faible.</li>
+        <li><b>Doigts recourbés</b> — l'attaque tombe au mauvais endroit.</li>
+        <li><b>Pouce trop écarté</b> des autres doigts — on perd le contrôle.</li>
+        <li><b>Jouer avec un seul doigt</b> — bloquant dès qu'on monte en vitesse.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. LES EXERCICES AVANCÉS ============ -->
+<section id="pluck-avance">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">3</span><h2>Les exercices avancés</h2></div>
+    <p class="hint">Les exercices de main d'attaque du cours du 28 août 2026. Les deux premiers sont à travailler tous les jours ; les deux suivants si tu as le temps.</p>
+    <div class="rule">
+      <b>Ne jamais répéter le même doigt de la main d'attaque</b>, surtout au changement de corde. Alternance <b>index–majeur</b>, puis la même chose en <b>majeur–index</b>. Dans les exercices 1 et 2, chaque note est jouée <b>deux fois</b>.
+    </div>
+    <div id="pluck-list"></div>
+  </div>
+</section>
+
+<!-- ============ 4. LES NOTES SUR LE MANCHE ============ -->
+<section id="notes-manche">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">4</span><h2>Les notes sur le manche</h2></div>
+    <p class="hint">Notes naturelles jusqu'à la case 12 — après, tout recommence à l'identique. Active <b>les dièses</b> pour voir les notes intermédiaires, ou le <b>mode quiz</b> pour t'interroger. La méthode de Santiago est juste en dessous : <b>5 minutes par jour pendant 15 jours</b>.</p>
+    <div class="board-panel">
+      <div class="board-controls">
+        <button class="toggle" id="btn-sharps-basse" aria-pressed="false">Afficher les dièses ♯</button>
+        <button class="toggle" id="btn-quiz-basse" aria-pressed="false">Mode quiz</button>
+      </div>
+      <p class="quiz-tip" id="quiz-tip-basse">Touche une pastille pour révéler la note. Re-clique sur « Mode quiz » pour tout réafficher.</p>
+      <div class="board-scroll">
+        <svg id="fretboard-basse" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Notes sur le manche de la basse, cases 0 à 12"></svg>
+      </div>
+    </div>
+    <ol class="steps">
+      <li>Mémoriser l'ordre des notes naturelles : <b>C D E F G A B</b>. Pas d'altérations.</li>
+      <li><b>Deux cases</b> entre chaque note, <b>sauf E–F et B–C</b> où il n'y en a qu'une.</li>
+      <li>Corde <b>E</b> : parcourir les notes jusqu'à la <b>case 8</b>, <b>à voix haute</b>, 3 à 4 fois.</li>
+      <li>Idem sur la corde <b>A</b>.</li>
+      <li>Réviser les deux cordes <b>E</b> et <b>A</b> ensemble.</li>
+      <li>Corde <b>D</b>, jusqu'à la <b>case 10</b>.</li>
+      <li>Réviser <b>E</b>, <b>A</b>, <b>D</b>.</li>
+      <li>Corde <b>G</b>.</li>
+      <li>Réviser les quatre cordes.</li>
+      <li>Refaire l'exercice complet <b>tous les jours pendant 15 jours</b>, avant de travailler autre chose.</li>
+      <li>Jouer des progressions d'accords connues en prenant à chaque fois <b>la note la plus grave</b>. Exemple : pour un accord de <b>G</b>, la case 3 de la corde de <b>E</b>.</li>
+      <li>Chercher ensuite les mêmes notes <b>dans les autres octaves</b>.</li>
+    </ol>
+    <div class="callout">
+      <b>Pourquoi c'est le socle :</b> connaître les notes, c'est parler la même langue que les autres musiciens — on annonce une note, tout le monde la trouve. Et ça marche aussi pour la guitare : même alphabet, mêmes repères.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. CROCHES CONTINUES ============ -->
 <section id="croches">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">1</span><h2>Croches continues</h2></div>
+    <div class="sec-head"><span class="sec-num">5</span><h2>Croches continues</h2></div>
     <p class="hint">Huit croches par mesure, sans interruption, sur la <b>fondamentale</b> de chaque accord. Tout l'intérêt est là : le son ne doit jamais s'arrêter, y compris au moment du changement d'accord. Compte <b>« 1 et 2 et 3 et 4 et »</b> et joue au médiator alterné ou en butée index-majeur.</p>
     <div id="croches-list"></div>
+    <table class="status-table">
+      <thead><tr><th>#</th><th>Progression</th><th>État</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="mono">C – Bm – Em – D – G</span></td><td class="ok">✅ validé</td></tr>
+        <tr><td>2</td><td><span class="mono">Em – D – Am – B7</span></td><td class="ok">✅ validé</td></tr>
+        <tr><td>3</td><td><span class="mono">A – D – E – A</span></td><td class="ok">✅ validé</td></tr>
+        <tr><td>4</td><td><span class="mono">Dm – G – C – E</span></td><td class="ok">✅ validé</td></tr>
+      </tbody>
+    </table>
+    <p class="status-note">Les quatre progressions ont été validées en cours le <b>28 août 2026</b>. Ce ne sont plus des devoirs — elles restent bonnes comme <b>échauffement</b>.</p>
+    <div class="warn">
+      <div class="warn-title">Ce que Santiago a dit</div>
+      <ol>
+        <li><b>On ne joue que la fondamentale.</b> Les autres notes de l'accord, même justes, brouillent l'harmonie. La fondamentale, tout le temps.</li>
+        <li><b>Les barres de reprise</b> (double barre + deux points) veulent dire qu'on rejoue la section. Deux fois, systématiquement.</li>
+        <li><b>Les phrases vont par 4, 8 ou 16 mesures</b> (le blues fait 12). Le but est de le <b>sentir</b> arriver, pas de compter.</li>
+      </ol>
+    </div>
     <div class="callout">
       <b>Comment travailler :</b> métronome lent (60–70 bpm), une section à la fois, chaque section deux fois. Ce qui compte n'est pas la vitesse mais la régularité — surtout la croche qui tombe juste après le changement d'accord, c'est là que ça flanche.
     </div>
   </div>
 </section>
 
-<!-- ============ 2. TEMPO & RYTHME ============ -->
+<!-- ============ 6. TEMPO & RYTHME ============ -->
 <section id="tempo">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">2</span><h2>Tempo &amp; rythme</h2></div>
+    <div class="sec-head"><span class="sec-num">6</span><h2>Tempo &amp; rythme</h2></div>
     <p class="hint">Les playlists à suivre en parallèle des exercices.</p>
     <div class="vid-grid" id="vid-list"></div>
     <div class="callout">
@@ -761,10 +976,10 @@
   </div>
 </section>
 
-<!-- ============ 3. L'ARAIGNÉE ============ -->
+<!-- ============ 7. L'ARAIGNÉE ============ -->
 <section id="araignee">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">3</span><h2>L'araignée</h2></div>
+    <div class="sec-head"><span class="sec-num">7</span><h2>L'araignée</h2></div>
     <p class="hint">L'exercice de déliement : <b>un doigt par case</b> (1 = index, 2 = majeur, 3 = annulaire, 4 = auriculaire) et les doigts déjà posés <b>restent en place</b>. On travaille en <b>position V</b> — index sur la case 5, auriculaire sur la case 8 — puis on remonte le manche case par case. Main droite en alternance stricte. C'est un exercice de précision, jamais de vitesse.</p>
     <div id="spider-list"></div>
     <div class="callout">
@@ -772,6 +987,26 @@
     </div>
   </div>
 </section>
+
+<div class="wrap">
+  <div class="roadmap">
+    <div class="roadmap-title">La suite du programme</div>
+    <div class="roadmap-chain">
+        <span>Répertoire rock en croches</span><i>→</i>
+        <span>Séquences de doigts (1-2-3-4, 1-3-4-3, 1-3-2-4, 1-4-2-3, 1-4-3-2)</span><i>→</i>
+        <span>Intervalles consonants parfaits</span><i>→</i>
+        <span>Progressions fondamentale / quinte / octave</span><i>→</i>
+        <span>Intervalles consonants imparfaits</span><i>→</i>
+        <span>Ajout de la tierce</span><i>→</i>
+        <span>Intervalles dissonants (septièmes, secondes)</span><i>→</i>
+        <span>Gamme majeure, degrés et accords</span><i>→</i>
+        <span>Pentatoniques mineures (E, puis A et G)</span><i>→</i>
+        <span>Pentatonique majeure</span><i>→</i>
+        <span>Accords à la basse</span>
+    </div>
+    <p class="roadmap-todo"><b>Encore à valider dans la méthode :</b> alternance des doigts en quintes et en octaves · lecture rythmique (exercices 1 à 7) · synchronisation avec la grosse caisse.</p>
+  </div>
+</div>
 
 <footer>
   <div class="wrap">Fiche basse · bon travail 🎸</div>
@@ -1093,6 +1328,139 @@ window.makeSpy = function(cb, opts){
 </script>
 
 <script>
+/* ================= manche partagé (guitare & basse) =================
+   Un seul générateur pour les deux fiches : mêmes couleurs, mêmes
+   pastilles, même mode quiz. Seul l'accordage change.
+   opts = { svg, strings:[{open,label,thick}], frets, gut, label,
+            btnSharps, btnQuiz, tip }                                  */
+(function(){
+
+const SVGNS = 'http://www.w3.org/2000/svg';
+const NOTE_COLORS = { C:'#0E9594', D:'#8E44AD', E:'#2E8B57', F:'#DE4229', G:'#E67E22', A:'#2C7FB8', B:'#8D6E4B' };
+const CHROMA = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+function el(tag, attrs, parent){
+  const n = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(n);
+  return n;
+}
+
+window.NOTE_COLORS = NOTE_COLORS;
+
+window.buildFretboard = function(opts){
+  const fb = document.getElementById(opts.svg);
+  if (!fb) return null;
+  const STRINGS = opts.strings;
+  const N = STRINGS.length;              /* nombre de cordes */
+  const FRETS = opts.frets || 12;
+  const GUT = opts.gut != null ? opts.gut : 86;   /* gouttière des noms de cordes */
+  const COL = 62;                        /* largeur d'une case */
+  const ROW = 38;                        /* espacement des cordes */
+  const TOPY = 26;
+  const NUTX = GUT + 46;                 /* position du sillet */
+  const W = NUTX + FRETS*COL + 24;
+  const H = TOPY + (N-1)*ROW + 46;
+  const MID = (N-1)/2;                   /* axe des repères de case */
+
+  fb.classList.add('fretboard-svg');
+  fb.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  fb.setAttribute('width', W);
+  if (opts.label) fb.setAttribute('aria-label', opts.label);
+
+  /* repères de cases (inlays) */
+  for (const f of [3,5,7,9]){
+    if (f > FRETS) continue;
+    el('circle',{cx:NUTX+(f-0.5)*COL, cy:TOPY+MID*ROW, r:7, fill:'#3E3226'}, fb);
+  }
+  if (FRETS >= 12){
+    el('circle',{cx:NUTX+11.5*COL, cy:TOPY+(MID-1)*ROW, r:7, fill:'#3E3226'}, fb);
+    el('circle',{cx:NUTX+11.5*COL, cy:TOPY+(MID+1)*ROW, r:7, fill:'#3E3226'}, fb);
+  }
+
+  /* sillet + frettes */
+  el('rect',{x:NUTX-5, y:TOPY-8, width:6, height:(N-1)*ROW+16, fill:'#E8DCC9', rx:2}, fb);
+  for (let f=1; f<=FRETS; f++){
+    el('line',{x1:NUTX+f*COL, y1:TOPY-6, x2:NUTX+f*COL, y2:TOPY+(N-1)*ROW+6,
+      stroke:'var(--board-line)','stroke-width':2}, fb);
+  }
+  /* numéros de cases */
+  for (const f of [3,5,7,9,12]){
+    if (f > FRETS) continue;
+    const t = el('text',{x:NUTX+(f-0.5)*COL, y:H-10, 'text-anchor':'middle', fill:'#A08D77',
+      'font-family':'Spline Sans Mono,monospace','font-size':'13','font-weight':'700'}, fb);
+    t.textContent = f;
+  }
+
+  /* cordes + noms */
+  STRINGS.forEach((s,i)=>{
+    const y = TOPY + i*ROW;
+    el('line',{x1:GUT+2, y1:y, x2:W-16, y2:y, stroke:'#C8B79F','stroke-width':s.thick}, fb);
+    if (s.label){
+      const name = el('text',{x:14, y:y+4, fill:'#D8CCBE',
+        'font-family':'Instrument Sans,sans-serif','font-size':'13','font-weight':'600'}, fb);
+      name.textContent = s.label;
+    }
+    /* sans libellé, la lettre prend la place du nom */
+    const letter = el('text',{x: s.label ? 52 : 18, y:y+4, fill: s.label ? '#8C7A69' : '#D8CCBE',
+      'font-family':'Spline Sans Mono,monospace','font-size': s.label ? '12' : '13','font-weight':'700'}, fb);
+    letter.textContent = s.open;
+  });
+
+  /* pastilles de notes */
+  let quizOn = false;
+  const noteGroups = [];
+  STRINGS.forEach((s,i)=>{
+    const y = TOPY + i*ROW;
+    const openIdx = CHROMA.indexOf(s.open);
+    for (let f=0; f<=FRETS; f++){
+      const note = CHROMA[(openIdx+f)%12];
+      const sharp = note.includes('#');
+      const cx = f===0 ? GUT+18 : NUTX+(f-0.5)*COL;
+      const g = el('g',{class:'note-g','data-note':note,'data-sharp':sharp?1:0,tabindex:'-1'}, fb);
+      const r = sharp ? 10.5 : 14;
+      const c = el('circle',{cx, cy:y, r, fill: sharp ? '#55483C' : NOTE_COLORS[note],
+        stroke: f===0 ? '#F3EADD' : 'none', 'stroke-width': f===0 ? 1.5 : 0}, g);
+      const t = el('text',{x:cx, y:y+(sharp?3.5:4.5), 'text-anchor':'middle', fill:'#fff',
+        'font-family':'Spline Sans Mono,monospace','font-size': sharp?'9.5':'13','font-weight':'700'}, g);
+      t.textContent = note;
+      if (sharp) g.style.display = 'none';
+      noteGroups.push({g, c, t, note, sharp});
+      g.addEventListener('click', ()=>{
+        if (!quizOn || sharp) return;
+        c.setAttribute('fill', NOTE_COLORS[note]);
+        t.style.display = '';
+      });
+    }
+  });
+
+  /* contrôles */
+  const btnSharps = document.getElementById(opts.btnSharps);
+  if (btnSharps) btnSharps.addEventListener('click', ()=>{
+    const on = btnSharps.getAttribute('aria-pressed') !== 'true';
+    btnSharps.setAttribute('aria-pressed', on);
+    noteGroups.forEach(n=>{ if (n.sharp) n.g.style.display = on ? '' : 'none'; });
+  });
+  const btnQuiz = document.getElementById(opts.btnQuiz);
+  const tip = document.getElementById(opts.tip);
+  if (btnQuiz) btnQuiz.addEventListener('click', ()=>{
+    quizOn = btnQuiz.getAttribute('aria-pressed') !== 'true';
+    btnQuiz.setAttribute('aria-pressed', quizOn);
+    if (tip) tip.classList.toggle('on', quizOn);
+    fb.classList.toggle('quiz', quizOn);
+    noteGroups.forEach(n=>{
+      if (n.sharp) return;
+      if (quizOn){ n.c.setAttribute('fill', '#5C4F41'); n.t.style.display = 'none'; }
+      else { n.c.setAttribute('fill', NOTE_COLORS[n.note]); n.t.style.display = ''; }
+    });
+  });
+
+  return { svg:fb, notes:noteGroups };
+};
+
+})();
+</script>
+
+<script>
 /* ===================== PAGE GUITARE ===================== */
 (function(){
 
@@ -1122,103 +1490,21 @@ for (const L of ['C','D','E','F','G','A','B']){
 }
 
 /* ============================================================
-   1. Le manche — SVG généré
+   1. Le manche — SVG généré par le composant partagé
    ============================================================ */
-const STRINGS = [                     /* de haut en bas, comme sur les schémas */
-  { open:'E', label:'Mi', thick:1.1 },  /* mi aigu */
-  { open:'B', label:'Si', thick:1.3 },
-  { open:'G', label:'Sol', thick:1.6 },
-  { open:'D', label:'Ré', thick:1.9 },
-  { open:'A', label:'La', thick:2.3 },
-  { open:'E', label:'Mi', thick:2.7 },  /* mi grave */
-];
-const FRETS = 12;
-const GUT = 86;            /* gouttière gauche (noms de cordes) */
-const COL = 62;            /* largeur d'une case */
-const ROW = 38;            /* espacement des cordes */
-const TOPY = 26;
-const NUTX = GUT + 46;     /* position du sillet */
-const W = NUTX + FRETS*COL + 24;
-const H = TOPY + 5*ROW + 46;
-
-const fb = document.getElementById('fretboard');
-fb.setAttribute('viewBox', `0 0 ${W} ${H}`);
-fb.setAttribute('width', W);
-
-/* repères de cases (inlays) */
-for (const f of [3,5,7,9]){
-  el('circle',{cx:NUTX+(f-0.5)*COL, cy:TOPY+2.5*ROW, r:7, fill:'#3E3226'}, fb);
-}
-el('circle',{cx:NUTX+11.5*COL, cy:TOPY+1.5*ROW, r:7, fill:'#3E3226'}, fb);
-el('circle',{cx:NUTX+11.5*COL, cy:TOPY+3.5*ROW, r:7, fill:'#3E3226'}, fb);
-
-/* frettes */
-el('rect',{x:NUTX-5, y:TOPY-8, width:6, height:5*ROW+16, fill:'#E8DCC9', rx:2}, fb); /* sillet */
-for (let f=1; f<=FRETS; f++){
-  el('line',{x1:NUTX+f*COL, y1:TOPY-6, x2:NUTX+f*COL, y2:TOPY+5*ROW+6, stroke:'var(--board-line)','stroke-width':2}, fb);
-}
-/* numéros de cases */
-for (const f of [3,5,7,9,12]){
-  const t = el('text',{x:NUTX+(f-0.5)*COL, y:H-10, 'text-anchor':'middle', fill:'#A08D77',
-    'font-family':'Spline Sans Mono,monospace','font-size':'13','font-weight':'700'}, fb);
-  t.textContent = f;
-}
-
-/* cordes + noms */
-STRINGS.forEach((s,i)=>{
-  const y = TOPY + i*ROW;
-  el('line',{x1:GUT+2, y1:y, x2:W-16, y2:y, stroke:'#C8B79F','stroke-width':s.thick}, fb);
-  const name = el('text',{x:14, y:y+4, fill:'#D8CCBE','font-family':'Instrument Sans,sans-serif','font-size':'13','font-weight':'600'}, fb);
-  name.textContent = s.label;
-  const letter = el('text',{x:52, y:y+4, fill:'#8C7A69','font-family':'Spline Sans Mono,monospace','font-size':'12','font-weight':'700'}, fb);
-  letter.textContent = s.open;
-});
-
-/* pastilles de notes */
-let quizOn = false;
-const noteGroups = [];
-STRINGS.forEach((s,i)=>{
-  const y = TOPY + i*ROW;
-  const openIdx = CHROMA.indexOf(s.open);
-  for (let f=0; f<=FRETS; f++){
-    const note = CHROMA[(openIdx+f)%12];
-    const sharp = note.includes('#');
-    const cx = f===0 ? GUT+18 : NUTX+(f-0.5)*COL;
-    const g = el('g',{class:'note-g','data-note':note,'data-sharp':sharp?1:0,tabindex:'-1'}, fb);
-    const r = sharp ? 10.5 : 14;
-    const c = el('circle',{cx, cy:y, r, fill: sharp ? '#55483C' : NOTE_COLORS[note],
-      stroke: f===0 ? '#F3EADD' : 'none', 'stroke-width': f===0 ? 1.5 : 0}, g);
-    const t = el('text',{x:cx, y:y+(sharp?3.5:4.5), 'text-anchor':'middle', fill:'#fff',
-      'font-family':'Spline Sans Mono,monospace','font-size': sharp?'9.5':'13','font-weight':'700'}, g);
-    t.textContent = note;
-    if (sharp) g.style.display = 'none';
-    noteGroups.push({g, c, t, note, sharp});
-    g.addEventListener('click', ()=>{
-      if (!quizOn || sharp) return;
-      c.setAttribute('fill', NOTE_COLORS[note]);
-      t.style.display = '';
-    });
-  }
-});
-
-/* contrôles */
-const btnSharps = document.getElementById('btn-sharps');
-btnSharps.addEventListener('click', ()=>{
-  const on = btnSharps.getAttribute('aria-pressed') !== 'true';
-  btnSharps.setAttribute('aria-pressed', on);
-  noteGroups.forEach(n=>{ if (n.sharp) n.g.style.display = on ? '' : 'none'; });
-});
-const btnQuiz = document.getElementById('btn-quiz');
-btnQuiz.addEventListener('click', ()=>{
-  quizOn = btnQuiz.getAttribute('aria-pressed') !== 'true';
-  btnQuiz.setAttribute('aria-pressed', quizOn);
-  document.getElementById('quiz-tip').classList.toggle('on', quizOn);
-  fb.classList.toggle('quiz', quizOn);
-  noteGroups.forEach(n=>{
-    if (n.sharp) return;
-    if (quizOn){ n.c.setAttribute('fill', '#5C4F41'); n.t.style.display = 'none'; }
-    else { n.c.setAttribute('fill', NOTE_COLORS[n.note]); n.t.style.display = ''; }
-  });
+buildFretboard({
+  svg:'fretboard',
+  frets:12,
+  label:'Notes sur le manche de la guitare, cases 0 à 12',
+  btnSharps:'btn-sharps', btnQuiz:'btn-quiz', tip:'quiz-tip',
+  strings:[                            /* de haut en bas, comme sur les schémas */
+    { open:'E', label:'Mi', thick:1.1 },  /* mi aigu */
+    { open:'B', label:'Si', thick:1.3 },
+    { open:'G', label:'Sol', thick:1.6 },
+    { open:'D', label:'Ré', thick:1.9 },
+    { open:'A', label:'La', thick:2.3 },
+    { open:'E', label:'Mi', thick:2.7 },  /* mi grave */
+  ],
 });
 
 /* ============================================================
@@ -1786,9 +2072,11 @@ function el(tag, attrs, parent){
   return n;
 }
 const NOTE_COLORS = { C:'#0E9594', D:'#8E44AD', E:'#2E8B57', F:'#DE4229', G:'#E67E22', A:'#2C7FB8', B:'#8D6E4B' };
-/* lignes de tablature : 0 = Sol (haut) … 3 = Mi (bas) */
+/* lignes de tablature : 0 = G (haut) … 3 = E (bas) */
 const STR_IDX = { G:0, D:1, A:2, E:3 };
 const STR_NAMES = ['G','D','A','E'];
+/* couleurs des doigts de la main gauche : 1 · 2 · 3 · 4 */
+const FINGER_COLORS = ['#2C7FB8','#0E9594','#E67E22','#8E44AD'];
 
 /* ------------------------------------------------------------
    Rendu d'une ligne de tablature
@@ -1800,7 +2088,10 @@ function tabSVG(bars, opts){
   /* largeur de chaque mesure selon son nombre de croches */
   const widths = bars.map(b => b.events.reduce((s,e)=>s+e.n,0) * eighthW + barPad);
   const w = left + widths.reduce((a,b)=>a+b,0) + 14;
-  const h = top + 3*rowH + 26;
+  /* rangée de doigtés main gauche, seulement si au moins un événement en porte un */
+  const hasFg = bars.some(b => b.events.some(e => e.fg != null));
+  const fgH = hasFg ? 18 : 0;
+  const h = top + 3*rowH + 26 + fgH;
   const svg = document.createElementNS(SVGNS,'svg');
   svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
   svg.setAttribute('width', w);
@@ -1839,6 +2130,11 @@ function tabSVG(bars, opts){
         const t = el('text',{x:px, y:y+4, 'text-anchor':'middle', fill:col,
           'font-family':'Spline Sans Mono,monospace','font-size':'12.5','font-weight':'700'}, svg);
         t.textContent = ev.f;
+        if (hasFg && ev.fg != null){
+          const ft = el('text',{x:px, y:h-8, 'text-anchor':'middle', fill:FINGER_COLORS[ev.fg-1] || 'var(--ink-soft)',
+            'font-family':'Spline Sans Mono,monospace','font-size':'10.5','font-weight':'700'}, svg);
+          ft.textContent = ev.fg;
+        }
       }
       cx += ev.n * eighthW;
     });
@@ -1847,7 +2143,7 @@ function tabSVG(bars, opts){
     for (let i=0; i<total; i++){
       const px = x + barPad/2 + i*eighthW + eighthW/2;
       const onBeat = i % 2 === 0;
-      const bt = el('text',{x:px, y:h-8, 'text-anchor':'middle',
+      const bt = el('text',{x:px, y:h-8-fgH, 'text-anchor':'middle',
         fill: onBeat ? 'var(--ink-soft)' : '#C9BFAE',
         'font-family':'Spline Sans Mono,monospace','font-size': onBeat?'10':'8.5','font-weight':'700'}, svg);
       bt.textContent = onBeat ? (i/2 + 1) : 'et';
@@ -1869,7 +2165,120 @@ function bar2(c1,s1,f1,n1, c2,s2,f2,n2, a,b){
 }
 
 /* ------------------------------------------------------------
-   1. Exercice de croches continues
+   1. Les exercices avancés de main d'attaque
+   ------------------------------------------------------------ */
+/* mesure à 6/4 : six notes, chacune jouée deux fois.
+   notes = [ [corde, case, note, doigt] ] — doigt null = corde à vide */
+function bar6(chord, notes){
+  return { chord, events: notes.map((n,i)=>({
+    chord: i===0 ? chord : '', s:n[0], f:n[1], n:2, note:n[2], fg:n[3] })) };
+}
+/* suite de noms de notes, colorée comme partout ailleurs */
+function noteSeq(names){
+  return names.map(n =>
+    `<b style="color:${NOTE_COLORS[n[0]]}">${n}</b>`).join(' · ');
+}
+/* la même chose, précédée du nom de l'accord */
+function accordSeq(chord, names){
+  return `<span class="seq"><span class="seq-chord">${chord}</span>${noteSeq(names)}</span>`;
+}
+
+const PLUCK = [
+  { id:'p1', titre:'Exercice #1', sub:'Croisement de cordes par intervalles',
+    intro:'Mesure à <b>6/4</b>, 12 croches — chaque note jouée <b>deux fois</b>. Main gauche : doigts <b>1</b> et <b>3</b> uniquement. La mesure se répète.',
+    tempo:'Validé à <b>65</b> puis <b>75 bpm</b> en cours. La cible actuelle est <b>100 bpm</b> — 110 est trop rapide pour l\'instant.',
+    lignes:[[ bar6('', [['E',5,'A',1],['A',7,'E',3],['D',5,'G',1],['G',7,'D',3],['D',5,'G',1],['A',7,'E',3]]) ]],
+    legendes:[ noteSeq(['A','E','G','D','G','E']) ] },
+
+  { id:'p2', titre:'Exercice #2', sub:'Croisement de cordes sur accords (arpèges)',
+    prio:true,
+    intro:'Quatre accords, <b>une mesure chacun</b> : <b>Am → G → F → E</b>. Toujours en <b>6/4</b>, chaque note jouée <b>deux fois</b>. On monte l\'arpège <b>et on le redescend en entier</b> avant de changer d\'accord.',
+    tempo:'Départ <b>60 bpm</b> avec la batterie, objectif <b>120 bpm</b> à terme. Jeu <b>legato</b> : le son ne se coupe jamais.',
+    lignes:[
+      [ bar6('Am', [['E',5,'A',1],['A',7,'E',3],['D',7,'A',4],['G',5,'C',1],['D',7,'A',4],['A',7,'E',3]]),
+        bar6('G',  [['E',3,'G',1],['A',5,'D',3],['D',5,'G',4],['G',4,'B',2],['D',5,'G',4],['A',5,'D',3]]) ],
+      [ bar6('F',  [['E',1,'F',1],['A',3,'C',3],['D',3,'F',4],['G',2,'A',2],['D',3,'F',4],['A',3,'C',3]]),
+        bar6('E',  [['E',0,'E',null],['A',2,'B',2],['D',2,'E',3],['G',1,'G♯',1],['D',2,'E',3],['A',2,'B',2]]) ],
+    ],
+    legendes:[
+      accordSeq('Am', ['A','E','A','C','A','E']) + accordSeq('G', ['G','D','G','B','G','D']),
+      accordSeq('F',  ['F','C','F','A','F','C']) + accordSeq('E', ['E','B','E','G♯','E','B']),
+    ],
+    note:'<b>G et F ont la même forme</b> — les deux sont majeurs, F est simplement deux cases plus bas. Dans chaque arpège on joue <b>fondamentale · quinte · octave · tierce · octave · quinte</b>. C\'est la <b>tierce</b> qui distingue le mineur (Am) du majeur (G, F, E).' },
+
+  { id:'p3', titre:'Exercice #3', sub:'Cordes alternées', option:true,
+    intro:'<b>4/4</b>, en croches. Doigts main gauche <b>1, 2, 1, 3</b>. Le motif enchaîne des paires sur deux cordes voisines, en montant : <b>quarte</b> puis <b>quinte</b> sur chaque paire de cordes. Départ <b>case 3</b> sur la corde de <b>E</b>.',
+    todo:'Tablature à transcrire depuis <b>02_PluckingHand.pdf</b>, page 8.' },
+
+  { id:'p4', titre:'Exercice #4', sub:'Sauts d\'octave', option:true,
+    intro:'<b>4/4</b>, en croches. Doigts main gauche <b>1</b> et <b>4</b>. Paires <b>fondamentale / octave</b> en sautant une corde, motif descendant (<b>5 → 3</b>).',
+    todo:'Tablature à transcrire depuis <b>02_PluckingHand.pdf</b>, page 8.' },
+];
+
+const pluckList = document.getElementById('pluck-list');
+for (const ex of PLUCK){
+  const block = document.createElement('div');
+  block.className = 'tab-block' + (ex.prio ? ' prio' : '');
+  block.id = 'px-' + ex.id;
+  block.innerHTML = `<div class="tab-head"><span class="tab-title">${ex.titre}</span>
+    <span class="tab-sub">${ex.sub}${ex.option ? ' · <i>si tu as le temps</i>' : ''}</span>
+    ${ex.prio ? '<span class="prio-badge">Priorité de la semaine</span>' : ''}</div>`;
+  const intro = document.createElement('div');
+  intro.className = 'tab-note';
+  intro.innerHTML = ex.intro;
+  block.appendChild(intro);
+  (ex.lignes || []).forEach((ligne, i)=>{
+    const sc = document.createElement('div');
+    sc.className = 'tab-scroll';
+    sc.appendChild(tabSVG(ligne));
+    block.appendChild(sc);
+    if (ex.legendes && ex.legendes[i]){
+      const lg = document.createElement('div');
+      lg.className = 'tab-note';
+      lg.innerHTML = ex.legendes[i];
+      block.appendChild(lg);
+    }
+  });
+  if (ex.todo){
+    const td = document.createElement('div');
+    td.className = 'todo-slot';
+    td.innerHTML = ex.todo;
+    block.appendChild(td);
+  }
+  if (ex.note){
+    const nt = document.createElement('div');
+    nt.className = 'tab-note';
+    nt.innerHTML = ex.note;
+    block.appendChild(nt);
+  }
+  if (ex.tempo){
+    const tp = document.createElement('div');
+    tp.className = 'tab-note';
+    tp.innerHTML = '<b>Tempo :</b> ' + ex.tempo;
+    block.appendChild(tp);
+  }
+  pluckList.appendChild(block);
+}
+
+/* ------------------------------------------------------------
+   2. Les notes sur le manche — composant partagé, accordage basse
+   ------------------------------------------------------------ */
+buildFretboard({
+  svg:'fretboard-basse',
+  frets:12,
+  gut:44,
+  label:'Notes sur le manche de la basse, cases 0 à 12',
+  btnSharps:'btn-sharps-basse', btnQuiz:'btn-quiz-basse', tip:'quiz-tip-basse',
+  strings:[                          /* de haut en bas, comme sur les tablatures */
+    { open:'G', thick:1.4 },
+    { open:'D', thick:1.9 },
+    { open:'A', thick:2.5 },
+    { open:'E', thick:3.1 },
+  ],
+});
+
+/* ------------------------------------------------------------
+   3. Exercice de croches continues
    ------------------------------------------------------------ */
 const CROCHES = [
   { id:'s1', titre:'Section 1', sub:'mesures 1 à 8 · à jouer deux fois',
@@ -1917,7 +2326,7 @@ for (const sec of CROCHES){
 }
 
 /* ------------------------------------------------------------
-   2. Playlists
+   4. Playlists
    ------------------------------------------------------------ */
 const VIDEOS = [
   { tag:'Playlist 1', titre:'Beats & rythmes', desc:'À suivre en jouant, pour caler le tempo et le comptage.',
@@ -1938,7 +2347,7 @@ for (const v of VIDEOS){
 }
 
 /* ------------------------------------------------------------
-   3. L'araignée
+   5. L'araignée
    ------------------------------------------------------------ */
 /* motif = suite de [corde, case, doigt] */
 function spiderSVG(steps){
@@ -1956,7 +2365,7 @@ function spiderSVG(steps){
       'font-family':'Spline Sans Mono,monospace','font-size':'11','font-weight':'700'}, svg);
     lb.textContent = STR_NAMES[s];
   }
-  const FCOL = ['#2C7FB8','#0E9594','#E67E22','#8E44AD'];  /* doigts 1·2·3·4 */
+  const FCOL = FINGER_COLORS;  /* doigts 1·2·3·4 */
   steps.forEach(([str, fret, finger], i)=>{
     const x = left + i*colW + colW/2;
     const y = top + STR_IDX[str]*rowH;
@@ -2020,10 +2429,15 @@ function navLink(href, html, lvl){
   return a;
 }
 const lvl1 = {};
-lvl1['croches'] = navLink('#croches','1 · Croches continues','lvl1');
+lvl1['routine'] = navLink('#routine','1 · La routine quotidienne','lvl1');
+lvl1['main-attaque'] = navLink('#main-attaque','2 · La main d\'attaque','lvl1');
+lvl1['pluck-avance'] = navLink('#pluck-avance','3 · Les exercices avancés','lvl1');
+PLUCK.forEach(x=> navLink('#px-'+x.id, x.titre + ' · ' + x.sub, 'lvl2'));
+lvl1['notes-manche'] = navLink('#notes-manche','4 · Les notes sur le manche','lvl1');
+lvl1['croches'] = navLink('#croches','5 · Croches continues','lvl1');
 CROCHES.forEach(s=> navLink('#cr-'+s.id, s.titre, 'lvl2'));
-lvl1['tempo'] = navLink('#tempo','2 · Tempo &amp; rythme','lvl1');
-lvl1['araignee'] = navLink('#araignee','3 · L\'araignée','lvl1');
+lvl1['tempo'] = navLink('#tempo','6 · Tempo &amp; rythme','lvl1');
+lvl1['araignee'] = navLink('#araignee','7 · L\'araignée','lvl1');
 SPIDERS.forEach(s=> navLink('#sp-'+s.id, s.titre, 'lvl2'));
 
 const spy = makeSpy((entries)=>{
@@ -2034,7 +2448,7 @@ const spy = makeSpy((entries)=>{
     }
   }
 }, { rootMargin:'-15% 0px -70% 0px' });
-for (const id of ['croches','tempo','araignee']) spy.observe(document.getElementById(id));
+for (const id of ['routine','main-attaque','pluck-avance','notes-manche','croches','tempo','araignee']) spy.observe(document.getElementById(id));
 
 })();
 </script>

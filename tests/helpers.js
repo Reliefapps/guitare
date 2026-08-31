@@ -8,7 +8,7 @@ const HTML = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 /* Charge la page dans jsdom. IntersectionObserver n'existe pas dans jsdom :
    on en installe un faux avant l'exécution des scripts pour pouvoir déclencher
    le scrollspy à la main. */
-function load(){
+function load(url){
   const observers = [];
   const jsErrors = [];
   const vc = new VirtualConsole();
@@ -23,6 +23,7 @@ function load(){
   });
 
   const dom = new JSDOM(HTML, {
+    url: url || 'https://reliefapps.github.io/guitare/',
     runScripts: 'dangerously',
     pretendToBeVisual: true,
     virtualConsole: vc,

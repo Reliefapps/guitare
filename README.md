@@ -8,14 +8,13 @@ page.
 
 ## Le contenu
 
-Le site est organisé en quatre onglets :
+Le site est organisé en trois onglets :
 
 | Onglet | Contenu |
 | --- | --- |
 | 🎸 **Guitare** | Les notes sur le manche, les accords ouverts, les barrés (deux formes), les rythmiques, les exercices, les progressions et les arpèges. |
 | 🎵 **Basse** | Les pistes de batterie par tempo (60 à 180 bpm), la routine quotidienne, les exercices de main d'attaque (croisement de cordes, arpèges, cordes alternées, sauts d'octave), les notes sur le manche, les croches continues et l'araignée. |
-| 🪘 **Malagueña** | Le morceau découpé en étapes, dans l'ordre où le travailler ; chaque étape renvoie à la bonne page de la partition. |
-| 📄 **Bibliothèque** | Les partitions consultables directement dans la page (visionneuse avec zoom, navigation au clavier et téléchargement). |
+| 🪘 **Malagueña** | L'enregistrement de référence et la partition complète : les 4 pages se suivent au défilement, avec zoom, saut de page au clavier et téléchargement. |
 
 Le fil conducteur : **une couleur par note**, la même partout — sur le manche,
 dans les diagrammes d'accords, dans les progressions et dans les tablatures.

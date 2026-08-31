@@ -611,10 +611,12 @@
   /* Dégradation en escalier de la barre d'onglets. Les seuils sont calculés
      pour les cinq libellés actuels — le plus long, « Bibliothèque », pèse
      12 caractères. Largeur d'un caractère ≈ 0,605 × la taille de police.
-       barre pleine   614 px (+ marque 147 + gouttières) → 819 px
-       barre compacte 426 px (+ marque courte 66)        → 550 px
-       barre d'icônes 254 px                             → 294 px
-     Chaque palier garde au moins 30 px de marge à son seuil bas. */
+       barre pleine   559 px (+ marque 144 + gouttières) → 761 px
+       barre compacte 454 px (+ marque courte  69)       → 581 px
+       barre d'icônes 239 px                             → 279 px
+     Largeurs relevées au rendu, pas seulement calculées. Chaque palier garde
+     au moins 30 px de marge à son seuil bas — d'où 540 et 610 plutôt que 500
+     et 580, où il ne restait respectivement que 7 px et 0 px. */
   @media (max-width:880px){
     .brand{font-size:13px;}
     .brand span{display:none;}
@@ -622,14 +624,14 @@
     .pagetab .ic{display:none;}
   }
   /* la marque cède toute la largeur aux onglets */
-  @media (max-width:580px){
+  @media (max-width:610px){
     .brand{display:none;}
     .mainnav-inner{gap:0;}
     .pagetabs{margin-left:0; width:100%; justify-content:space-between;}
   }
   /* cinq libellés ne tiennent plus, même resserrés : on passe en icône seule.
      Le nom reste porté par aria-label et title. */
-  @media (max-width:500px){
+  @media (max-width:540px){
     .pagetab .lbl{display:none;}
     .pagetab .ic{display:inline; font-size:17px;}
     .pagetab{padding:7px 12px;}

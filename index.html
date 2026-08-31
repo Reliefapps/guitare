@@ -875,7 +875,7 @@
 
 <header class="hero">
   <div class="wrap">
-    <div class="eyebrow">Apprendre · pas à pas</div>
+    <div class="eyebrow">Partition · référence</div>
     <h1>Malagueña.</h1>
     <p class="lead">La partition en entier, page après page, et l'enregistrement de référence pour l'avoir dans l'oreille avant de la lire.</p>
     <div class="tuning">Traditionnel · transcription A. Franzi · <b>3/4</b> · 113 mesures · 3 sections + reprise</div>
@@ -2209,9 +2209,15 @@ for (const id of ['routine','pluck-avance','notes-manche','croches','araignee'])
     dl.textContent = 'Télécharger la page ' + (cur + 1);
   }
 
+  /* distance d'une page au haut de la zone visible — mesurée au rendu plutôt
+     que via offsetTop, qui se compte depuis l'offsetParent et fausse le calcul */
+  function decalage(fig){
+    return fig.getBoundingClientRect().top - sheet.getBoundingClientRect().top;
+  }
+
   function aller(i, doux){
     cur = Math.max(0, Math.min(PAGES.length - 1, i));
-    const top = figures[cur].offsetTop - sheet.offsetTop;
+    const top = sheet.scrollTop + decalage(figures[cur]);
     /* scrollTo n'existe pas partout (ni dans jsdom) : on retombe sur scrollTop */
     try { sheet.scrollTo({ top, behavior: doux === false ? 'auto' : 'smooth' }); }
     catch (e) { sheet.scrollTop = top; }
@@ -2228,9 +2234,9 @@ for (const id of ['routine','pluck-avance','notes-manche','croches','araignee'])
     if (tick) return;
     tick = requestAnimationFrame(() => {
       tick = null;
-      const y = sheet.scrollTop + sheet.clientHeight * 0.3;
+      const seuil = sheet.clientHeight * 0.3;
       let i = 0;
-      figures.forEach((f, k) => { if (f.offsetTop - sheet.offsetTop <= y) i = k; });
+      figures.forEach((f, k) => { if (decalage(f) <= seuil) i = k; });
       if (i !== cur) { cur = i; maj(); }
     });
   }, { passive: true });

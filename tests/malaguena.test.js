@@ -30,7 +30,7 @@ test("l'ancienne ancre #/mal n'existe plus", () => {
 test("l'onglet Bibliothèque a disparu, ses restes aussi", () => {
   const { doc } = load();
   assert.deepEqual([...doc.querySelectorAll('.pagetab')].map(t => t.dataset.page),
-    ['guitare', 'basse', 'malaguena']);
+    ['guitare', 'basse', 'malaguena', 'theorie']);
   assert.equal(doc.getElementById('page-biblio'), null);
   assert.equal(doc.querySelectorAll('.doc-card, .struct-row, .fact').length, 0);
 });

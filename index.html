@@ -521,6 +521,34 @@
   .video-legend a{color:var(--ink); text-underline-offset:3px;}
 
 
+  /* ================= page théorie ================= */
+  .scale-row{background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px 18px 14px; margin-bottom:14px;}
+  .scale-name{font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:17px;}
+  .scale-desc{font-size:13.5px; color:var(--ink-soft); margin:2px 0 10px;}
+  .scale-line{display:flex; align-items:center; flex-wrap:wrap; gap:6px 0; padding:4px 0;}
+  .scale-note{font-family:"Spline Sans Mono",monospace; font-weight:700; font-size:15px;
+    color:#fff; border-radius:8px; padding:6px 0; min-width:44px; text-align:center; flex:none;}
+  .scale-int{font-family:"Spline Sans Mono",monospace; font-size:12.5px; font-weight:700;
+    color:var(--ink-soft); display:flex; flex-direction:column; align-items:center;
+    padding:0 8px; flex:none; line-height:1.25;}
+  .scale-int i{font-style:normal; font-size:9px; opacity:.75; letter-spacing:.03em; white-space:nowrap;}
+  .scale-int.half{color:var(--c-F);}
+  .quiz-actions{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:14px;}
+  .quiz-btn{
+    font-family:"Spline Sans Mono",monospace; font-size:12.5px; font-weight:700;
+    color:var(--ink); background:var(--paper); border:1px solid var(--line);
+    border-radius:8px; padding:7px 13px; cursor:pointer; transition:all .15s ease;
+  }
+  .quiz-btn:hover{border-color:var(--ink-soft);}
+  .quiz-btn:disabled{opacity:.45; cursor:default;}
+  .quiz-score{font-family:"Spline Sans Mono",monospace; font-size:13px; font-weight:700;
+    color:var(--ink-soft); margin-left:auto;}
+  #quiz-line{margin-top:10px;}
+  #quiz-feedback{padding-left:0; padding-right:0; min-height:22px;}
+  #quiz-feedback.juste{color:var(--c-E);}
+  #quiz-feedback.faux{color:var(--c-F);}
+
   /* ================= navigation principale ================= */
   .mainnav{
     position:fixed; top:0; left:0; right:0; z-index:100; height:54px;
@@ -536,7 +564,9 @@
     letter-spacing:-.01em; white-space:nowrap;
   }
   .brand span{color:var(--ink-soft); font-weight:500;}
-  .pagetabs{display:flex; gap:6px; margin-left:auto;}
+  .pagetabs{display:flex; gap:6px; margin-left:auto; overflow-x:auto; max-width:100%;
+    scrollbar-width:none;}
+  .pagetabs::-webkit-scrollbar{display:none;}
   .pagetab{
     font-family:"Spline Sans Mono",monospace; font-size:13px; font-weight:700;
     color:var(--ink-soft); background:transparent; border:1px solid transparent;
@@ -553,10 +583,11 @@
   .page[hidden]{display:none;}
   nav.sticky{top:54px;}
   @media (min-width:1180px){ .sidenav{top:74px;} }
-  @media (max-width:520px){
+  @media (max-width:640px){
     .brand{font-size:13px;}
     .brand span{display:none;}
-    .pagetab{padding:7px 12px; font-size:12.5px;}
+    .pagetab{padding:7px 10px; font-size:12.5px;}
+    .pagetab .ic{display:none;}
   }
 
 </style>
@@ -602,6 +633,7 @@
     <a href="#exercices">5 · Les exercices</a>
     <a href="#progressions">6 · Les progressions</a>
     <a href="#arpeges">7 · Les arpèges</a>
+    <a href="#gamme-am">8 · La gamme de Am</a>
   </div>
 </nav>
 
@@ -704,6 +736,23 @@
     <div id="arp-list"></div>
     <div class="prog-legend" style="margin-top:18px">
       <b>Comment jouer :</b> une mesure par accord, sans t'arrêter entre les accords — c'est là que ça se joue. Commence lentement au métronome et n'accélère que quand le passage d'un accord à l'autre ne fait plus de trou. Le pouce sonne toujours un peu plus fort : c'est lui qui donne l'appui.
+    </div>
+  </div>
+</section>
+
+<!-- ================= 8. LA GAMME DE LA MINEUR ================= -->
+<section id="gamme-am">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">8</span><h2>La gamme de La mineur</h2></div>
+    <p class="hint">Deux octaves complètes — du <b>A</b> grave (corde de La à vide, ou case 5 de la corde de Mi grave) au <b>A</b> aigu de la case 5 de la chanterelle. Les mêmes couleurs que partout ailleurs, le <b>A</b> est cerclé : c'est le début de chaque octave. Pourquoi ces notes-là ? La construction de la gamme est expliquée dans l'onglet <a href="#/theorie" data-goto="theorie">Théorie</a>.</p>
+    <div id="gamme-list"></div>
+    <div class="prog-legend exo-consignes">
+      <strong>Les deux exercices :</strong>
+      <ol class="exo-steps">
+        <li><b>Deux octaves, aller-retour.</b> Monte la gamme du A grave au A aigu puis redescends, sans t'arrêter en haut — d'abord en <b>position ouverte</b>, puis en <b>position fermée</b>. Lentement, au métronome, en nommant chaque note à voix haute.</li>
+        <li><b>D'une octave à l'autre.</b> Joue <b>A B C D E F G</b> dans l'octave du haut, puis enchaîne <b>A B C D E F G</b> dans l'octave du bas, sans casser la pulsation. Le but : savoir où habite chaque note dans les deux octaves, dans les deux positions.</li>
+      </ol>
+      <div style="margin-top:8px">Ne valide un exercice que si tu le joues <b>deux fois de suite sans hésiter</b> — c'est l'hésitation qu'on chasse, pas la vitesse.</div>
     </div>
   </div>
 </section>
@@ -919,6 +968,64 @@
 
 <footer>
   <div class="wrap">Malagueña · guide de travail</div>
+</footer>
+
+</div>
+
+<div class="page" id="page-theorie" role="tabpanel" aria-label="Théorie musicale" hidden>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Théorie musicale</div>
+    <h1>Mineur ou majeur ?<br>Une histoire d'intervalles.</h1>
+    <p class="lead">Une gamme, c'est sept notes séparées par des intervalles : <b>W</b> (<i>whole</i>, un ton — deux cases sur le manche) ou <b>H</b> (<i>half</i>, un demi-ton — une case). Ce n'est pas la note de départ qui fait qu'une gamme sonne majeure ou mineure : c'est <b>la place des demi-tons</b>.</p>
+  </div>
+</header>
+
+<nav class="sticky" aria-label="Sommaire">
+  <div class="wrap">
+    <a href="#construire">1 · Construire une gamme</a>
+    <a href="#jeu">2 · Le jeu</a>
+  </div>
+</nav>
+
+<!-- ============ 1. CONSTRUIRE UNE GAMME ============ -->
+<section id="construire">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">1</span><h2>Construire une gamme</h2></div>
+    <p class="hint">Les deux recettes, appliquées à partir de <b>A</b> — celles de ta feuille. Même point de départ, mais les demi-tons (<b>H</b>, en rouge) ne tombent pas au même endroit : trois notes changent, et tout le caractère avec.</p>
+    <div id="scale-rows"></div>
+    <div class="prog-legend">
+      <b>Mineur :</b> W · H · W · W · H · W · W &nbsp;·&nbsp; <b>majeur :</b> W · W · H · W · W · W · H.
+      Entre A mineur et A majeur, trois notes montent d'un demi-ton : la <b>tierce</b> (C → C♯), la <b>sixte</b> (F → F♯) et la <b>septième</b> (G → G♯). C'est surtout la tierce qui fait la couleur : mineur = tierce à un ton et demi de la fondamentale, majeur = à deux tons.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. LE JEU ============ -->
+<section id="jeu">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">2</span><h2>Le jeu — mineur ou majeur ?</h2></div>
+    <p class="hint">Une gamme s'affiche avec ses intervalles. Dis si elle est <b>majeure</b> ou <b>mineure</b> — sans regarder les dièses : regarde seulement <b>où tombe le premier H</b>. Tout de suite (entre la 2ᵉ et la 3ᵉ note) → mineur ; plus tard (entre la 3ᵉ et la 4ᵉ) → majeur.</p>
+    <div class="prog-card" id="quiz-zone">
+      <div class="prog-title">Une gamme au hasard</div>
+      <div id="quiz-line"></div>
+      <div class="quiz-actions">
+        <button class="quiz-btn" type="button" id="quiz-mineur">Mineur</button>
+        <button class="quiz-btn" type="button" id="quiz-majeur">Majeur</button>
+        <button class="quiz-btn" type="button" id="quiz-new">Nouvelle gamme →</button>
+        <span class="quiz-score" id="quiz-score"></span>
+      </div>
+      <div class="tab-note" id="quiz-feedback"></div>
+    </div>
+    <div class="callout">
+      <b>Le lien avec le manche :</b> W = deux cases, H = une case. Monte une corde en suivant W&nbsp;H&nbsp;W&nbsp;W&nbsp;H&nbsp;W&nbsp;W depuis n'importe quelle case : tu joues une gamme mineure. La gamme de <a href="#/guitare" data-goto="guitare">La mineur de la fiche guitare</a> est exactement ça, réparti sur les six cordes.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">Théorie · W = un ton, H = un demi-ton 🎼</div>
 </footer>
 
 </div>
@@ -1644,6 +1751,124 @@ for (const exo of ARP_EXOS){
 }
 
 /* ============================================================
+   8. La gamme de La mineur — deux octaves, deux positions
+   Cordes de haut en bas comme sur les schémas : Mi aigu → Mi grave.
+   s : indice de corde (0 = Mi aigu … 5 = Mi grave) · f : case (0 = à vide)
+   ============================================================ */
+const GAMME_CORDES = ['E','B','G','D','A','E'];
+const GAMME_AM = [
+  { id:'ouverte', titre:'Position ouverte', sub:'cases 0 à 5 — tout à gauche du manche, avec les cordes à vide',
+    f0:0, f1:5,
+    notes:[   /* dans l'ordre de la gamme, du A grave au A aigu */
+      {s:4,f:0,n:'A'},{s:4,f:2,n:'B'},{s:4,f:3,n:'C'},
+      {s:3,f:0,n:'D'},{s:3,f:2,n:'E'},{s:3,f:3,n:'F'},
+      {s:2,f:0,n:'G'},{s:2,f:2,n:'A'},
+      {s:1,f:0,n:'B'},{s:1,f:1,n:'C'},{s:1,f:3,n:'D'},
+      {s:0,f:0,n:'E'},{s:0,f:1,n:'F'},{s:0,f:3,n:'G'},{s:0,f:5,n:'A'},
+    ],
+    legende:'Les cordes à vide font partie de la gamme : <b>A</b> (La), <b>D</b> (Ré), <b>G</b> (Sol), <b>B</b> (Si) et <b>E</b> (les deux Mi). L\'octave du bas se joue sur les cordes La et Ré, celle du haut sur Sol, Si et Mi aigu.' },
+  { id:'fermee', titre:'Position fermée (V)', sub:'cases 4 à 8 — la même gamme, sans aucune corde à vide',
+    f0:3, f1:9,
+    notes:[
+      {s:5,f:5,n:'A'},{s:5,f:7,n:'B'},{s:5,f:8,n:'C'},
+      {s:4,f:5,n:'D'},{s:4,f:7,n:'E'},{s:4,f:8,n:'F'},
+      {s:3,f:5,n:'G'},{s:3,f:7,n:'A'},
+      {s:2,f:4,n:'B'},{s:2,f:5,n:'C'},{s:2,f:7,n:'D'},
+      {s:1,f:5,n:'E'},{s:1,f:6,n:'F'},{s:1,f:8,n:'G'},
+      {s:0,f:5,n:'A'},
+    ],
+    legende:'Un doigt par case : <b>index</b> cases 4–5, <b>majeur</b> case 6, <b>annulaire</b> case 7, <b>auriculaire</b> case 8. Comme rien n\'est à vide, cette forme se déplace : la même position démarrée ailleurs donne une autre gamme mineure.' },
+];
+
+function gammeSVG(pos){
+  const COL = 62, ROW = 34, TOPY = 24, GUT = 30;
+  const nF = pos.f1 - pos.f0;
+  const NUTX = GUT + (pos.f0 === 0 ? 40 : 14);   /* de la place pour les cordes à vide */
+  const W = NUTX + nF*COL + 18;
+  const H = TOPY + 5*ROW + 40;
+  const svg = document.createElementNS(SVGNS,'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('width', W);
+  svg.setAttribute('role','img');
+  svg.setAttribute('aria-label','Gamme de La mineur — ' + pos.titre);
+  /* repères de cases */
+  for (const f of [3,5,7,9]){
+    if (f <= pos.f0 || f > pos.f1) continue;
+    el('circle',{cx:NUTX+(f-pos.f0-0.5)*COL, cy:TOPY+2.5*ROW, r:7, fill:'#3E3226'}, svg);
+  }
+  /* sillet (position ouverte) ou frette de départ */
+  if (pos.f0 === 0){
+    el('rect',{x:NUTX-5, y:TOPY-8, width:6, height:5*ROW+16, fill:'#E8DCC9', rx:2}, svg);
+  }
+  for (let f = pos.f0 + 1; f <= pos.f1; f++){
+    el('line',{x1:NUTX+(f-pos.f0)*COL, y1:TOPY-6, x2:NUTX+(f-pos.f0)*COL, y2:TOPY+5*ROW+6,
+      stroke:'var(--board-line)','stroke-width':2}, svg);
+  }
+  if (pos.f0 !== 0){
+    el('line',{x1:NUTX, y1:TOPY-6, x2:NUTX, y2:TOPY+5*ROW+6,
+      stroke:'var(--board-line)','stroke-width':2}, svg);
+  }
+  /* numéros de cases */
+  for (const f of [1,3,5,7,9]){
+    if (f <= pos.f0 || f > pos.f1) continue;
+    const t = el('text',{x:NUTX+(f-pos.f0-0.5)*COL, y:H-8, 'text-anchor':'middle', fill:'#A08D77',
+      'font-family':'Spline Sans Mono,monospace','font-size':'13','font-weight':'700'}, svg);
+    t.textContent = f;
+  }
+  /* cordes + noms */
+  GAMME_CORDES.forEach((c,i)=>{
+    const y = TOPY + i*ROW;
+    el('line',{x1:GUT-8, y1:y, x2:W-12, y2:y, stroke:'#C8B79F','stroke-width':1.1+i*0.32}, svg);
+    const lb = el('text',{x:12, y:y+4, fill:'#D8CCBE',
+      'font-family':'Spline Sans Mono,monospace','font-size':'13','font-weight':'700'}, svg);
+    lb.textContent = c;
+  });
+  /* les notes de la gamme, dans l'ordre — le A (fondamentale) est cerclé */
+  for (const note of pos.notes){
+    const y = TOPY + note.s*ROW;
+    const cx = note.f === 0 ? GUT + 16 : NUTX + (note.f - pos.f0 - 0.5)*COL;
+    const g = el('g',{class:'gamme-note','data-note':note.n}, svg);
+    el('circle',{cx, cy:y, r:14, fill:NOTE_COLORS[note.n],
+      stroke: note.n === 'A' ? '#F3EADD' : 'none', 'stroke-width': note.n === 'A' ? 2.5 : 0}, g);
+    const t = el('text',{x:cx, y:y+4.5, 'text-anchor':'middle', fill:'#fff',
+      'font-family':'Spline Sans Mono,monospace','font-size':'13','font-weight':'700'}, g);
+    t.textContent = note.n;
+  }
+  return svg;
+}
+
+function gammeSeq(names){
+  return names.map(n => `<b style="color:${NOTE_COLORS[n[0]]}">${n}</b>`).join(' · ');
+}
+
+const gammeList = document.getElementById('gamme-list');
+for (const pos of GAMME_AM){
+  const block = document.createElement('div');
+  block.className = 'tab-block';
+  block.id = 'gamme-' + pos.id;
+  block.innerHTML = `<div class="tab-head"><span class="tab-title">${pos.titre}</span>
+    <span class="tab-sub">${pos.sub}</span></div>`;
+  const panel = document.createElement('div');
+  panel.className = 'board-panel';
+  panel.style.margin = '8px 14px 4px';
+  const scroll = document.createElement('div');
+  scroll.className = 'board-scroll';
+  scroll.appendChild(gammeSVG(pos));
+  panel.appendChild(scroll);
+  block.appendChild(panel);
+  const seq = document.createElement('div');
+  seq.className = 'tab-note';
+  seq.innerHTML = 'Octave du bas : ' + gammeSeq(['A','B','C','D','E','F','G']) +
+    ' &nbsp;·&nbsp; octave du haut : ' + gammeSeq(['A','B','C','D','E','F','G','A']);
+  block.appendChild(seq);
+  const lg = document.createElement('div');
+  lg.className = 'tab-note';
+  lg.innerHTML = pos.legende;
+  block.appendChild(lg);
+  gammeList.appendChild(block);
+}
+
+/* ============================================================
    Menu latéral — généré depuis les données
    ============================================================ */
 const sideNav = document.getElementById('sidenav-links');
@@ -1681,6 +1906,11 @@ ARP_EXOS.forEach(exo=>{
     exo.accords.map(a=>`<span class="mono-b" style="color:${NOTE_COLORS[CHORDS[a.id].root[0]]}">${CHORDS[a.id].name || a.id}</span>`).join(' · '),
     'lvl2');
 });
+lvl1Links['gamme-am'] = navLink('#gamme-am','8 · La gamme de Am','lvl1');
+for (const pos of GAMME_AM){
+  navLink('#gamme-'+pos.id,
+    `<span class="sw" style="background:${NOTE_COLORS.A}"></span>${pos.titre}`,'lvl2');
+}
 
 /* section active pendant le défilement */
 const spy = makeSpy((entries)=>{
@@ -1691,7 +1921,7 @@ const spy = makeSpy((entries)=>{
     }
   }
 }, { rootMargin:'-15% 0px -70% 0px' });
-for (const id of ['manche','accords','barres','rythmiques','exercices','progressions','arpeges']){
+for (const id of ['manche','accords','barres','rythmiques','exercices','progressions','arpeges','gamme-am']){
   spy.observe(document.getElementById(id));
 }
 
@@ -2262,6 +2492,111 @@ for (const id of ['routine','pluck-avance','notes-manche','croches','araignee'])
   maj();
 })();
 
+</script>
+
+<script>
+/* ===================== PAGE THÉORIE ===================== */
+(function(){
+
+const NOTE_COLORS = { C:'#0E9594', D:'#8E44AD', E:'#2E8B57', F:'#DE4229', G:'#E67E22', A:'#2C7FB8', B:'#8D6E4B' };
+const CHROMA = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+/* les recettes, en demi-tons : 2 = W (un ton), 1 = H (un demi-ton) */
+const FORMULES = { mineur:[2,1,2,2,1,2,2], majeur:[2,2,1,2,2,2,1] };
+
+/* rend une gamme : les 8 notes + les 7 intervalles W/H entre elles */
+function ligneGamme(root, type){
+  const div = document.createElement('div');
+  div.className = 'scale-line';
+  let idx = CHROMA.indexOf(root);
+  let note = root;
+  for (let i = 0; i < 8; i++){
+    const chip = document.createElement('span');
+    chip.className = 'scale-note';
+    chip.style.background = NOTE_COLORS[note[0]];
+    chip.textContent = note;
+    div.appendChild(chip);
+    if (i < 7){
+      const st = FORMULES[type][i];
+      const sp = document.createElement('span');
+      sp.className = 'scale-int' + (st === 1 ? ' half' : '');
+      sp.innerHTML = (st === 2 ? 'W' : 'H') + `<i>${st === 2 ? '1 ton' : '½ ton'}</i>`;
+      div.appendChild(sp);
+      idx = (idx + st) % 12;
+      note = CHROMA[idx];
+    }
+  }
+  return div;
+}
+
+/* ------------------------------------------------------------
+   1. Les deux gammes de la feuille : A mineur et A majeur
+   ------------------------------------------------------------ */
+const ROWS = [
+  { root:'A', type:'mineur', desc:'W H W W H W W — le premier demi-ton arrive tout de suite, entre B et C.' },
+  { root:'A', type:'majeur', desc:'W W H W W W H — le premier demi-ton attend la 3ᵉ note ; il faut des dièses pour y arriver.' },
+];
+const rows = document.getElementById('scale-rows');
+for (const r of ROWS){
+  const card = document.createElement('article');
+  card.className = 'scale-row';
+  card.id = 'scale-' + r.type;
+  card.innerHTML = `<div class="scale-name" style="color:${NOTE_COLORS.A}">A ${r.type}</div>
+    <div class="scale-desc">${r.desc}</div>`;
+  card.appendChild(ligneGamme(r.root, r.type));
+  rows.appendChild(card);
+}
+
+/* ------------------------------------------------------------
+   2. Le jeu — mineur ou majeur ?
+   Les fondamentales choisies ne demandent que des dièses, jamais
+   de bémols : ce qu'on affiche reste juste.
+   ------------------------------------------------------------ */
+const RACINES = { majeur:['C','G','D','A','E','B'], mineur:['A','E','B','F#','C#'] };
+const zone = document.getElementById('quiz-zone');
+const line = document.getElementById('quiz-line');
+const feedback = document.getElementById('quiz-feedback');
+const scoreEl = document.getElementById('quiz-score');
+const btnMin = document.getElementById('quiz-mineur');
+const btnMaj = document.getElementById('quiz-majeur');
+let attendu = null, bons = 0, total = 0;
+
+function nouvelle(){
+  const type = Math.random() < 0.5 ? 'mineur' : 'majeur';
+  const roots = RACINES[type];
+  const root = roots[Math.floor(Math.random() * roots.length)];
+  attendu = type;
+  zone.dataset.type = type;
+  line.replaceChildren(ligneGamme(root, type));
+  feedback.textContent = '';
+  feedback.className = 'tab-note';
+  btnMin.disabled = false;
+  btnMaj.disabled = false;
+}
+
+function repondre(guess){
+  if (!attendu) return;
+  total++;
+  const juste = guess === attendu;
+  if (juste) bons++;
+  const signe = attendu === 'mineur'
+    ? 'le premier <b>H</b> arrive tout de suite, entre la 2ᵉ et la 3ᵉ note'
+    : 'le premier <b>H</b> n\'arrive qu\'entre la 3ᵉ et la 4ᵉ note';
+  feedback.innerHTML = juste
+    ? `✓ Oui, ${attendu}e — ${signe}.`
+    : `✗ Non, c'était une gamme ${attendu}e — ${signe}.`;
+  feedback.className = 'tab-note ' + (juste ? 'juste' : 'faux');
+  scoreEl.textContent = bons + ' / ' + total;
+  attendu = null;
+  btnMin.disabled = true;
+  btnMaj.disabled = true;
+}
+
+btnMin.addEventListener('click', () => repondre('mineur'));
+btnMaj.addEventListener('click', () => repondre('majeur'));
+document.getElementById('quiz-new').addEventListener('click', nouvelle);
+nouvelle();
+
+})();
 </script>
 </body>
 </html>

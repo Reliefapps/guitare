@@ -8,7 +8,7 @@ page.
 
 ## Le contenu
 
-Le site est organisé en quatre onglets :
+Le site est organisé en cinq onglets :
 
 | Onglet | Contenu |
 | --- | --- |
@@ -16,6 +16,7 @@ Le site est organisé en quatre onglets :
 | 🎵 **Basse** | Les pistes de batterie par tempo (60 à 180 bpm), la routine quotidienne, les exercices de main d'attaque (croisement de cordes, arpèges, cordes alternées, sauts d'octave), les notes sur le manche, les croches continues et l'araignée. |
 | 🪘 **Malagueña** | L'enregistrement de référence et la partition complète : les 4 pages se suivent au défilement, avec zoom, saut de page au clavier et téléchargement. |
 | 🎼 **Théorie** | Comment on construit une gamme : les intervalles W (un ton) et H (un demi-ton), A mineur et A majeur côte à côte, et un petit jeu « mineur ou majeur ? ». |
+| 📄 **Bibliothèque** | Les partitions et grilles d'accords, consultables directement dans la page : un onglet par document, pages qui se suivent au défilement, zoom et téléchargement. |
 
 Le fil conducteur : **une couleur par note**, la même partout — sur le manche,
 dans les diagrammes d'accords, dans les progressions et dans les tablatures.

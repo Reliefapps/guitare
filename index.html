@@ -586,8 +586,14 @@
   @media (max-width:640px){
     .brand{font-size:13px;}
     .brand span{display:none;}
-    .pagetab{padding:7px 10px; font-size:12.5px;}
+    .pagetab{padding:7px 9px; font-size:12.5px;}
     .pagetab .ic{display:none;}
+  }
+  /* sous 480px, la marque cède toute la largeur aux quatre onglets */
+  @media (max-width:480px){
+    .brand{display:none;}
+    .mainnav-inner{gap:0;}
+    .pagetabs{margin-left:0; width:100%; justify-content:space-between;}
   }
 
 </style>

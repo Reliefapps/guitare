@@ -569,7 +569,27 @@
   .quiz-btn:disabled{opacity:.45; cursor:default;}
   .quiz-score{font-family:"Spline Sans Mono",monospace; font-size:13px; font-weight:700;
     color:var(--ink-soft); margin-left:auto;}
-  #quiz-line{margin-top:10px;}
+  .quiz-slots{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;}
+  .quiz-slot{
+    font-family:"Spline Sans Mono",monospace; font-weight:700; font-size:15px;
+    min-width:42px; height:42px; border-radius:8px; padding:0 4px;
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    border:2px dashed var(--line); color:#C9BFAE; background:var(--paper);
+  }
+  .quiz-slot.given{border-style:solid; border-color:transparent; color:#fff;}
+  button.quiz-slot{cursor:pointer; font:inherit;}
+  button.quiz-slot.filled{border-style:solid; border-color:transparent; color:#fff;}
+  button.quiz-slot.filled:hover{filter:brightness(1.08);}
+  .quiz-slot.filled.correct{border:2px solid var(--c-E); box-shadow:inset 0 0 0 2px var(--card);}
+  .quiz-slot.filled.wrong{border:2px solid var(--c-F); box-shadow:inset 0 0 0 2px var(--card);}
+  .quiz-palette{display:flex; flex-wrap:wrap; gap:6px; margin-top:16px;}
+  .quiz-note-btn{
+    font-family:"Spline Sans Mono",monospace; font-weight:700; font-size:13px;
+    min-width:38px; padding:8px 0; border-radius:8px; border:1px solid transparent;
+    color:#fff; cursor:pointer; transition:transform .1s ease;
+  }
+  .quiz-note-btn:hover{transform:translateY(-1px);}
+  .quiz-note-btn:disabled{opacity:.3; cursor:default; transform:none;}
   #quiz-feedback{padding-left:0; padding-right:0; min-height:22px;}
   #quiz-feedback.juste{color:var(--c-E);}
   #quiz-feedback.faux{color:var(--c-F);}
@@ -1053,14 +1073,14 @@
 <!-- ============ 2. LE JEU ============ -->
 <section id="jeu">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">2</span><h2>Le jeu — mineur ou majeur ?</h2></div>
-    <p class="hint">Une gamme s'affiche avec ses intervalles. Dis si elle est <b>majeure</b> ou <b>mineure</b> — sans regarder les dièses : regarde seulement <b>où tombe le premier H</b>. Tout de suite (entre la 2ᵉ et la 3ᵉ note) → mineur ; plus tard (entre la 3ᵉ et la 4ᵉ) → majeur.</p>
+    <div class="sec-head"><span class="sec-num">2</span><h2>Le jeu — trouve la gamme</h2></div>
+    <p class="hint">Une fondamentale et un type de gamme sont donnés. À toi de trouver <b>les six autres notes</b>, dans l'ordre, en cliquant sur la palette — aide-toi de la formule <b>W H W W H W W</b> (mineur) ou <b>W W H W W W H</b> (majeur) de la section précédente.</p>
     <div class="prog-card" id="quiz-zone">
-      <div class="prog-title">Une gamme au hasard</div>
-      <div id="quiz-line"></div>
+      <div class="prog-title" id="quiz-prompt"></div>
+      <div class="quiz-slots" id="quiz-slots"></div>
+      <div class="quiz-palette" id="quiz-palette"></div>
       <div class="quiz-actions">
-        <button class="quiz-btn" type="button" id="quiz-mineur">Mineur</button>
-        <button class="quiz-btn" type="button" id="quiz-majeur">Majeur</button>
+        <button class="quiz-btn" type="button" id="quiz-undo">← Effacer</button>
         <button class="quiz-btn" type="button" id="quiz-new">Nouvelle gamme →</button>
         <span class="quiz-score" id="quiz-score"></span>
       </div>
@@ -2619,13 +2639,23 @@ const CHROMA = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 /* les recettes, en demi-tons : 2 = W (un ton), 1 = H (un demi-ton) */
 const FORMULES = { mineur:[2,1,2,2,1,2,2], majeur:[2,2,1,2,2,2,1] };
 
+/* les 8 notes d'une gamme (la 8ᵉ = l'octave, identique à la fondamentale) */
+function computeScale(root, type){
+  const notes = [root];
+  let idx = CHROMA.indexOf(root);
+  for (const st of FORMULES[type]){
+    idx = (idx + st) % 12;
+    notes.push(CHROMA[idx]);
+  }
+  return notes;
+}
+
 /* rend une gamme : les 8 notes + les 7 intervalles W/H entre elles */
 function ligneGamme(root, type){
   const div = document.createElement('div');
   div.className = 'scale-line';
-  let idx = CHROMA.indexOf(root);
-  let note = root;
-  for (let i = 0; i < 8; i++){
+  const notes = computeScale(root, type);
+  notes.forEach((note, i) => {
     const chip = document.createElement('span');
     chip.className = 'scale-note';
     chip.style.background = NOTE_COLORS[note[0]];
@@ -2637,10 +2667,8 @@ function ligneGamme(root, type){
       sp.className = 'scale-int' + (st === 1 ? ' half' : '');
       sp.innerHTML = (st === 2 ? 'W' : 'H') + `<i>${st === 2 ? '1 ton' : '½ ton'}</i>`;
       div.appendChild(sp);
-      idx = (idx + st) % 12;
-      note = CHROMA[idx];
     }
-  }
+  });
   return div;
 }
 
@@ -2663,52 +2691,118 @@ for (const r of ROWS){
 }
 
 /* ------------------------------------------------------------
-   2. Le jeu — mineur ou majeur ?
+   2. Le jeu — trouve la gamme
+   Une fondamentale et un type sont donnés (degré 1) ; à partir de la
+   palette, on retrouve les degrés 2 à 7, dans l'ordre.
    Les fondamentales choisies ne demandent que des dièses, jamais
    de bémols : ce qu'on affiche reste juste.
    ------------------------------------------------------------ */
 const RACINES = { majeur:['C','G','D','A','E','B'], mineur:['A','E','B','F#','C#'] };
 const zone = document.getElementById('quiz-zone');
-const line = document.getElementById('quiz-line');
+const promptEl = document.getElementById('quiz-prompt');
+const slotsEl = document.getElementById('quiz-slots');
+const paletteEl = document.getElementById('quiz-palette');
 const feedback = document.getElementById('quiz-feedback');
 const scoreEl = document.getElementById('quiz-score');
-const btnMin = document.getElementById('quiz-mineur');
-const btnMaj = document.getElementById('quiz-majeur');
-let attendu = null, bons = 0, total = 0;
+const undoBtn = document.getElementById('quiz-undo');
+let root, type, expected, filled, done, bons = 0, total = 0;
+
+/* la palette est statique : 12 notes, une fois pour toutes */
+CHROMA.forEach(note => {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'quiz-note-btn';
+  b.style.background = NOTE_COLORS[note[0]];
+  b.textContent = note;
+  b.dataset.note = note;
+  b.addEventListener('click', () => jouer(note));
+  paletteEl.appendChild(b);
+});
+
+function slotBouton(note, idx){
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'quiz-slot filled';
+  b.style.background = NOTE_COLORS[note[0]];
+  b.textContent = note;
+  b.title = 'Effacer à partir d\'ici';
+  b.addEventListener('click', () => {
+    if (done) return;
+    for (let i = idx; i < filled.length; i++) filled[i] = null;
+    render();
+  });
+  return b;
+}
+
+function render(){
+  promptEl.innerHTML = `Gamme de <b style="color:${NOTE_COLORS[root[0]]}">${root}</b> ${type}`;
+
+  const donne = document.createElement('span');
+  donne.className = 'quiz-slot given';
+  donne.style.background = NOTE_COLORS[root[0]];
+  donne.textContent = root;
+  const slots = [donne];
+  filled.forEach((note, i) => {
+    let el;
+    if (note == null){
+      el = document.createElement('span');
+      el.className = 'quiz-slot';
+    } else {
+      el = slotBouton(note, i);
+      if (done) el.classList.add(note === expected[i+1] ? 'correct' : 'wrong');
+    }
+    slots.push(el);
+  });
+  slotsEl.replaceChildren(...slots);
+
+  const complet = filled.every(n => n != null);
+  [...paletteEl.children].forEach(b => b.disabled = done || complet);
+  undoBtn.disabled = done || filled.every(n => n == null);
+}
+
+function jouer(note){
+  if (done) return;
+  const i = filled.findIndex(n => n == null);
+  if (i === -1) return;
+  filled[i] = note;
+  render();
+  if (filled.every(n => n != null)) verifier();
+}
+
+function verifier(){
+  done = true;
+  total++;
+  const justes = filled.filter((n, i) => n === expected[i+1]).length;
+  if (justes === 6) bons++;
+  const gammeComplete = expected.slice(0, 7).join(' · ');
+  feedback.innerHTML = justes === 6
+    ? `✓ Bravo — la gamme de ${root} ${type}, c'est ${gammeComplete}.`
+    : `✗ ${justes} / 6 notes justes — la gamme complète est ${gammeComplete}.`;
+  feedback.className = 'tab-note ' + (justes === 6 ? 'juste' : 'faux');
+  scoreEl.textContent = bons + ' / ' + total;
+  render();
+}
 
 function nouvelle(){
-  const type = Math.random() < 0.5 ? 'mineur' : 'majeur';
-  const roots = RACINES[type];
-  const root = roots[Math.floor(Math.random() * roots.length)];
-  attendu = type;
+  type = Math.random() < 0.5 ? 'mineur' : 'majeur';
+  root = RACINES[type][Math.floor(Math.random() * RACINES[type].length)];
+  expected = computeScale(root, type);
+  filled = new Array(6).fill(null);
+  done = false;
   zone.dataset.type = type;
-  line.replaceChildren(ligneGamme(root, type));
+  zone.dataset.root = root;
   feedback.textContent = '';
   feedback.className = 'tab-note';
-  btnMin.disabled = false;
-  btnMaj.disabled = false;
+  render();
 }
 
-function repondre(guess){
-  if (!attendu) return;
-  total++;
-  const juste = guess === attendu;
-  if (juste) bons++;
-  const signe = attendu === 'mineur'
-    ? 'le premier <b>H</b> arrive tout de suite, entre la 2ᵉ et la 3ᵉ note'
-    : 'le premier <b>H</b> n\'arrive qu\'entre la 3ᵉ et la 4ᵉ note';
-  feedback.innerHTML = juste
-    ? `✓ Oui, ${attendu}e — ${signe}.`
-    : `✗ Non, c'était une gamme ${attendu}e — ${signe}.`;
-  feedback.className = 'tab-note ' + (juste ? 'juste' : 'faux');
-  scoreEl.textContent = bons + ' / ' + total;
-  attendu = null;
-  btnMin.disabled = true;
-  btnMaj.disabled = true;
-}
-
-btnMin.addEventListener('click', () => repondre('mineur'));
-btnMaj.addEventListener('click', () => repondre('majeur'));
+undoBtn.addEventListener('click', () => {
+  if (done) return;
+  for (let i = filled.length - 1; i >= 0; i--){
+    if (filled[i] != null){ filled[i] = null; break; }
+  }
+  render();
+});
 document.getElementById('quiz-new').addEventListener('click', nouvelle);
 nouvelle();
 

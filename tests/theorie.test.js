@@ -74,34 +74,95 @@ test("l'onglet Théorie s'ouvre et montre la construction des deux gammes", () =
   assert.deepEqual(ints(rows[1]),  ['W','W','H','W','W','W','H']);
 });
 
-test('le jeu mineur ou majeur valide la bonne réponse et compte les points', () => {
+/* la même recette que celle codée dans la page, pour calculer la réponse attendue */
+const FORMULES = { mineur:[2,1,2,2,1,2,2], majeur:[2,2,1,2,2,2,1] };
+const CHROMA = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+function gammeAttendue(root, type){
+  const notes = [root];
+  let idx = CHROMA.indexOf(root);
+  for (const st of FORMULES[type]){ idx = (idx + st) % 12; notes.push(CHROMA[idx]); }
+  return notes;
+}
+
+test('le jeu propose une fondamentale et un type, à compléter note par note', () => {
+  const { doc } = load();
+  openTab(doc, 'theorie');
+  const zone = doc.getElementById('quiz-zone');
+
+  /* une gamme est proposée dès le chargement */
+  assert.ok(['mineur','majeur'].includes(zone.dataset.type));
+  assert.ok(zone.dataset.root, 'aucune fondamentale tirée au chargement');
+  assert.match(doc.getElementById('quiz-prompt').textContent, new RegExp(zone.dataset.root));
+  /* la fondamentale est donnée, affichée en 1ère case ; les 6 autres sont vides */
+  const slots = () => [...doc.querySelectorAll('#quiz-slots .quiz-slot')];
+  assert.equal(slots().length, 7);
+  assert.equal(slots()[0].textContent, zone.dataset.root);
+  assert.ok(slots()[0].classList.contains('given'));
+  assert.equal(slots().slice(1).every(s => s.textContent === ''), true);
+});
+
+test('remplir les 6 notes justes valide la gamme et compte le point', () => {
   const { doc } = load();
   openTab(doc, 'theorie');
   const zone = doc.getElementById('quiz-zone');
   const feedback = doc.getElementById('quiz-feedback');
+  const attendu = gammeAttendue(zone.dataset.root, zone.dataset.type);
 
-  /* une gamme est proposée dès le chargement */
-  assert.ok(['mineur','majeur'].includes(zone.dataset.type));
-  assert.equal(doc.querySelectorAll('#quiz-line .scale-note').length, 8);
-  assert.equal(doc.querySelectorAll('#quiz-line .scale-int').length, 7);
-  /* le motif affiché correspond bien au type attendu */
-  const ints = [...doc.querySelectorAll('#quiz-line .scale-int')].map(n => n.textContent[0]).join('');
-  assert.equal(ints, zone.dataset.type === 'mineur' ? 'WHWWHWW' : 'WWHWWWH');
-
-  /* bonne réponse */
-  doc.getElementById('quiz-' + zone.dataset.type).click();
+  for (const note of attendu.slice(1, 7)){
+    doc.querySelector(`#quiz-palette [data-note="${note}"]`).click();
+  }
   assert.match(feedback.textContent, /✓/);
   assert.equal(doc.getElementById('quiz-score').textContent, '1 / 1');
-  assert.equal(doc.getElementById('quiz-mineur').disabled, true, 'une seule réponse par gamme');
+  /* une fois validé, la palette et l'effacement se bloquent */
+  assert.equal(doc.querySelector('#quiz-palette button').disabled, true);
+  assert.equal(doc.getElementById('quiz-undo').disabled, true);
+  /* les 6 cases complétées sont marquées justes */
+  const remplies = [...doc.querySelectorAll('#quiz-slots .quiz-slot.filled')];
+  assert.equal(remplies.length, 6);
+  remplies.forEach(s => assert.ok(s.classList.contains('correct')));
+});
 
-  /* nouvelle gamme, mauvaise réponse */
-  doc.getElementById('quiz-new').click();
-  assert.equal(feedback.textContent, '');
-  const t2 = zone.dataset.type;
-  doc.getElementById('quiz-' + (t2 === 'mineur' ? 'majeur' : 'mineur')).click();
+test('une note fausse est signalée, effacer permet de corriger', () => {
+  const { doc } = load();
+  openTab(doc, 'theorie');
+  const zone = doc.getElementById('quiz-zone');
+  const attendu = gammeAttendue(zone.dataset.root, zone.dataset.type);
+  const fausse = CHROMA.find(n => n !== attendu[1]);
+
+  doc.querySelector(`#quiz-palette [data-note="${fausse}"]`).click();
+  /* effacer retire la dernière note posée, la case redevient vide */
+  doc.getElementById('quiz-undo').click();
+  assert.equal(doc.querySelectorAll('#quiz-slots .quiz-slot.filled').length, 0);
+
+  /* on complète la gamme avec une erreur volontaire au 1er degré libre */
+  doc.querySelector(`#quiz-palette [data-note="${fausse}"]`).click();
+  for (const note of attendu.slice(2, 7)){
+    doc.querySelector(`#quiz-palette [data-note="${note}"]`).click();
+  }
+  const feedback = doc.getElementById('quiz-feedback');
   assert.match(feedback.textContent, /✗/);
-  assert.match(feedback.textContent, new RegExp(t2 + 'e'));
-  assert.equal(doc.getElementById('quiz-score').textContent, '1 / 2');
+  assert.match(feedback.textContent, /5 \/ 6/);
+  const remplies = [...doc.querySelectorAll('#quiz-slots .quiz-slot.filled')];
+  assert.equal(remplies[0].classList.contains('wrong'), true);
+  assert.equal(remplies.slice(1).every(s => s.classList.contains('correct')), true);
+});
+
+test('une nouvelle gamme réinitialise les cases et garde le score', () => {
+  const { doc } = load();
+  openTab(doc, 'theorie');
+  const zone = doc.getElementById('quiz-zone');
+  const attendu = gammeAttendue(zone.dataset.root, zone.dataset.type);
+  for (const note of attendu.slice(1, 7)){
+    doc.querySelector(`#quiz-palette [data-note="${note}"]`).click();
+  }
+  assert.equal(doc.getElementById('quiz-score').textContent, '1 / 1');
+
+  doc.getElementById('quiz-new').click();
+  assert.equal(doc.getElementById('quiz-feedback').textContent, '');
+  assert.equal(doc.querySelectorAll('#quiz-slots .quiz-slot.filled').length, 0);
+  assert.equal(doc.querySelector('#quiz-palette button').disabled, false);
+  /* le score de la manche précédente reste affiché */
+  assert.equal(doc.getElementById('quiz-score').textContent, '1 / 1');
 });
 
 test('les liens croisés gamme ↔ théorie changent de page sans recharger', () => {

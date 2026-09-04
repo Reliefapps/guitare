@@ -5,10 +5,10 @@ const { load, isVisible, openTab } = require('./helpers');
 
 /* les 6 sections de l'onglet basse, dans l'ordre attendu */
 const SECTIONS = [
-  ['routine',      '1', 'La routine quotidienne'],
-  ['pluck-avance', '2', 'Les exercices avancés'],
-  ['impro',        '3', 'Improviser sur Am / G'],
-  ['notes-manche', '4', 'Les notes sur le manche'],
+  ['notes-manche', '1', 'Les notes sur le manche'],
+  ['routine',      '2', 'La routine quotidienne'],
+  ['pluck-avance', '3', 'Les exercices avancés'],
+  ['impro',        '4', 'Improviser sur Am / G'],
   ['croches',      '5', 'Croches continues'],
   ['araignee',     '6', "L'araignée"],
 ];
@@ -100,9 +100,12 @@ test("les sections retirées ne sont plus dans la page", () => {
   }
   const basse = doc.getElementById('page-basse').textContent;
   for (const bout of ['Ce que Santiago a dit', 'Accordage standard', 'Comment travailler',
-                      'La position', 'Les erreurs à éviter', 'Playlist 1']){
+                      'La position', 'Les erreurs à éviter', 'Playlist 1',
+                      'La suite du programme']){
     assert.ok(!basse.includes(bout), 'texte encore présent : ' + bout);
   }
+  assert.equal(doc.querySelectorAll('#page-basse .roadmap').length, 0,
+    'la feuille de route devrait avoir disparu');
   assert.equal(doc.querySelectorAll('#croches .status-table, #croches .warn').length, 0);
 });
 

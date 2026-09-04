@@ -461,17 +461,6 @@
   .status-note b{color:var(--ink);}
 
   /* ---------- la suite du programme ---------- */
-  .roadmap{margin-top:34px; padding:18px 20px; background:var(--card);
-    border:1px solid var(--line); border-radius:var(--radius);}
-  .roadmap-title{font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:16px;
-    margin-bottom:10px;}
-  .roadmap-chain{display:flex; flex-wrap:wrap; gap:6px 4px; align-items:center;}
-  .roadmap-chain span{font-family:"Spline Sans Mono",monospace; font-size:12px;
-    background:var(--paper); border:1px solid var(--line); border-radius:999px;
-    padding:4px 10px; color:var(--ink-soft);}
-  .roadmap-chain i{color:#C9BFAE; font-style:normal; font-size:12px;}
-  .roadmap-todo{margin-top:14px; font-size:13.5px; color:var(--ink-soft);}
-  .roadmap-todo b{color:var(--ink);}
 
   /* ================= bibliothèque : onglets de documents ================= */
   .doctabs{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px;}
@@ -861,7 +850,7 @@
 <header class="hero">
   <div class="wrap">
     <div class="eyebrow">Fiche de révision · basse</div>
-    <h1>La routine, les exercices,<br>le manche.</h1>
+    <h1>Le manche, la routine,<br>les exercices.</h1>
     <div class="tempo-lab">🥁 Pistes de batterie — une piste par tempo, à lancer avant de jouer</div>
     <div class="tempo-bar" id="tempo-bar" role="list" aria-label="Pistes de batterie, par tempo"></div>
     <div class="tempo-note">Exercice #2 : départ à <b>60</b>, objectif <b>120</b>. ·
@@ -871,19 +860,54 @@
 
 <nav class="sticky" aria-label="Sommaire">
   <div class="wrap">
-    <a href="#routine">1 · La routine quotidienne</a>
-    <a href="#pluck-avance">2 · Les exercices avancés</a>
-    <a href="#impro">3 · Improviser sur Am / G</a>
-    <a href="#notes-manche">4 · Les notes sur le manche</a>
+    <a href="#notes-manche">1 · Les notes sur le manche</a>
+    <a href="#routine">2 · La routine quotidienne</a>
+    <a href="#pluck-avance">3 · Les exercices avancés</a>
+    <a href="#impro">4 · Improviser sur Am / G</a>
     <a href="#croches">5 · Croches continues</a>
     <a href="#araignee">6 · L'araignée</a>
   </div>
 </nav>
 
-<!-- ============ 1. LA ROUTINE QUOTIDIENNE ============ -->
+<!-- ============ 1. LES NOTES SUR LE MANCHE ============ -->
+<section id="notes-manche">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">1</span><h2>Les notes sur le manche</h2></div>
+    <p class="hint">Notes naturelles jusqu'à la case 12 — après, tout recommence à l'identique. Active <b>les dièses</b> pour voir les notes intermédiaires, ou le <b>mode quiz</b> pour t'interroger. La méthode de Santiago est juste en dessous : <b>5 minutes par jour pendant 15 jours</b>.</p>
+    <div class="board-panel">
+      <div class="board-controls">
+        <button class="toggle" id="btn-sharps-basse" aria-pressed="false">Afficher les dièses ♯</button>
+        <button class="toggle" id="btn-quiz-basse" aria-pressed="false">Mode quiz</button>
+      </div>
+      <p class="quiz-tip" id="quiz-tip-basse">Touche une pastille pour révéler la note. Re-clique sur « Mode quiz » pour tout réafficher.</p>
+      <div class="board-scroll">
+        <svg id="fretboard-basse" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Notes sur le manche de la basse, cases 0 à 12"></svg>
+      </div>
+    </div>
+    <ol class="steps">
+      <li>Mémoriser l'ordre des notes naturelles : <b>C D E F G A B</b>. Pas d'altérations.</li>
+      <li><b>Deux cases</b> entre chaque note, <b>sauf E–F et B–C</b> où il n'y en a qu'une.</li>
+      <li>Corde <b>E</b> : parcourir les notes jusqu'à la <b>case 8</b>, <b>à voix haute</b>, 3 à 4 fois.</li>
+      <li>Idem sur la corde <b>A</b>.</li>
+      <li>Réviser les deux cordes <b>E</b> et <b>A</b> ensemble.</li>
+      <li>Corde <b>D</b>, jusqu'à la <b>case 10</b>.</li>
+      <li>Réviser <b>E</b>, <b>A</b>, <b>D</b>.</li>
+      <li>Corde <b>G</b>.</li>
+      <li>Réviser les quatre cordes.</li>
+      <li>Refaire l'exercice complet <b>tous les jours pendant 15 jours</b>, avant de travailler autre chose.</li>
+      <li>Jouer des progressions d'accords connues en prenant à chaque fois <b>la note la plus grave</b>. Exemple : pour un accord de <b>G</b>, la case 3 de la corde de <b>E</b>.</li>
+      <li>Chercher ensuite les mêmes notes <b>dans les autres octaves</b>.</li>
+    </ol>
+    <div class="callout">
+      <b>Pourquoi c'est le socle :</b> connaître les notes, c'est parler la même langue que les autres musiciens — on annonce une note, tout le monde la trouve. Et ça marche aussi pour la guitare : même alphabet, mêmes repères.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. LA ROUTINE QUOTIDIENNE ============ -->
 <section id="routine">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">1</span><h2>La routine quotidienne</h2></div>
+    <div class="sec-head"><span class="sec-num">2</span><h2>La routine quotidienne</h2></div>
     <p class="hint">Le devoir de la semaine du <b>4 septembre 2026</b>, dans cet ordre : trois blocs de cinq minutes, puis l'improvisation qui prend le temps qu'il reste. C'est court, donc c'est tenable — et c'est la régularité qui fait le travail, pas la durée.</p>
     <div class="routine-grid">
       <div class="routine-card">
@@ -932,10 +956,10 @@
   </div>
 </section>
 
-<!-- ============ 2. LES EXERCICES AVANCÉS ============ -->
+<!-- ============ 3. LES EXERCICES AVANCÉS ============ -->
 <section id="pluck-avance">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">2</span><h2>Les exercices avancés</h2></div>
+    <div class="sec-head"><span class="sec-num">3</span><h2>Les exercices avancés</h2></div>
     <p class="hint">Les exercices de main d'attaque du cours du 28 août 2026. Les deux premiers sont à travailler tous les jours ; les deux suivants si tu as le temps.</p>
     <div class="rule">
       <b>Ne jamais répéter le même doigt de la main d'attaque</b>, surtout au changement de corde. Alternance <b>index–majeur</b>, puis la même chose en <b>majeur–index</b>. Dans les exercices 1 et 2, chaque note est jouée <b>deux fois</b>.
@@ -944,10 +968,10 @@
   </div>
 </section>
 
-<!-- ============ 3. IMPROVISER SUR AM / G ============ -->
+<!-- ============ 4. IMPROVISER SUR AM / G ============ -->
 <section id="impro">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">3</span><h2>Improviser sur Am / G</h2></div>
+    <div class="sec-head"><span class="sec-num">4</span><h2>Improviser sur Am / G</h2></div>
     <p class="hint">L'exercice du cours du <b>4 septembre 2026</b>. La piste tourne sur deux accords — <b>A mineur</b> puis <b>G majeur</b>, quatre mesures chacun — et tu joues par-dessus en n'utilisant que les notes de l'accord en cours. Les notes d'un accord jouées l'une après l'autre au lieu d'être plaquées ensemble, c'est un <b>arpège</b> : c'est le vrai métier du bassiste, pas les mélodies.</p>
     <div class="rule">
       <b>Deux règles, et rien d'autre.</b> <b>1 ·</b> On ne joue que les notes de la forme — aucune note en dehors. <b>2 ·</b> On joue la <b>fondamentale au changement d'accord</b>, sur le premier temps : c'est la basse qui annonce à tout le monde où on en est. Entre les deux, le rythme est libre et l'ordre des notes aussi.
@@ -972,41 +996,6 @@
   </div>
 </section>
 
-<!-- ============ 4. LES NOTES SUR LE MANCHE ============ -->
-<section id="notes-manche">
-  <div class="wrap">
-    <div class="sec-head"><span class="sec-num">4</span><h2>Les notes sur le manche</h2></div>
-    <p class="hint">Notes naturelles jusqu'à la case 12 — après, tout recommence à l'identique. Active <b>les dièses</b> pour voir les notes intermédiaires, ou le <b>mode quiz</b> pour t'interroger. La méthode de Santiago est juste en dessous : <b>5 minutes par jour pendant 15 jours</b>.</p>
-    <div class="board-panel">
-      <div class="board-controls">
-        <button class="toggle" id="btn-sharps-basse" aria-pressed="false">Afficher les dièses ♯</button>
-        <button class="toggle" id="btn-quiz-basse" aria-pressed="false">Mode quiz</button>
-      </div>
-      <p class="quiz-tip" id="quiz-tip-basse">Touche une pastille pour révéler la note. Re-clique sur « Mode quiz » pour tout réafficher.</p>
-      <div class="board-scroll">
-        <svg id="fretboard-basse" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Notes sur le manche de la basse, cases 0 à 12"></svg>
-      </div>
-    </div>
-    <ol class="steps">
-      <li>Mémoriser l'ordre des notes naturelles : <b>C D E F G A B</b>. Pas d'altérations.</li>
-      <li><b>Deux cases</b> entre chaque note, <b>sauf E–F et B–C</b> où il n'y en a qu'une.</li>
-      <li>Corde <b>E</b> : parcourir les notes jusqu'à la <b>case 8</b>, <b>à voix haute</b>, 3 à 4 fois.</li>
-      <li>Idem sur la corde <b>A</b>.</li>
-      <li>Réviser les deux cordes <b>E</b> et <b>A</b> ensemble.</li>
-      <li>Corde <b>D</b>, jusqu'à la <b>case 10</b>.</li>
-      <li>Réviser <b>E</b>, <b>A</b>, <b>D</b>.</li>
-      <li>Corde <b>G</b>.</li>
-      <li>Réviser les quatre cordes.</li>
-      <li>Refaire l'exercice complet <b>tous les jours pendant 15 jours</b>, avant de travailler autre chose.</li>
-      <li>Jouer des progressions d'accords connues en prenant à chaque fois <b>la note la plus grave</b>. Exemple : pour un accord de <b>G</b>, la case 3 de la corde de <b>E</b>.</li>
-      <li>Chercher ensuite les mêmes notes <b>dans les autres octaves</b>.</li>
-    </ol>
-    <div class="callout">
-      <b>Pourquoi c'est le socle :</b> connaître les notes, c'est parler la même langue que les autres musiciens — on annonce une note, tout le monde la trouve. Et ça marche aussi pour la guitare : même alphabet, mêmes repères.
-    </div>
-  </div>
-</section>
-
 <!-- ============ 5. CROCHES CONTINUES ============ -->
 <section id="croches">
   <div class="wrap">
@@ -1027,26 +1016,6 @@
     </div>
   </div>
 </section>
-
-<div class="wrap">
-  <div class="roadmap">
-    <div class="roadmap-title">La suite du programme</div>
-    <div class="roadmap-chain">
-        <span>Répertoire rock en croches</span><i>→</i>
-        <span>Séquences de doigts (1-2-3-4, 1-3-4-3, 1-3-2-4, 1-4-2-3, 1-4-3-2)</span><i>→</i>
-        <span>Intervalles consonants parfaits</span><i>→</i>
-        <span>Progressions fondamentale / quinte / octave</span><i>→</i>
-        <span>Intervalles consonants imparfaits</span><i>→</i>
-        <span>Ajout de la tierce</span><i>→</i>
-        <span>Intervalles dissonants (septièmes, secondes)</span><i>→</i>
-        <span>Gamme majeure, degrés et accords</span><i>→</i>
-        <span>Pentatoniques mineures (E, puis A et G)</span><i>→</i>
-        <span>Pentatonique majeure</span><i>→</i>
-        <span>Accords à la basse</span>
-    </div>
-    <p class="roadmap-todo"><b>Encore à valider dans la méthode :</b> alternance des doigts en quintes et en octaves · lecture rythmique (exercices 1 à 7) · synchronisation avec la grosse caisse.</p>
-  </div>
-</div>
 
 <footer>
   <div class="wrap">Fiche basse · bon travail 🎸</div>
@@ -2353,7 +2322,7 @@ function enFenetre(a){
 }
 
 /* ------------------------------------------------------------
-   1. Les pistes de batterie, une par tempo
+   Les pistes de batterie, une par tempo (en-tête de page)
    ------------------------------------------------------------ */
 const PLAYLIST = 'PLt_W1IWJABR2R5GL_TjkCrv6oTkeWkLMH';
 /* [bpm, identifiant de la vidéo] — l'ordre est celui de la playlist */
@@ -2397,7 +2366,7 @@ TEMPOS.forEach(([bpm, id], i)=>{
 });
 
 /* ------------------------------------------------------------
-   2. Les exercices avancés de main d'attaque
+   Les exercices avancés de main d'attaque
    ------------------------------------------------------------ */
 /* mesure à 6/4 : six notes, chacune jouée deux fois.
    notes = [ [corde, case, note, doigt] ] — doigt null = corde à vide */
@@ -2521,7 +2490,7 @@ for (const ex of PLUCK){
 }
 
 /* ------------------------------------------------------------
-   3. Improviser sur Am / G
+   Improviser sur Am / G
    ------------------------------------------------------------ */
 /* la piste du cours du 4 septembre 2026 */
 const IMPRO = {
@@ -2623,7 +2592,7 @@ for (const f of FORMES){
 }
 
 /* ------------------------------------------------------------
-   4. Les notes sur le manche — composant partagé, accordage basse
+   Les notes sur le manche — composant partagé, accordage basse
    ------------------------------------------------------------ */
 buildFretboard({
   svg:'fretboard-basse',
@@ -2640,7 +2609,7 @@ buildFretboard({
 });
 
 /* ------------------------------------------------------------
-   5. Exercice de croches continues
+   Exercice de croches continues
    ------------------------------------------------------------ */
 const CROCHES = [
   { id:'s1', url:'https://www.youtube.com/watch?v=tKw1XWmX6Io&list=PLC717tTqpYtQ&index=1', titre:'Section 1', sub:'mesures 1 à 8 · à jouer deux fois',
@@ -2691,7 +2660,7 @@ for (const sec of CROCHES){
 }
 
 /* ------------------------------------------------------------
-   6. L'araignée
+   L'araignée
    ------------------------------------------------------------ */
 /* motif = suite de [corde, case, doigt] */
 function spiderSVG(steps){
@@ -2773,12 +2742,12 @@ function navLink(href, html, lvl){
   return a;
 }
 const lvl1 = {};
-lvl1['routine'] = navLink('#routine','1 · La routine quotidienne','lvl1');
-lvl1['pluck-avance'] = navLink('#pluck-avance','2 · Les exercices avancés','lvl1');
+lvl1['notes-manche'] = navLink('#notes-manche','1 · Les notes sur le manche','lvl1');
+lvl1['routine'] = navLink('#routine','2 · La routine quotidienne','lvl1');
+lvl1['pluck-avance'] = navLink('#pluck-avance','3 · Les exercices avancés','lvl1');
 PLUCK.forEach(x=> navLink('#px-'+x.id, x.titre + ' · ' + x.sub, 'lvl2'));
-lvl1['impro'] = navLink('#impro','3 · Improviser sur Am / G','lvl1');
+lvl1['impro'] = navLink('#impro','4 · Improviser sur Am / G','lvl1');
 FORMES.forEach(f=> navLink('#fo-'+f.id, f.titre + ' · ' + f.sub, 'lvl2'));
-lvl1['notes-manche'] = navLink('#notes-manche','4 · Les notes sur le manche','lvl1');
 lvl1['croches'] = navLink('#croches','5 · Croches continues','lvl1');
 CROCHES.forEach(s=> navLink('#cr-'+s.id, s.titre, 'lvl2'));
 lvl1['araignee'] = navLink('#araignee','6 · L\'araignée','lvl1');
@@ -2792,7 +2761,7 @@ const spy = makeSpy((entries)=>{
     }
   }
 }, { rootMargin:'-15% 0px -70% 0px' });
-for (const id of ['routine','pluck-avance','impro','notes-manche','croches','araignee']) spy.observe(document.getElementById(id));
+for (const id of ['notes-manche','routine','pluck-avance','impro','croches','araignee']) spy.observe(document.getElementById(id));
 
 })();
 </script>

@@ -233,12 +233,3 @@ test('chaque section de croches renvoie à sa vidéo', () => {
   });
 });
 
-test('la suite du programme est listée en bas de page', () => {
-  const { doc } = load();
-  openTab(doc, 'basse');
-  const road = doc.querySelector('#page-basse .roadmap');
-  assert.equal(isVisible(road), true);
-  assert.equal(road.querySelectorAll('.roadmap-chain span').length, 11);
-  assert.equal(road.querySelectorAll('a').length, 0, 'la liste reste non cliquable');
-  assert.match(road.textContent, /grosse caisse/);
-});

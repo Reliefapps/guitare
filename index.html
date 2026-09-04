@@ -1089,8 +1089,8 @@
 <nav class="sticky" aria-label="Sommaire">
   <div class="wrap">
     <a href="#construire">1 · Construire une gamme</a>
-    <a href="#triades">2 · Construire un accord</a>
-    <a href="#jeu">3 · Le jeu</a>
+    <a href="#jeu">2 · Le jeu</a>
+    <a href="#triades">3 · Construire un accord</a>
   </div>
 </nav>
 
@@ -1107,23 +1107,10 @@
   </div>
 </section>
 
-<!-- ============ 2. CONSTRUIRE UN ACCORD ============ -->
-<section id="triades">
-  <div class="wrap">
-    <div class="sec-head"><span class="sec-num">2</span><h2>Construire un accord</h2></div>
-    <p class="hint">Une fois la gamme posée, l'accord se lit dedans : on part de la fondamentale et on <b>saute une note sur deux</b>. Trois notes, c'est une <b>triade</b> — l'accord de base, celui qu'on note <b>Am</b> ou <b>C</b>. On continue d'empiler dans le même sens et on obtient les accords de <b>septième</b>. Compter en degrés revient au même : on prend le <b>1</b>, on saute le 2, on prend le <b>3</b>, on saute le 4, on prend le <b>5</b>, on saute le 6, on prend le <b>7</b>.</p>
-    <div id="chord-rows"></div>
-    <div class="prog-legend">
-      <b>Le lien avec la basse :</b> ces trois notes jouées l'une après l'autre au lieu d'être plaquées ensemble, c'est un <b>arpège</b> — exactement ce que tu joues sur <a href="#/basse" data-goto="basse">la piste Am / G de la fiche basse</a>.
-      Et remarque que <b>A mineur</b> et <b>C majeur</b> ont les mêmes sept notes : l'une est la gamme relative de l'autre. Les deux accords sortent donc de la même gamme, ce qui explique qu'on les croise sans arrêt dans les mêmes morceaux.
-    </div>
-  </div>
-</section>
-
-<!-- ============ 3. LE JEU ============ -->
+<!-- ============ 2. LE JEU ============ -->
 <section id="jeu">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">3</span><h2>Le jeu — trouve la gamme</h2></div>
+    <div class="sec-head"><span class="sec-num">2</span><h2>Le jeu — trouve la gamme</h2></div>
     <p class="hint">Une fondamentale et un type de gamme sont donnés. À toi de trouver <b>les six autres notes</b>, dans l'ordre, en cliquant sur la palette — aide-toi de la formule <b>W H W W H W W</b> (mineur) ou <b>W W H W W W H</b> (majeur) de la section précédente.</p>
     <div class="prog-card" id="quiz-zone">
       <div class="prog-title" id="quiz-prompt"></div>
@@ -1138,6 +1125,31 @@
     </div>
     <div class="callout">
       <b>Le lien avec le manche :</b> W = deux cases, H = une case. Monte une corde en suivant W&nbsp;H&nbsp;W&nbsp;W&nbsp;H&nbsp;W&nbsp;W depuis n'importe quelle case : tu joues une gamme mineure. La gamme de <a href="#/guitare" data-goto="guitare">La mineur de la fiche guitare</a> est exactement ça, réparti sur les six cordes.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. CONSTRUIRE UN ACCORD ============ -->
+<section id="triades">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">3</span><h2>Construire un accord</h2></div>
+    <p class="hint">Une fois la gamme posée, l'accord se lit dedans : on part de la fondamentale et on <b>saute une note sur deux</b>. Trois notes, c'est une <b>triade</b> — l'accord de base, celui qu'on note <b>Am</b> ou <b>C</b>. On continue d'empiler dans le même sens et on obtient les accords de <b>septième</b>. Compter en degrés revient au même : on prend le <b>1</b>, on saute le 2, on prend le <b>3</b>, on saute le 4, on prend le <b>5</b>, on saute le 6, on prend le <b>7</b>.</p>
+    <div id="chord-rows"></div>
+    <p class="hint" id="acc-intro"><b>À toi.</b> Une fondamentale et un type d'accord sont donnés. Retrouve les notes qui manquent en sautant une note sur deux dans la gamme : <b>deux notes</b> pour une triade, <b>trois</b> pour un accord de septième.</p>
+    <div class="prog-card" id="acc-zone">
+      <div class="prog-title" id="acc-prompt"></div>
+      <div class="quiz-slots" id="acc-slots"></div>
+      <div class="quiz-palette" id="acc-palette"></div>
+      <div class="quiz-actions">
+        <button class="quiz-btn" type="button" id="acc-undo">← Effacer</button>
+        <button class="quiz-btn" type="button" id="acc-new">Nouvel accord →</button>
+        <span class="quiz-score" id="acc-score"></span>
+      </div>
+      <div class="tab-note" id="acc-feedback"></div>
+    </div>
+    <div class="prog-legend">
+      <b>Le lien avec la basse :</b> ces trois notes jouées l'une après l'autre au lieu d'être plaquées ensemble, c'est un <b>arpège</b> — exactement ce que tu joues sur <a href="#/basse" data-goto="basse">la piste Am / G de la fiche basse</a>.
+      Et remarque que <b>A mineur</b> et <b>C majeur</b> ont les mêmes sept notes : l'une est la gamme relative de l'autre. Les deux accords sortent donc de la même gamme, ce qui explique qu'on les croise sans arrêt dans les mêmes morceaux.
     </div>
   </div>
 </section>
@@ -3011,6 +3023,136 @@ undoBtn.addEventListener('click', () => {
 });
 document.getElementById('quiz-new').addEventListener('click', nouvelle);
 nouvelle();
+
+/* ------------------------------------------------------------
+   Le jeu d'entraînement de la section « Construire un accord »
+   Même principe que le jeu de gamme, mais on ne demande que les notes
+   de l'accord : deux pour une triade, trois avec la septième. Il vit
+   dans son propre IIFE, sinon il faudrait renommer la moitié du jeu
+   précédent pour éviter les collisions.
+   ------------------------------------------------------------ */
+(function(){
+
+const zone = document.getElementById('acc-zone');
+const promptEl = document.getElementById('acc-prompt');
+const slotsEl = document.getElementById('acc-slots');
+const paletteEl = document.getElementById('acc-palette');
+const feedback = document.getElementById('acc-feedback');
+const scoreEl = document.getElementById('acc-score');
+const undoBtn = document.getElementById('acc-undo');
+let root, type, sept, attendu, filled, done, bons = 0, total = 0;
+
+CHROMA.forEach(note => {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'quiz-note-btn';
+  b.style.background = NOTE_COLORS[note[0]];
+  b.textContent = note;
+  b.dataset.note = note;
+  b.addEventListener('click', () => jouer(note));
+  paletteEl.appendChild(b);
+});
+
+/* Am, Am7, C, Cmaj7 — le majeur ne porte pas de suffixe pour la triade */
+function nomAccord(){
+  if (type === 'mineur') return root + (sept ? 'm7' : 'm');
+  return root + (sept ? 'maj7' : '');
+}
+
+function slotBouton(note, idx){
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'quiz-slot filled';
+  b.style.background = NOTE_COLORS[note[0]];
+  b.textContent = note;
+  b.title = 'Effacer à partir d\'ici';
+  b.addEventListener('click', () => {
+    if (done) return;
+    for (let i = idx; i < filled.length; i++) filled[i] = null;
+    render();
+  });
+  return b;
+}
+
+function render(){
+  promptEl.innerHTML = `Accord de <b style="color:${NOTE_COLORS[root[0]]}">${root}</b> ${type} — ` +
+    (sept ? 'l\'accord de septième' : 'la triade');
+
+  const donne = document.createElement('span');
+  donne.className = 'quiz-slot given';
+  donne.style.background = NOTE_COLORS[root[0]];
+  donne.textContent = root;
+  const slots = [donne];
+  filled.forEach((note, i) => {
+    let el;
+    if (note == null){
+      el = document.createElement('span');
+      el.className = 'quiz-slot';
+    } else {
+      el = slotBouton(note, i);
+      if (done) el.classList.add(note === attendu[i+1] ? 'correct' : 'wrong');
+    }
+    slots.push(el);
+  });
+  slotsEl.replaceChildren(...slots);
+
+  const complet = filled.every(n => n != null);
+  [...paletteEl.children].forEach(b => b.disabled = done || complet);
+  undoBtn.disabled = done || filled.every(n => n == null);
+}
+
+function jouer(note){
+  if (done) return;
+  const i = filled.findIndex(n => n == null);
+  if (i === -1) return;
+  filled[i] = note;
+  render();
+  if (filled.every(n => n != null)) verifier();
+}
+
+function verifier(){
+  done = true;
+  total++;
+  const justes = filled.filter((n, i) => n === attendu[i+1]).length;
+  if (justes === filled.length) bons++;
+  const accordComplet = attendu.join(' · ');
+  feedback.innerHTML = justes === filled.length
+    ? `✓ Bravo — ${nomAccord()}, c'est ${accordComplet}.`
+    : `✗ ${justes} / ${filled.length} notes justes — ${nomAccord()}, c'est ${accordComplet}.`;
+  feedback.className = 'tab-note ' + (justes === filled.length ? 'juste' : 'faux');
+  scoreEl.textContent = bons + ' / ' + total;
+  render();
+}
+
+function nouveau(){
+  type = Math.random() < 0.5 ? 'mineur' : 'majeur';
+  root = RACINES[type][Math.floor(Math.random() * RACINES[type].length)];
+  sept = Math.random() < 0.5;
+  /* une note sur deux dans la gamme : degrés 1, 3, 5, et 7 pour la septième */
+  const gamme = computeScale(root, type);
+  attendu = sept ? [gamme[0], gamme[2], gamme[4], gamme[6]]
+                 : [gamme[0], gamme[2], gamme[4]];
+  filled = new Array(attendu.length - 1).fill(null);
+  done = false;
+  zone.dataset.type = type;
+  zone.dataset.root = root;
+  zone.dataset.sept = sept ? '1' : '0';
+  feedback.textContent = '';
+  feedback.className = 'tab-note';
+  render();
+}
+
+undoBtn.addEventListener('click', () => {
+  if (done) return;
+  for (let i = filled.length - 1; i >= 0; i--){
+    if (filled[i] != null){ filled[i] = null; break; }
+  }
+  render();
+});
+document.getElementById('acc-new').addEventListener('click', nouveau);
+nouveau();
+
+})();
 
 })();
 </script>

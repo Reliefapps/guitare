@@ -185,7 +185,7 @@ test("l'onglet Théorie navigue désormais en trois sections", () => {
   openTab(doc, 'theorie');
   const liens = [...doc.querySelectorAll('#page-theorie nav.sticky a')];
   assert.deepEqual(liens.map(a => a.getAttribute('href')),
-    ['#construire', '#triades', '#jeu']);
+    ['#construire', '#jeu', '#triades']);
   liens.forEach(a => {
     const cible = doc.getElementById(a.getAttribute('href').slice(1));
     assert.ok(cible, a.getAttribute('href') + ' ne mène nulle part');
@@ -229,4 +229,120 @@ test("la théorie renvoie à la piste Am / G de la fiche basse", () => {
   assert.equal(doc.getElementById('page-basse').hidden, false);
   assert.equal(doc.getElementById('page-theorie').hidden, true);
   assert.equal(isVisible(doc.getElementById('impro')), true);
+});
+
+/* les notes de l'accord : une sur deux dans la gamme, degrés 1 · 3 · 5 (· 7) */
+function accordAttendu(root, type, sept){
+  const g = gammeAttendue(root, type);
+  return sept ? [g[0], g[2], g[4], g[6]] : [g[0], g[2], g[4]];
+}
+function nomAttendu(root, type, sept){
+  if (type === 'mineur') return root + (sept ? 'm7' : 'm');
+  return root + (sept ? 'maj7' : '');
+}
+
+test("le jeu d'accords suit les exemples, fondamentale donnée", () => {
+  const { doc } = load();
+  openTab(doc, 'theorie');
+  const zone = doc.getElementById('acc-zone');
+  assert.equal(isVisible(zone), true);
+  /* il vit dans la section « Construire un accord », après les exemples A et C */
+  assert.equal(zone.closest('section').id, 'triades');
+  const ordre = [...zone.parentElement.children].map(n => n.id).filter(Boolean);
+  assert.ok(ordre.indexOf('chord-rows') < ordre.indexOf('acc-zone'),
+    'le jeu doit venir après les exemples');
+
+  assert.ok(['mineur', 'majeur'].includes(zone.dataset.type));
+  assert.ok(zone.dataset.root, 'aucune fondamentale tirée au chargement');
+  assert.ok(['0', '1'].includes(zone.dataset.sept));
+  const enonce = doc.getElementById('acc-prompt').textContent;
+  assert.match(enonce, new RegExp(zone.dataset.root));
+  assert.match(enonce, zone.dataset.sept === '1' ? /septième/ : /triade/);
+
+  /* la fondamentale est donnée : reste 2 notes pour une triade, 3 avec la septième */
+  const slots = [...doc.querySelectorAll('#acc-slots .quiz-slot')];
+  assert.equal(slots.length, zone.dataset.sept === '1' ? 4 : 3);
+  assert.equal(slots[0].textContent, zone.dataset.root);
+  assert.ok(slots[0].classList.contains('given'));
+  assert.equal(slots.slice(1).every(s => s.textContent === ''), true);
+});
+
+test("un accord complété juste compte le point et se voit nommé", () => {
+  const { doc } = load();
+  openTab(doc, 'theorie');
+  const zone = doc.getElementById('acc-zone');
+  const sept = zone.dataset.sept === '1';
+  const attendu = accordAttendu(zone.dataset.root, zone.dataset.type, sept);
+
+  for (const note of attendu.slice(1)){
+    doc.querySelector(`#acc-palette [data-note="${note}"]`).click();
+  }
+  const feedback = doc.getElementById('acc-feedback');
+  assert.match(feedback.textContent, /✓/);
+  assert.match(feedback.textContent, new RegExp(
+    nomAttendu(zone.dataset.root, zone.dataset.type, sept) + ", c'est " + attendu.join(' · ')));
+  assert.equal(doc.getElementById('acc-score').textContent, '1 / 1');
+  /* une fois validé, la palette et l'effacement se bloquent */
+  assert.equal(doc.querySelector('#acc-palette button').disabled, true);
+  assert.equal(doc.getElementById('acc-undo').disabled, true);
+  const remplies = [...doc.querySelectorAll('#acc-slots .quiz-slot.filled')];
+  assert.equal(remplies.length, attendu.length - 1);
+  remplies.forEach(s => assert.ok(s.classList.contains('correct')));
+});
+
+test("une note fausse dans l'accord est signalée, effacer permet de corriger", () => {
+  const { doc } = load();
+  openTab(doc, 'theorie');
+  const zone = doc.getElementById('acc-zone');
+  const attendu = accordAttendu(zone.dataset.root, zone.dataset.type, zone.dataset.sept === '1');
+  const fausse = CHROMA.find(n => n !== attendu[1]);
+
+  doc.querySelector(`#acc-palette [data-note="${fausse}"]`).click();
+  doc.getElementById('acc-undo').click();
+  assert.equal(doc.querySelectorAll('#acc-slots .quiz-slot.filled').length, 0);
+
+  /* on complète avec une erreur volontaire sur la première note libre */
+  doc.querySelector(`#acc-palette [data-note="${fausse}"]`).click();
+  for (const note of attendu.slice(2)){
+    doc.querySelector(`#acc-palette [data-note="${note}"]`).click();
+  }
+  const feedback = doc.getElementById('acc-feedback');
+  assert.match(feedback.textContent, /✗/);
+  assert.match(feedback.textContent,
+    new RegExp((attendu.length - 2) + ' / ' + (attendu.length - 1)));
+  const remplies = [...doc.querySelectorAll('#acc-slots .quiz-slot.filled')];
+  assert.equal(remplies[0].classList.contains('wrong'), true);
+  assert.equal(remplies.slice(1).every(s => s.classList.contains('correct')), true);
+});
+
+test("un nouvel accord réinitialise les cases et garde le score", () => {
+  const { doc } = load();
+  openTab(doc, 'theorie');
+  const zone = doc.getElementById('acc-zone');
+  const attendu = accordAttendu(zone.dataset.root, zone.dataset.type, zone.dataset.sept === '1');
+  for (const note of attendu.slice(1)){
+    doc.querySelector(`#acc-palette [data-note="${note}"]`).click();
+  }
+  assert.equal(doc.getElementById('acc-score').textContent, '1 / 1');
+
+  doc.getElementById('acc-new').click();
+  assert.equal(doc.getElementById('acc-feedback').textContent, '');
+  assert.equal(doc.querySelectorAll('#acc-slots .quiz-slot.filled').length, 0);
+  assert.equal(doc.querySelector('#acc-palette button').disabled, false);
+  assert.equal(doc.getElementById('acc-score').textContent, '1 / 1');
+});
+
+test("les deux jeux de la théorie sont indépendants", () => {
+  const { doc } = load();
+  openTab(doc, 'theorie');
+  /* remplir l'un ne touche pas l'autre : palettes, cases et scores séparés */
+  const gamme = gammeAttendue(doc.getElementById('quiz-zone').dataset.root,
+                              doc.getElementById('quiz-zone').dataset.type);
+  for (const note of gamme.slice(1, 7)){
+    doc.querySelector(`#quiz-palette [data-note="${note}"]`).click();
+  }
+  assert.equal(doc.getElementById('quiz-score').textContent, '1 / 1');
+  assert.equal(doc.getElementById('acc-score').textContent, '');
+  assert.equal(doc.querySelectorAll('#acc-slots .quiz-slot.filled').length, 0);
+  assert.equal(doc.querySelector('#acc-palette button').disabled, false);
 });

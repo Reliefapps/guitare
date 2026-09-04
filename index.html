@@ -421,6 +421,19 @@
     background:var(--paper); border:1px solid var(--line); border-radius:6px;
     padding:2px 8px; color:var(--ink);}
 
+  /* ---------- la piste sur laquelle on improvise ---------- */
+  .track-card{display:flex; align-items:center; gap:14px 18px; flex-wrap:wrap;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:14px 16px; margin-bottom:18px;}
+  .track-meta{font-size:14px; color:var(--ink-soft); flex:1 1 320px;}
+  .track-meta b{color:var(--ink); font-weight:600;}
+  .track-card .play-link{font-size:12.5px; padding:7px 15px;}
+
+  /* ---------- les formes d'arpege, cote a cote ---------- */
+  .forme-grid{display:grid; gap:14px; grid-template-columns:1fr;}
+  @media(min-width:880px){ .forme-grid{grid-template-columns:1fr 1fr;} }
+  .forme-grid .tab-block{margin-bottom:0;}
+
   /* ---------- emplacement de tablature à venir ---------- */
   .todo-slot{margin:10px 14px 4px; padding:16px; border:1px dashed var(--line);
     border-radius:10px; font-size:13px; color:var(--ink-soft); text-align:center;}
@@ -559,6 +572,11 @@
     padding:0 8px; flex:none; line-height:1.25;}
   .scale-int i{font-style:normal; font-size:9px; opacity:.75; letter-spacing:.03em; white-space:nowrap;}
   .scale-int.half{color:var(--c-F);}
+  /* notes de la gamme qu'on saute pour construire l'accord */
+  .scale-note.skip{opacity:.2;}
+  .scale-note.sept{opacity:.6; box-shadow:inset 0 0 0 2px var(--card);}
+  .chord-out{display:flex; align-items:baseline; flex-wrap:wrap; gap:8px 6px; margin-top:14px;}
+  .chord-line{display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:4px 0;}
   .quiz-actions{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:14px;}
   .quiz-btn{
     font-family:"Spline Sans Mono",monospace; font-size:12.5px; font-weight:700;
@@ -855,9 +873,10 @@
   <div class="wrap">
     <a href="#routine">1 · La routine quotidienne</a>
     <a href="#pluck-avance">2 · Les exercices avancés</a>
-    <a href="#notes-manche">3 · Les notes sur le manche</a>
-    <a href="#croches">4 · Croches continues</a>
-    <a href="#araignee">5 · L'araignée</a>
+    <a href="#impro">3 · Improviser sur Am / G</a>
+    <a href="#notes-manche">4 · Les notes sur le manche</a>
+    <a href="#croches">5 · Croches continues</a>
+    <a href="#araignee">6 · L'araignée</a>
   </div>
 </nav>
 
@@ -865,18 +884,8 @@
 <section id="routine">
   <div class="wrap">
     <div class="sec-head"><span class="sec-num">1</span><h2>La routine quotidienne</h2></div>
-    <p class="hint">Le devoir de la semaine : <b>10 minutes minimum, tous les jours</b>. Deux blocs de cinq minutes, dans cet ordre. C'est court, donc c'est tenable — et c'est la régularité qui fait le travail, pas la durée.</p>
+    <p class="hint">Le devoir de la semaine du <b>4 septembre 2026</b>, dans cet ordre : trois blocs de cinq minutes, puis l'improvisation qui prend le temps qu'il reste. C'est court, donc c'est tenable — et c'est la régularité qui fait le travail, pas la durée.</p>
     <div class="routine-grid">
-      <div class="routine-card">
-        <div class="routine-time">5 min · priorité</div>
-        <div class="routine-title">Exercice #2 · les arpèges en croches</div>
-        <ul class="focus">
-          <li>Départ à <b>60 bpm</b>, on monte progressivement. L'objectif est <b>120 bpm</b>, mais <b>pas en une semaine</b>.</li>
-          <li>Toujours avec une <b>piste de batterie</b>, jamais à sec.</li>
-          <li>Jeu <b>legato</b> : le son ne se coupe pas entre deux notes. Pas de staccato.</li>
-        </ul>
-        <a class="routine-link" href="#pluck-avance">Aller à l'exercice →</a>
-      </div>
       <div class="routine-card">
         <div class="routine-time">5 min · avant tout le reste</div>
         <div class="routine-title">Révision des notes sur le manche</div>
@@ -885,6 +894,36 @@
           <li>À voix haute, corde par corde, en suivant la méthode.</li>
         </ul>
         <a class="routine-link" href="#notes-manche">Aller à la méthode →</a>
+      </div>
+      <div class="routine-card">
+        <div class="routine-time">5 min · technique</div>
+        <div class="routine-title">Exercice #2 · les arpèges en croches</div>
+        <ul class="focus">
+          <li>On <b>continue</b> : c'est lui qui construit la technique, et ses quatre formes sont celles qu'on réutilise pour improviser.</li>
+          <li>Départ à <b>60 bpm</b>, on monte progressivement. L'objectif est <b>120 bpm</b>, mais <b>pas en une semaine</b>.</li>
+          <li>Toujours avec une <b>piste de batterie</b>, jamais à sec. Jeu <b>legato</b> : le son ne se coupe pas entre deux notes.</li>
+        </ul>
+        <a class="routine-link" href="#px-p2">Aller à l'exercice →</a>
+      </div>
+      <div class="routine-card">
+        <div class="routine-time">5 min · nouveau</div>
+        <div class="routine-title">Exercice #4 · les sauts d'octave</div>
+        <ul class="focus">
+          <li>Celui-là n'a jamais été commencé : c'est le moment. L'octave est <b>l'outil le plus utilisé à la basse</b>.</li>
+          <li>Suivre les <b>doigtés de la méthode</b> — les chiffres en noir sur la partition sont les doigts, pas les cases.</li>
+          <li>Apprendre d'abord avec la main gauche, mais c'est un exercice de <b>main d'attaque</b> : l'alternance index–majeur ne doit jamais sauter.</li>
+        </ul>
+        <a class="routine-link" href="#px-p4">Aller à l'exercice →</a>
+      </div>
+      <div class="routine-card">
+        <div class="routine-time">le temps qui reste · la priorité</div>
+        <div class="routine-title">Improviser sur Am / G</div>
+        <ul class="focus">
+          <li>La piste du cours, deux accords, <b>110 bpm</b>. On rejoue par-dessus avec les formes de l'exercice #2.</li>
+          <li>D'abord <b>la fondamentale seule</b>, jusqu'à entendre les changements. Les autres notes viennent après.</li>
+          <li>Puis les mêmes formes sur d'autres pistes, <b>batterie seule</b>, d'autres styles.</li>
+        </ul>
+        <a class="routine-link" href="#impro">Aller à la piste →</a>
       </div>
     </div>
     <div class="callout">
@@ -905,10 +944,38 @@
   </div>
 </section>
 
-<!-- ============ 3. LES NOTES SUR LE MANCHE ============ -->
+<!-- ============ 3. IMPROVISER SUR AM / G ============ -->
+<section id="impro">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">3</span><h2>Improviser sur Am / G</h2></div>
+    <p class="hint">L'exercice du cours du <b>4 septembre 2026</b>. La piste tourne sur deux accords — <b>A mineur</b> puis <b>G majeur</b>, quatre mesures chacun — et tu joues par-dessus en n'utilisant que les notes de l'accord en cours. Les notes d'un accord jouées l'une après l'autre au lieu d'être plaquées ensemble, c'est un <b>arpège</b> : c'est le vrai métier du bassiste, pas les mélodies.</p>
+    <div class="rule">
+      <b>Deux règles, et rien d'autre.</b> <b>1 ·</b> On ne joue que les notes de la forme — aucune note en dehors. <b>2 ·</b> On joue la <b>fondamentale au changement d'accord</b>, sur le premier temps : c'est la basse qui annonce à tout le monde où on en est. Entre les deux, le rythme est libre et l'ordre des notes aussi.
+    </div>
+    <div id="impro-track"></div>
+    <div class="forme-grid" id="forme-list"></div>
+    <p class="hint" id="impro-mobile">Les deux formes sont <b>mobiles</b> : la même boîte, posée n'importe où sur le manche, donne le même accord à partir de sa nouvelle fondamentale. Et entre les deux, il n'y a qu'<b>une note d'écart</b> — la <b>tierce</b>, une case plus haut en majeur. Tout le reste (fondamentale, quinte, octave) est identique. C'est pour ça qu'on apprend des formes plutôt que des accords : deux formes couvrent déjà les vingt-quatre accords mineurs et majeurs.</p>
+    <ol class="steps">
+      <li>Écoute la piste <b>sans jouer</b>. Compte « 1 · 2 · 3 · 4 » à voix haute et repère l'endroit où ça passe de <b>Am</b> à <b>G</b>.</li>
+      <li>Joue <b>seulement la fondamentale</b>, une note par mesure : A quatre fois, puis G quatre fois. Tant que ce n'est pas en place, on ne va pas plus loin.</li>
+      <li>Ajoute la <b>quinte</b> et l'<b>octave</b> — la fondamentale reste obligatoire au changement d'accord.</li>
+      <li>Ajoute la <b>tierce</b> : c'est la note qui dit si l'accord est mineur ou majeur, donc celle qu'on entend le plus.</li>
+      <li>Change le <b>rythme</b> et l'<b>ordre des notes</b>. À partir de là, tu improvises.</li>
+      <li>Refais le même travail sur d'autres pistes — <b>batterie seule</b>, d'autres styles — en cherchant les changements à l'oreille.</li>
+    </ol>
+    <div class="callout">
+      <b>Entendre le changement d'accord :</b> suis <b>le piano</b>, c'est lui qui pose les accords — la guitare ne joue qu'un motif rythmique, plus proche d'une percussion · le batteur place un <b>fill</b> à la fin du cycle, ici il est très discret · branche une <b>enceinte</b>, le haut-parleur du téléphone ne laisse rien passer · et si tu te perds, <b>ne t'arrête pas</b> : tu récupères au changement suivant, c'est exactement ce qu'on demande à un bassiste.
+    </div>
+    <div class="callout">
+      <b>Pourquoi ces notes-là ?</b> On part de la gamme et on <b>saute une note sur deux</b> : A, on saute B, C, on saute D, E → <b>A C E</b>, l'accord de Am. Une note de plus au même rythme et on obtient <b>A C E G</b>, c'est-à-dire Am7. La construction est détaillée dans l'onglet <a href="#/theorie" data-goto="theorie">Théorie</a>.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. LES NOTES SUR LE MANCHE ============ -->
 <section id="notes-manche">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">3</span><h2>Les notes sur le manche</h2></div>
+    <div class="sec-head"><span class="sec-num">4</span><h2>Les notes sur le manche</h2></div>
     <p class="hint">Notes naturelles jusqu'à la case 12 — après, tout recommence à l'identique. Active <b>les dièses</b> pour voir les notes intermédiaires, ou le <b>mode quiz</b> pour t'interroger. La méthode de Santiago est juste en dessous : <b>5 minutes par jour pendant 15 jours</b>.</p>
     <div class="board-panel">
       <div class="board-controls">
@@ -940,19 +1007,19 @@
   </div>
 </section>
 
-<!-- ============ 4. CROCHES CONTINUES ============ -->
+<!-- ============ 5. CROCHES CONTINUES ============ -->
 <section id="croches">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">4</span><h2>Croches continues</h2></div>
+    <div class="sec-head"><span class="sec-num">5</span><h2>Croches continues</h2></div>
     <p class="hint">Huit croches par mesure, sans interruption, sur la <b>fondamentale</b> de chaque accord. Tout l'intérêt est là : le son ne doit jamais s'arrêter, y compris au moment du changement d'accord. Compte <b>« 1 et 2 et 3 et 4 et »</b> et joue au médiator alterné ou en butée index-majeur.</p>
     <div id="croches-list"></div>
   </div>
 </section>
 
-<!-- ============ 5. L'ARAIGNÉE ============ -->
+<!-- ============ 6. L'ARAIGNÉE ============ -->
 <section id="araignee">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">5</span><h2>L'araignée</h2></div>
+    <div class="sec-head"><span class="sec-num">6</span><h2>L'araignée</h2></div>
     <p class="hint">L'exercice de déliement : <b>un doigt par case</b> (1 = index, 2 = majeur, 3 = annulaire, 4 = auriculaire) et les doigts déjà posés <b>restent en place</b>. On travaille en <b>position V</b> — index sur la case 5, auriculaire sur la case 8 — puis on remonte le manche case par case. Main droite en alternance stricte. C'est un exercice de précision, jamais de vitesse.</p>
     <div id="spider-list"></div>
     <div class="callout">
@@ -1053,7 +1120,8 @@
 <nav class="sticky" aria-label="Sommaire">
   <div class="wrap">
     <a href="#construire">1 · Construire une gamme</a>
-    <a href="#jeu">2 · Le jeu</a>
+    <a href="#triades">2 · Construire un accord</a>
+    <a href="#jeu">3 · Le jeu</a>
   </div>
 </nav>
 
@@ -1070,10 +1138,23 @@
   </div>
 </section>
 
-<!-- ============ 2. LE JEU ============ -->
+<!-- ============ 2. CONSTRUIRE UN ACCORD ============ -->
+<section id="triades">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">2</span><h2>Construire un accord</h2></div>
+    <p class="hint">Une fois la gamme posée, l'accord se lit dedans : on part de la fondamentale et on <b>saute une note sur deux</b>. Trois notes, c'est une <b>triade</b> — l'accord de base, celui qu'on note <b>Am</b> ou <b>C</b>. On continue d'empiler dans le même sens et on obtient les accords de <b>septième</b>. Compter en degrés revient au même : on prend le <b>1</b>, on saute le 2, on prend le <b>3</b>, on saute le 4, on prend le <b>5</b>, on saute le 6, on prend le <b>7</b>.</p>
+    <div id="chord-rows"></div>
+    <div class="prog-legend">
+      <b>Le lien avec la basse :</b> ces trois notes jouées l'une après l'autre au lieu d'être plaquées ensemble, c'est un <b>arpège</b> — exactement ce que tu joues sur <a href="#/basse" data-goto="basse">la piste Am / G de la fiche basse</a>.
+      Et remarque que <b>A mineur</b> et <b>C majeur</b> ont les mêmes sept notes : l'une est la gamme relative de l'autre. Les deux accords sortent donc de la même gamme, ce qui explique qu'on les croise sans arrêt dans les mêmes morceaux.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. LE JEU ============ -->
 <section id="jeu">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">2</span><h2>Le jeu — trouve la gamme</h2></div>
+    <div class="sec-head"><span class="sec-num">3</span><h2>Le jeu — trouve la gamme</h2></div>
     <p class="hint">Une fondamentale et un type de gamme sont donnés. À toi de trouver <b>les six autres notes</b>, dans l'ordre, en cliquant sur la palette — aide-toi de la formule <b>W H W W H W W</b> (mineur) ou <b>W W H W W W H</b> (majeur) de la section précédente.</p>
     <div class="prog-card" id="quiz-zone">
       <div class="prog-title" id="quiz-prompt"></div>
@@ -2440,7 +2521,109 @@ for (const ex of PLUCK){
 }
 
 /* ------------------------------------------------------------
-   3. Les notes sur le manche — composant partagé, accordage basse
+   3. Improviser sur Am / G
+   ------------------------------------------------------------ */
+/* la piste du cours du 4 septembre 2026 */
+const IMPRO = {
+  url:'https://www.youtube.com/watch?v=gvOmQCdW6qs&list=PLFezkIXPVPrM&index=4',
+  titre:'Am G · Funk Disco · 110 bpm',
+};
+const improTrack = document.getElementById('impro-track');
+improTrack.className = 'track-card';
+improTrack.innerHTML = `<div class="track-meta"><b>La piste du cours</b> — <b>Am</b> quatre mesures, puis <b>G</b> quatre mesures, et ça tourne. <b>110 bpm</b>, funk disco. Batterie, guitare et piano : c'est le <b>piano</b> qui pose les accords, c'est lui qu'il faut suivre.</div>
+  <a class="play-link" id="impro-link" href="${IMPRO.url}" target="_blank" rel="noopener">▶ ${IMPRO.titre}</a>`;
+enFenetre(improTrack.querySelector('.play-link'));
+
+/* ------------------------------------------------------------
+   Une forme d'arpège, dessinée en boîte sur le manche.
+   Une tablature montre le temps ; ici on veut la géométrie, parce que
+   c'est elle qui se déplace. pastilles = [ [corde, case, note, degré] ]
+   ------------------------------------------------------------ */
+function formeSVG(caseMin, caseMax, pastilles, label){
+  const rowH = 30, top = 32, left = 46, colW = 46;
+  const nb = caseMax - caseMin + 1;
+  const w = left + nb*colW + 14, h = top + 3*rowH + 30;
+  const svg = document.createElementNS(SVGNS,'svg');
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  svg.setAttribute('width', w);
+  svg.setAttribute('role','img');
+  svg.setAttribute('aria-label', label);
+  /* les frettes */
+  for (let i=0; i<=nb; i++){
+    const x = left + i*colW;
+    el('line',{x1:x, y1:top-10, x2:x, y2:top+3*rowH+10, stroke:'#DFD6C6','stroke-width':1.2}, svg);
+  }
+  /* les cordes, G en haut comme sur les tablatures */
+  for (let s=0; s<4; s++){
+    const y = top + s*rowH;
+    el('line',{x1:left-10, y1:y, x2:left+nb*colW, y2:y, stroke:'#C9BFAE','stroke-width': 1 + s*0.25}, svg);
+    const lb = el('text',{x:16, y:y+4, 'text-anchor':'middle', fill:'var(--ink-soft)',
+      'font-family':'Spline Sans Mono,monospace','font-size':'11','font-weight':'700'}, svg);
+    lb.textContent = STR_NAMES[s];
+  }
+  /* le numéro de case, sous le manche */
+  for (let i=0; i<nb; i++){
+    const t = el('text',{x:left + i*colW + colW/2, y:h-9, 'text-anchor':'middle', fill:'#C9BFAE',
+      'font-family':'Spline Sans Mono,monospace','font-size':'10.5','font-weight':'700'}, svg);
+    t.textContent = caseMin + i;
+  }
+  /* les notes de l'accord, couleur de la note comme partout ailleurs */
+  pastilles.forEach(([str, fret, note, deg])=>{
+    const x = left + (fret - caseMin)*colW + colW/2;
+    const y = top + STR_IDX[str]*rowH;
+    const g = el('g',{class:'forme-note','data-note':note,'data-degre':deg,
+      'data-corde':str,'data-case':fret}, svg);
+    el('circle',{cx:x, cy:y, r:13, fill:NOTE_COLORS[note[0]]}, g);
+    const t = el('text',{x, y:y+4.5, 'text-anchor':'middle', fill:'#fff',
+      'font-family':'Spline Sans Mono,monospace','font-size':'12.5','font-weight':'700'}, g);
+    t.textContent = note;
+    const d = el('text',{x:x+17, y:y-9, fill:'var(--ink-soft)',
+      'font-family':'Spline Sans Mono,monospace','font-size':'9.5','font-weight':'700'}, g);
+    d.textContent = deg;
+  });
+  return svg;
+}
+
+/* les deux formes du cours, telles qu'elles sont jouées dans l'exercice #2 :
+   fondamentale sur la corde de E, une seule note d'écart entre les deux */
+const FORMES = [
+  { id:'min', titre:'La forme mineure', sub:'ici en Am, fondamentale case 5',
+    caseMin:4, caseMax:8,
+    pastilles:[['E',5,'A','1'],['A',7,'E','5'],['D',7,'A','8'],['G',5,'C','♭3']],
+    ordre: accordSeq('Am', ['A','E','A','C']),
+    degres:'<b>1</b> fondamentale · <b>♭3</b> tierce mineure · <b>5</b> quinte · <b>8</b> octave. La tierce tombe sur <b>la même case que la fondamentale</b>, deux cordes plus haut.',
+    ailleurs:'<b>La même forme ailleurs :</b> case 3 → <b>Gm</b> · case 5 → <b>Am</b> · case 7 → <b>Bm</b> · case 8 → <b>Cm</b> · case 10 → <b>Dm</b>.' },
+
+  { id:'maj', titre:'La forme majeure', sub:'ici en G, fondamentale case 3',
+    caseMin:2, caseMax:6,
+    pastilles:[['E',3,'G','1'],['A',5,'D','5'],['D',5,'G','8'],['G',4,'B','3']],
+    ordre: accordSeq('G', ['G','D','G','B']),
+    degres:'<b>1</b> fondamentale · <b>3</b> tierce majeure · <b>5</b> quinte · <b>8</b> octave. Seule la tierce bouge : <b>une case plus haut</b> qu\'en mineur.',
+    ailleurs:'<b>La même forme ailleurs :</b> case 1 → <b>F</b> · case 3 → <b>G</b> · case 5 → <b>A</b> · case 8 → <b>C</b> · case 10 → <b>D</b>.' },
+];
+
+const formeList = document.getElementById('forme-list');
+for (const f of FORMES){
+  const block = document.createElement('div');
+  block.className = 'tab-block';
+  block.id = 'fo-' + f.id;
+  block.innerHTML = `<div class="tab-head"><span class="tab-title">${f.titre}</span>
+    <span class="tab-sub">${f.sub}</span></div>`;
+  const sc = document.createElement('div');
+  sc.className = 'tab-scroll';
+  sc.appendChild(formeSVG(f.caseMin, f.caseMax, f.pastilles, f.titre + ' — ' + f.sub));
+  block.appendChild(sc);
+  for (const html of [f.ordre, f.degres, f.ailleurs]){
+    const nt = document.createElement('div');
+    nt.className = 'tab-note';
+    nt.innerHTML = html;
+    block.appendChild(nt);
+  }
+  formeList.appendChild(block);
+}
+
+/* ------------------------------------------------------------
+   4. Les notes sur le manche — composant partagé, accordage basse
    ------------------------------------------------------------ */
 buildFretboard({
   svg:'fretboard-basse',
@@ -2457,7 +2640,7 @@ buildFretboard({
 });
 
 /* ------------------------------------------------------------
-   4. Exercice de croches continues
+   5. Exercice de croches continues
    ------------------------------------------------------------ */
 const CROCHES = [
   { id:'s1', url:'https://www.youtube.com/watch?v=tKw1XWmX6Io&list=PLC717tTqpYtQ&index=1', titre:'Section 1', sub:'mesures 1 à 8 · à jouer deux fois',
@@ -2508,7 +2691,7 @@ for (const sec of CROCHES){
 }
 
 /* ------------------------------------------------------------
-   5. L'araignée
+   6. L'araignée
    ------------------------------------------------------------ */
 /* motif = suite de [corde, case, doigt] */
 function spiderSVG(steps){
@@ -2593,10 +2776,12 @@ const lvl1 = {};
 lvl1['routine'] = navLink('#routine','1 · La routine quotidienne','lvl1');
 lvl1['pluck-avance'] = navLink('#pluck-avance','2 · Les exercices avancés','lvl1');
 PLUCK.forEach(x=> navLink('#px-'+x.id, x.titre + ' · ' + x.sub, 'lvl2'));
-lvl1['notes-manche'] = navLink('#notes-manche','3 · Les notes sur le manche','lvl1');
-lvl1['croches'] = navLink('#croches','4 · Croches continues','lvl1');
+lvl1['impro'] = navLink('#impro','3 · Improviser sur Am / G','lvl1');
+FORMES.forEach(f=> navLink('#fo-'+f.id, f.titre + ' · ' + f.sub, 'lvl2'));
+lvl1['notes-manche'] = navLink('#notes-manche','4 · Les notes sur le manche','lvl1');
+lvl1['croches'] = navLink('#croches','5 · Croches continues','lvl1');
 CROCHES.forEach(s=> navLink('#cr-'+s.id, s.titre, 'lvl2'));
-lvl1['araignee'] = navLink('#araignee','5 · L\'araignée','lvl1');
+lvl1['araignee'] = navLink('#araignee','6 · L\'araignée','lvl1');
 SPIDERS.forEach(s=> navLink('#sp-'+s.id, s.titre, 'lvl2'));
 
 const spy = makeSpy((entries)=>{
@@ -2607,7 +2792,7 @@ const spy = makeSpy((entries)=>{
     }
   }
 }, { rootMargin:'-15% 0px -70% 0px' });
-for (const id of ['routine','pluck-avance','notes-manche','croches','araignee']) spy.observe(document.getElementById(id));
+for (const id of ['routine','pluck-avance','impro','notes-manche','croches','araignee']) spy.observe(document.getElementById(id));
 
 })();
 </script>
@@ -2691,7 +2876,59 @@ for (const r of ROWS){
 }
 
 /* ------------------------------------------------------------
-   2. Le jeu — trouve la gamme
+   2. Construire un accord — on saute une note sur deux
+   ------------------------------------------------------------ */
+/* suite de noms de notes, colorée comme partout ailleurs */
+function noteSeq(names){
+  return names.map(n => `<b style="color:${NOTE_COLORS[n[0]]}">${n}</b>`).join(' · ');
+}
+function accordSeq(chord, names){
+  return `<span class="seq"><span class="seq-chord">${chord}</span>${noteSeq(names)}</span>`;
+}
+
+/* les sept notes de la gamme, celles de l'accord en pleine couleur,
+   les autres effacées : c'est le saut qu'on veut voir */
+function ligneAccord(root, type, triade, sept){
+  const div = document.createElement('div');
+  div.className = 'chord-line';
+  computeScale(root, type).slice(0, 7).forEach(note => {
+    const chip = document.createElement('span');
+    chip.className = 'scale-note' +
+      (triade.includes(note) ? '' : (note === sept ? ' sept' : ' skip'));
+    chip.style.background = NOTE_COLORS[note[0]];
+    chip.textContent = note;
+    div.appendChild(chip);
+  });
+  return div;
+}
+
+const ACCORDS = [
+  { id:'am', root:'A', type:'mineur', nom:'A mineur', triade:['A','C','E'], sept:'G',
+    nomTriade:'Am', nomSept:'Am7',
+    desc:'A, on saute B, C, on saute D, E. La tierce est C, à un ton et demi de la fondamentale : l\'accord est mineur. On saute encore F et la septième G s\'ajoute.' },
+  { id:'c', root:'C', type:'majeur', nom:'C majeur', triade:['C','E','G'], sept:'B',
+    nomTriade:'C', nomSept:'Cmaj7',
+    desc:'C, on saute D, E, on saute F, G. Même mouvement, mais la tierce E est à deux tons de la fondamentale : l\'accord est majeur.' },
+];
+
+const chordRows = document.getElementById('chord-rows');
+for (const a of ACCORDS){
+  const card = document.createElement('article');
+  card.className = 'scale-row';
+  card.id = 'chord-' + a.id;
+  card.innerHTML = `<div class="scale-name" style="color:${NOTE_COLORS[a.root[0]]}">${a.nom}</div>
+    <div class="scale-desc">${a.desc}</div>`;
+  card.appendChild(ligneAccord(a.root, a.type, a.triade, a.sept));
+  const out = document.createElement('div');
+  out.className = 'chord-out';
+  out.innerHTML = accordSeq(a.nomTriade, a.triade) +
+                  accordSeq(a.nomSept, a.triade.concat([a.sept]));
+  card.appendChild(out);
+  chordRows.appendChild(card);
+}
+
+/* ------------------------------------------------------------
+   3. Le jeu — trouve la gamme
    Une fondamentale et un type sont donnés (degré 1) ; à partir de la
    palette, on retrouve les degrés 2 à 7, dans l'ordre.
    Les fondamentales choisies ne demandent que des dièses, jamais

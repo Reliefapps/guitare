@@ -9,8 +9,9 @@ const NOTE_COLORS = { C:'#0E9594', D:'#8E44AD', E:'#2E8B57', F:'#DE4229',
 const CORDES = ['G','D','A','E'];          /* de haut en bas */
 const SOLFEGE = /^(do|ré|re|mi|fa|sol|la|si)$/i;
 
-/* le contenu ajouté à partir du cours du 28 août 2026 */
-const NOUVEAU = ['#routine', '#pluck-avance', '#notes-manche', '#page-basse .roadmap'];
+/* le contenu ajouté à partir des cours des 28 août et 4 septembre 2026 */
+const NOUVEAU = ['#routine', '#pluck-avance', '#impro', '#notes-manche',
+                 '#page-basse .roadmap', '#triades'];
 
 /* hauteur d'un nom de note écrit, altérations comprises */
 function hauteur(nom){
@@ -59,7 +60,8 @@ test('les nouveaux contenus nomment les notes en lettres, jamais en solfège', (
 test('les noms de cordes et de notes des SVG basse sont des lettres', () => {
   const { doc } = load();
   openTab(doc, 'basse');
-  const svgs = [...doc.querySelectorAll('#pluck-list svg'), doc.getElementById('fretboard-basse')];
+  const svgs = [...doc.querySelectorAll('#pluck-list svg'), ...doc.querySelectorAll('#forme-list svg'),
+                doc.getElementById('fretboard-basse')];
   const suspects = [];
   for (const svg of svgs){
     for (const t of svg.querySelectorAll('text')){
@@ -151,5 +153,32 @@ test("exercice #4 : on saute une corde, et la 2ᵉ mesure est deux cases plus ba
   for (let i = 0; i < 8; i++){
     assert.equal(notes[8+i].corde, notes[i].corde);
     assert.equal(notes[8+i].fret, notes[i].fret - 2);
+  }
+});
+
+test("les formes d'arpège sonnent la fondamentale, la quinte, l'octave et la tierce", () => {
+  const { doc } = load();
+  openTab(doc, 'basse');
+  /* demi-tons entre la corde de E grave et chaque corde à vide */
+  const CORDE = { E: 0, A: 5, D: 10, G: 15 };
+  /* les intervalles attendus, en demi-tons depuis la fondamentale */
+  const ATTENDU = { 'fo-min': [0, 7, 12, 15], 'fo-maj': [0, 7, 12, 16] };
+  for (const id of Object.keys(ATTENDU)){
+    const notes = [...doc.querySelectorAll('#' + id + ' .forme-note')].map(g => ({
+      note: g.dataset.note, degre: g.dataset.degre, corde: g.dataset.corde,
+      fret: Number(g.dataset.case),
+      demi: CORDE[g.dataset.corde] + Number(g.dataset.case),
+    }));
+    assert.equal(notes.length, 4, id + ' : quatre notes attendues');
+    /* le nom affiché est bien la note que la case donne */
+    for (const n of notes){
+      assert.equal((CHROMA.indexOf(n.corde) + n.fret) % 12, hauteur(n.note),
+        `${id} : ${n.note} ne correspond pas à la case jouée`);
+    }
+    assert.deepEqual(notes.map(n => n.demi - notes[0].demi), ATTENDU[id],
+      id + ' : les intervalles ne sont pas ceux de l\'arpège');
+    /* les degrés annoncés collent aux intervalles */
+    assert.deepEqual(notes.map(n => n.degre),
+      id === 'fo-min' ? ['1', '5', '8', '♭3'] : ['1', '5', '8', '3']);
   }
 });

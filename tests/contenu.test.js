@@ -3,15 +3,73 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { load, isVisible, openTab } = require('./helpers');
 
-test('la routine affiche ses deux cartes et leurs liens internes', () => {
+test('la routine affiche ses quatre cartes et leurs liens internes', () => {
   const { doc } = load();
   openTab(doc, 'basse');
   const cartes = [...doc.querySelectorAll('#routine .routine-card')];
-  assert.equal(cartes.length, 2);
+  assert.equal(cartes.length, 4);
   cartes.forEach(c => assert.equal(isVisible(c), true));
+  /* l'ordre des cartes est l'ordre de la séance */
   const liens = [...doc.querySelectorAll('#routine .routine-link')].map(a => a.getAttribute('href'));
-  assert.deepEqual(liens, ['#pluck-avance', '#notes-manche']);
+  assert.deepEqual(liens, ['#notes-manche', '#px-p2', '#px-p4', '#impro']);
   liens.forEach(h => assert.ok(doc.getElementById(h.slice(1)), h + ' ne mène nulle part'));
+});
+
+test("la section improvisation porte la piste du cours, en fenêtre à part", () => {
+  const { doc, win } = load();
+  openTab(doc, 'basse');
+  const sec = doc.getElementById('impro');
+  assert.equal(isVisible(sec), true);
+  const lien = doc.querySelector('#impro .track-card .play-link');
+  assert.ok(lien, 'lien de la piste absent');
+  assert.equal(isVisible(lien), true);
+  assert.equal(lien.getAttribute('href'),
+    'https://www.youtube.com/watch?v=gvOmQCdW6qs&list=PLFezkIXPVPrM&index=4');
+  assert.equal(lien.target, '_blank');
+  assert.equal(lien.rel, 'noopener');
+  /* comme les pistes de batterie, elle s'ouvre dans la fenêtre dédiée */
+  const appels = [];
+  win.open = (url, nom) => { appels.push({ url, nom }); return { focus(){} }; };
+  lien.dispatchEvent(new win.MouseEvent('click', { bubbles: true, cancelable: true }));
+  assert.deepEqual(appels, [{ url: lien.href, nom: 'piste-batterie' }]);
+  /* les deux règles du cours sont mises en avant */
+  assert.match(doc.querySelector('#impro .rule').textContent,
+    /fondamentale au changement d'accord/);
+  assert.equal(doc.querySelectorAll('#impro .steps li').length, 6);
+});
+
+test("les deux formes d'arpège ne diffèrent que par la tierce", () => {
+  const { doc } = load();
+  openTab(doc, 'basse');
+  const blocs = [...doc.querySelectorAll('#forme-list .tab-block')];
+  assert.deepEqual(blocs.map(b => b.id), ['fo-min', 'fo-maj']);
+  blocs.forEach(b => assert.equal(isVisible(b), true, b.id + ' rendu mais pas visible'));
+
+  const forme = id => [...doc.querySelectorAll('#' + id + ' .forme-note')].map(g => ({
+    corde: g.dataset.corde, fret: +g.dataset.case, note: g.dataset.note, degre: g.dataset.degre,
+  }));
+  const min = forme('fo-min'), maj = forme('fo-maj');
+  assert.deepEqual(min, [
+    { corde:'E', fret:5, note:'A', degre:'1' },
+    { corde:'A', fret:7, note:'E', degre:'5' },
+    { corde:'D', fret:7, note:'A', degre:'8' },
+    { corde:'G', fret:5, note:'C', degre:'♭3' },
+  ]);
+  assert.deepEqual(maj, [
+    { corde:'E', fret:3, note:'G', degre:'1' },
+    { corde:'A', fret:5, note:'D', degre:'5' },
+    { corde:'D', fret:5, note:'G', degre:'8' },
+    { corde:'G', fret:4, note:'B', degre:'3' },
+  ]);
+  /* la même boîte, mobile : seuls les écarts à la fondamentale comptent,
+     et le seul qui change entre mineur et majeur est celui de la tierce */
+  const ecarts = f => f.map(n => n.fret - f[0].fret);
+  assert.deepEqual(ecarts(min), [0, 2, 2, 0]);
+  assert.deepEqual(ecarts(maj), [0, 2, 2, 1]);
+  assert.deepEqual(min.map(n => n.corde), maj.map(n => n.corde));
+  /* la forme vient de l'exercice #2, elle est annoncée comme mobile */
+  assert.match(doc.getElementById('fo-min').textContent, /case 7 → Bm/);
+  assert.match(doc.getElementById('impro-mobile').textContent, /une note d'écart/);
 });
 
 test('les 4 exercices avancés sont rendus et visibles', () => {

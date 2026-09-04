@@ -3,13 +3,14 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { load, isVisible, openTab } = require('./helpers');
 
-/* les 5 sections de l'onglet basse, dans l'ordre attendu */
+/* les 6 sections de l'onglet basse, dans l'ordre attendu */
 const SECTIONS = [
   ['routine',      '1', 'La routine quotidienne'],
   ['pluck-avance', '2', 'Les exercices avancés'],
-  ['notes-manche', '3', 'Les notes sur le manche'],
-  ['croches',      '4', 'Croches continues'],
-  ['araignee',     '5', "L'araignée"],
+  ['impro',        '3', 'Improviser sur Am / G'],
+  ['notes-manche', '4', 'Les notes sur le manche'],
+  ['croches',      '5', 'Croches continues'],
+  ['araignee',     '6', "L'araignée"],
 ];
 
 test('la page se charge sans erreur de script', () => {
@@ -26,7 +27,7 @@ test("les sections de la basse sont masquées tant qu'on est sur l'onglet guitar
   }
 });
 
-test("les 5 sections sont rendues ET visibles après passage sur l'onglet basse", () => {
+test("les 6 sections sont rendues ET visibles après passage sur l'onglet basse", () => {
   const { doc } = load();
   openTab(doc, 'basse');
   for (const [id, num, titre] of SECTIONS){
@@ -44,11 +45,11 @@ test('les sections sont dans le bon ordre dans la page', () => {
   assert.deepEqual(ids, SECTIONS.map(s => s[0]));
 });
 
-test('les 5 ancres du sommaire pointent vers une section existante et visible', () => {
+test('les 6 ancres du sommaire pointent vers une section existante et visible', () => {
   const { doc } = load();
   openTab(doc, 'basse');
   const liens = [...doc.querySelectorAll('#page-basse nav.sticky a')];
-  assert.equal(liens.length, 5);
+  assert.equal(liens.length, 6);
   liens.forEach((a, i) => {
     const [id, num, titre] = SECTIONS[i];
     assert.equal(a.getAttribute('href'), '#' + id);
@@ -60,15 +61,16 @@ test('les 5 ancres du sommaire pointent vers une section existante et visible', 
   });
 });
 
-test('le sommaire latéral liste les 5 sections et les sous-parties', () => {
+test('le sommaire latéral liste les 6 sections et les sous-parties', () => {
   const { doc } = load();
   const lvl1 = [...doc.querySelectorAll('#sidenav-links-basse a.lvl1')];
   assert.deepEqual(lvl1.map(a => a.getAttribute('href')),
     SECTIONS.map(s => '#' + s[0]));
-  /* les 4 exercices de main d'attaque apparaissent en second niveau */
+  /* les 4 exercices de main d'attaque et les 2 formes d'arpège en second niveau */
   const lvl2 = [...doc.querySelectorAll('#sidenav-links-basse a.lvl2')]
     .map(a => a.getAttribute('href'));
-  for (const id of ['#px-p1','#px-p2','#px-p3','#px-p4']) assert.ok(lvl2.includes(id), id + ' absent du sommaire');
+  for (const id of ['#px-p1','#px-p2','#px-p3','#px-p4','#fo-min','#fo-maj'])
+    assert.ok(lvl2.includes(id), id + ' absent du sommaire');
 });
 
 test('le scrollspy marque la bonne section', () => {
@@ -76,7 +78,7 @@ test('le scrollspy marque la bonne section', () => {
   openTab(doc, 'basse');
   /* le dernier observateur créé est celui de la page basse */
   const spy = observers[observers.length - 1];
-  assert.equal(spy.targets.length, 5, 'les 5 sections doivent être observées');
+  assert.equal(spy.targets.length, 6, 'les 6 sections doivent être observées');
   for (const [id] of SECTIONS){
     spy.enter(doc.getElementById(id));
     const actifs = [...doc.querySelectorAll('#sidenav-links-basse a.active')];

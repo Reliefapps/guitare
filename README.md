@@ -13,9 +13,9 @@ Le site est organisé en cinq onglets :
 | Onglet | Contenu |
 | --- | --- |
 | 🎸 **Guitare** | Les notes sur le manche, les accords ouverts, les barrés (deux formes), les rythmiques, les exercices, les progressions, les arpèges et la gamme de La mineur (deux octaves, position ouverte et position fermée). |
-| 🎵 **Basse** | Les pistes de batterie par tempo (60 à 180 bpm), la routine quotidienne, les exercices de main d'attaque (croisement de cordes, arpèges, cordes alternées, sauts d'octave), les notes sur le manche, les croches continues et l'araignée. |
+| 🎵 **Basse** | Les pistes de batterie par tempo (60 à 180 bpm), la routine quotidienne, les exercices de main d'attaque (croisement de cordes, arpèges, cordes alternées, sauts d'octave), l'improvisation sur la piste Am / G du cours (les deux formes d'arpège, mineure et majeure, avec leurs degrés), les notes sur le manche, les croches continues et l'araignée. |
 | 🪘 **Malagueña** | L'enregistrement de référence et la partition complète : les 4 pages se suivent au défilement, avec zoom, saut de page au clavier et téléchargement. |
-| 🎼 **Théorie** | Comment on construit une gamme : les intervalles W (un ton) et H (un demi-ton), A mineur et A majeur côte à côte, et un jeu où il faut retrouver les six notes d'une gamme à partir de sa fondamentale et de son type. |
+| 🎼 **Théorie** | Comment on construit une gamme : les intervalles W (un ton) et H (un demi-ton), A mineur et A majeur côte à côte. Comment on construit un accord : on saute une note sur deux dans la gamme (A C E → Am, puis Am7). Et un jeu où il faut retrouver les six notes d'une gamme à partir de sa fondamentale et de son type. |
 | 📄 **Bibliothèque** | Les partitions et grilles d'accords, consultables directement dans la page : un onglet par document, pages qui se suivent au défilement, zoom et téléchargement. |
 
 Le fil conducteur : **une couleur par note**, la même partout — sur le manche,

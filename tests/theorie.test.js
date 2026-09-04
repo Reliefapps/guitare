@@ -177,3 +177,56 @@ test('les liens croisés gamme ↔ théorie changent de page sans recharger', ()
   versGuitare.click();
   assert.equal(doc.getElementById('page-guitare').hidden, false);
 });
+
+/* ============ la construction des accords ============ */
+
+test("l'onglet Théorie navigue désormais en trois sections", () => {
+  const { doc } = load();
+  openTab(doc, 'theorie');
+  const liens = [...doc.querySelectorAll('#page-theorie nav.sticky a')];
+  assert.deepEqual(liens.map(a => a.getAttribute('href')),
+    ['#construire', '#triades', '#jeu']);
+  liens.forEach(a => {
+    const cible = doc.getElementById(a.getAttribute('href').slice(1));
+    assert.ok(cible, a.getAttribute('href') + ' ne mène nulle part');
+    assert.equal(isVisible(cible), true, a.getAttribute('href') + ' mène à une section masquée');
+  });
+  assert.deepEqual([...doc.querySelectorAll('#page-theorie .sec-num')].map(n => n.textContent),
+    ['1', '2', '3']);
+});
+
+test("un accord se construit en sautant une note sur deux dans la gamme", () => {
+  const { doc } = load();
+  openTab(doc, 'theorie');
+  const cartes = [...doc.querySelectorAll('#chord-rows .scale-row')];
+  assert.deepEqual(cartes.map(c => c.id), ['chord-am', 'chord-c']);
+  cartes.forEach(c => assert.equal(isVisible(c), true));
+
+  /* chaque note de la gamme est soit prise, soit sautée, soit la septième */
+  const lire = c => [...c.querySelectorAll('.chord-line .scale-note')].map(n =>
+    n.textContent + (n.classList.contains('skip') ? '·saut'
+                   : n.classList.contains('sept') ? '·7' : '·accord'));
+  assert.deepEqual(lire(cartes[0]),
+    ['A·accord', 'B·saut', 'C·accord', 'D·saut', 'E·accord', 'F·saut', 'G·7']);
+  assert.deepEqual(lire(cartes[1]),
+    ['C·accord', 'D·saut', 'E·accord', 'F·saut', 'G·accord', 'A·saut', 'B·7']);
+
+  /* et l'accord obtenu est nommé sous la gamme, triade puis septième */
+  const seqs = c => [...c.querySelectorAll('.chord-out .seq')].map(sq => [
+    sq.querySelector('.seq-chord').textContent,
+    [...sq.querySelectorAll('b')].map(b => b.textContent).join(''),
+  ]);
+  assert.deepEqual(seqs(cartes[0]), [['Am', 'ACE'], ['Am7', 'ACEG']]);
+  assert.deepEqual(seqs(cartes[1]), [['C', 'CEG'], ['Cmaj7', 'CEGB']]);
+});
+
+test("la théorie renvoie à la piste Am / G de la fiche basse", () => {
+  const { doc } = load();
+  openTab(doc, 'theorie');
+  const lien = doc.querySelector('#triades a[data-goto="basse"]');
+  assert.ok(lien, 'lien vers la fiche basse absent');
+  lien.click();
+  assert.equal(doc.getElementById('page-basse').hidden, false);
+  assert.equal(doc.getElementById('page-theorie').hidden, true);
+  assert.equal(isVisible(doc.getElementById('impro')), true);
+});

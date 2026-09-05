@@ -2230,8 +2230,13 @@ const FINGER_COLORS = ['#2C7FB8','#0E9594','#E67E22','#8E44AD'];
 function tabSVG(bars, opts){
   const o = opts || {};
   const rowH = 20, top = 30, left = 30, eighthW = o.eighthW || 25, barPad = 10;
-  /* largeur de chaque mesure selon son nombre de croches */
-  const widths = bars.map(b => b.events.reduce((s,e)=>s+e.n,0) * eighthW + barPad);
+  /* respiration entre deux groupes de croches, là où la méthode coupe ses
+     ligatures : c'est elle qui rend les groupes de quatre lisibles */
+  const groupGap = 10;
+  /* nombre de croches, puis largeur de chaque mesure, gaps de groupe compris */
+  const croches = bars.map(b => b.events.reduce((s,e)=>s+e.n,0));
+  const trous = b => b.group ? Math.ceil(b.events.reduce((s,e)=>s+e.n,0)/b.group) - 1 : 0;
+  const widths = bars.map((b,i) => croches[i]*eighthW + barPad + trous(b)*groupGap);
   const w = left + widths.reduce((a,b)=>a+b,0) + 14;
   /* rangée de doigtés main gauche, seulement si au moins un événement en porte un */
   const hasFg = bars.some(b => b.events.some(e => e.fg != null));
@@ -2255,22 +2260,30 @@ function tabSVG(bars, opts){
   bars.forEach((bar, bi)=>{
     /* barre de mesure */
     el('line',{x1:x-4, y1:top-3, x2:x-4, y2:top+3*rowH+3, stroke:'#C9BFAE','stroke-width': bi===0?2:1.2}, svg);
-    let cx = x + barPad/2;
+    /* abscisse de la croche n° j dans la mesure, gaps de groupe compris */
+    const xOf = j => x + barPad/2 + j*eighthW +
+      (bar.group ? Math.floor(j/bar.group)*groupGap : 0);
+    let k = 0;   /* k = la croche en cours dans la mesure */
     bar.events.forEach(ev=>{
+      const kEv = k;
       const y = top + STR_IDX[ev.s]*rowH;
       const col = NOTE_COLORS[(ev.note||'')[0]] || 'var(--ink)';
       /* libellé d'accord au-dessus du premier temps de l'événement */
       if (ev.chord){
-        const ct = el('text',{x:cx+2, y:top-12, fill:col,
+        const ct = el('text',{x:xOf(kEv)+2, y:top-12, fill:col,
           'font-family':'Spline Sans Mono,monospace','font-size':'12.5','font-weight':'700'}, svg);
         ct.textContent = ev.chord;
       }
       for (let i=0; i<ev.n; i++){
-        const px = cx + i*eighthW + eighthW/2;
-        /* trait de liaison entre les chiffres */
-        if (i < ev.n - 1 || ev !== bar.events[bar.events.length-1]){
+        const px = xOf(k) + eighthW/2;
+        /* trait de liaison entre les chiffres — coupé en fin de mesure et à
+           chaque fin de groupe, là où la méthode coupe ses ligatures */
+        const fin = i === ev.n - 1 && ev === bar.events[bar.events.length-1];
+        const coupe = bar.group && (k+1) % bar.group === 0;
+        if (!fin && !coupe){
           el('line',{x1:px+7, y1:y, x2:px+eighthW-7, y2:y, stroke:'#DFD6C6','stroke-width':1}, svg);
         }
+        k++;
         el('circle',{cx:px, cy:y, r:9, fill:'var(--card)'}, svg);
         const t = el('text',{x:px, y:y+4, 'text-anchor':'middle', fill:col,
           'font-family':'Spline Sans Mono,monospace','font-size':'12.5','font-weight':'700'}, svg);
@@ -2281,7 +2294,6 @@ function tabSVG(bars, opts){
           ft.textContent = ev.fg;
         }
       }
-      cx += ev.n * eighthW;
     });
     /* « ×2 » : la mesure se joue deux fois de suite avant de passer à la suivante */
     if (bar.rep){
@@ -2290,9 +2302,8 @@ function tabSVG(bars, opts){
       rt.textContent = '\u00d7' + bar.rep;
     }
     /* compte 1 et 2 et… sous la mesure */
-    const total = bar.events.reduce((s,e)=>s+e.n,0);
-    for (let i=0; i<total; i++){
-      const px = x + barPad/2 + i*eighthW + eighthW/2;
+    for (let i=0; i<croches[bi]; i++){
+      const px = xOf(i) + eighthW/2;
       const onBeat = i % 2 === 0;
       const bt = el('text',{x:px, y:h-8-fgH, 'text-anchor':'middle',
         fill: onBeat ? 'var(--ink-soft)' : '#C9BFAE',
@@ -2392,11 +2403,12 @@ function bar6(chord, notes){
   return { chord, events: notes.map((n,i)=>({
     chord: i===0 ? chord : '', s:n[0], f:n[1], n:2, note:n[2], fg:n[3] })) };
 }
-/* mesure à 4/4 : huit croches, une note par croche.
+/* mesure à 4/4 : huit croches, une note par croche, ligaturées par quatre
+   comme dans la méthode — deux groupes de quatre par mesure.
    notes = [ [corde, case, note, doigt] ] — doigt facultatif
    rep = nombre de fois que la mesure se joue de suite (affiché « ×2 ») */
 function bar8(chord, notes, rep){
-  return { chord, rep, events: notes.map((n,i)=>({
+  return { chord, rep, group:4, events: notes.map((n,i)=>({
     chord: i===0 ? chord : '', s:n[0], f:n[1], n:1, note:n[2], fg:n[3] })) };
 }
 /* suite de noms de notes, colorée comme partout ailleurs */
@@ -2433,8 +2445,8 @@ const PLUCK = [
     note:'<b>G et F ont la même forme</b> — les deux sont majeurs, F est simplement deux cases plus bas. Dans chaque arpège on joue <b>fondamentale · quinte · octave · tierce · octave · quinte</b>. C\'est la <b>tierce</b> qui distingue le mineur (Am) du majeur (G, F, E).' },
 
   { id:'p3', titre:'Exercice #3', sub:'Cordes alternées', option:true,
-    intro:'<b>4/4</b>, en croches. Le motif enchaîne des paires sur deux cordes voisines : <b>fondamentale · quarte · fondamentale · quinte</b>, puis on recommence une corde plus haut. Départ <b>case 3</b> sur la corde de <b>E</b>. On monte E/A → A/D → D/G, puis on redescend sur A/D.',
-    doigts:'<b>1, 2, 1, 3</b> à la main gauche — la méthode ne les note que sur le premier groupe, ils se reprennent à l\'identique sur chacun des quatre groupes.',
+    intro:'<b>4/4</b>, en croches, par <b>groupes de quatre</b> — deux groupes par mesure, comme les ligatures de la méthode. Chaque groupe tient sur <b>deux cordes voisines</b> : <b>fondamentale · quarte · fondamentale · quinte</b>, puis on recommence une corde plus haut. Départ <b>case 3</b> sur la corde de <b>E</b>. Les quatre groupes montent E/A → A/D → D/G, puis redescendent sur A/D.',
+    doigts:'<b>1, 2, 1, 3</b> à la main gauche — la méthode ne les note que sur le premier groupe de quatre, ils se reprennent à l\'identique sur les trois autres.',
     lignes:[[
       bar8('', [['E',3,'G',1],['A',3,'C',2],['E',3,'G',1],['A',5,'D',3],
                 ['A',3,'C',1],['D',3,'F',2],['A',3,'C',1],['D',5,'G',3]]),

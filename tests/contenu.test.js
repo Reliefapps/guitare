@@ -116,6 +116,23 @@ test('les exercices 3 et 4 sont en 4/4, huit croches par mesure', () => {
   }
 });
 
+test('exercices 3 et 4 : les croches se lisent par groupes de quatre', () => {
+  const { doc } = load();
+  openTab(doc, 'basse');
+  for (const id of ['px-p3', 'px-p4']){
+    const svg = doc.querySelector('#' + id + ' .tab-scroll svg');
+    /* les traits de liaison sont courts et horizontaux : ni les lignes de
+       cordes, qui traversent toute la tablature, ni les barres de mesure,
+       qui sont verticales */
+    const liens = [...svg.querySelectorAll('line')].filter(l => {
+      const dx = +l.getAttribute('x2') - +l.getAttribute('x1');
+      return l.getAttribute('y1') === l.getAttribute('y2') && dx > 0 && dx < 20;
+    });
+    assert.equal(liens.length, 12,
+      id + ' : 2 mesures × 2 groupes de 4 croches × 3 liaisons');
+  }
+});
+
 test("exercice #4 : chaque mesure porte son « ×2 »", () => {
   const { doc } = load();
   openTab(doc, 'basse');

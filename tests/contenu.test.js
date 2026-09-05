@@ -116,6 +116,21 @@ test('les exercices 3 et 4 sont en 4/4, huit croches par mesure', () => {
   }
 });
 
+test("exercice #4 : chaque mesure porte son « ×2 »", () => {
+  const { doc } = load();
+  openTab(doc, 'basse');
+  const svg = doc.querySelector('#px-p4 .tab-scroll svg');
+  const marques = [...svg.querySelectorAll('text')].filter(t => t.textContent === '×2');
+  assert.equal(marques.length, 2,
+    'la première mesure se joue deux fois, puis la seconde deux fois');
+  /* les autres exercices n'en portent pas : leur reprise est d'une autre forme */
+  for (const id of ['px-p1', 'px-p2', 'px-p3']){
+    const autres = [...doc.querySelectorAll('#' + id + ' .tab-scroll svg text')]
+      .filter(t => /^×\d$/.test(t.textContent));
+    assert.equal(autres.length, 0, id);
+  }
+});
+
 test('les tablatures basse ont 4 lignes de cordes, G D A E de haut en bas', () => {
   const { doc } = load();
   openTab(doc, 'basse');

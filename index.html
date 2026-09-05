@@ -2283,6 +2283,12 @@ function tabSVG(bars, opts){
       }
       cx += ev.n * eighthW;
     });
+    /* « ×2 » : la mesure se joue deux fois de suite avant de passer à la suivante */
+    if (bar.rep){
+      const rt = el('text',{x:x+widths[bi]-12, y:top-12, 'text-anchor':'end', fill:'var(--ink-soft)',
+        'font-family':'Spline Sans Mono,monospace','font-size':'11','font-weight':'700'}, svg);
+      rt.textContent = '\u00d7' + bar.rep;
+    }
     /* compte 1 et 2 et… sous la mesure */
     const total = bar.events.reduce((s,e)=>s+e.n,0);
     for (let i=0; i<total; i++){
@@ -2387,9 +2393,10 @@ function bar6(chord, notes){
     chord: i===0 ? chord : '', s:n[0], f:n[1], n:2, note:n[2], fg:n[3] })) };
 }
 /* mesure à 4/4 : huit croches, une note par croche.
-   notes = [ [corde, case, note, doigt] ] — doigt facultatif */
-function bar8(chord, notes){
-  return { chord, events: notes.map((n,i)=>({
+   notes = [ [corde, case, note, doigt] ] — doigt facultatif
+   rep = nombre de fois que la mesure se joue de suite (affiché « ×2 ») */
+function bar8(chord, notes, rep){
+  return { chord, rep, events: notes.map((n,i)=>({
     chord: i===0 ? chord : '', s:n[0], f:n[1], n:1, note:n[2], fg:n[3] })) };
 }
 /* suite de noms de notes, colorée comme partout ailleurs */
@@ -2438,16 +2445,16 @@ const PLUCK = [
     note:'La méthode écrit cette cellule de deux mesures <b>deux fois</b>, entre barres de reprise.' },
 
   { id:'p4', titre:'Exercice #4', sub:'Sauts d\'octave', option:true,
-    intro:'<b>4/4</b>, en croches. On <b>saute une corde</b> à chaque paire : E↔D, puis A↔G, puis on redescend G↔A et D↔E. Motif descendant — la deuxième mesure reprend la première <b>deux cases plus bas</b>.',
+    intro:'<b>4/4</b>, en croches. On <b>saute une corde</b> à chaque paire : E↔D, puis A↔G, puis on redescend G↔A et D↔E. Motif descendant — la deuxième mesure reprend la première <b>deux cases plus bas</b>. On joue la <b>première mesure deux fois</b>, puis la <b>seconde deux fois</b> — et l\'ensemble se reprend.',
     doigts:'La méthode n\'indique les doigts que sur les deux premières notes : <b>1</b> puis <b>4</b> — la forme d\'octave, index sur la fondamentale et auriculaire deux cases plus haut, deux cordes plus haut.',
     lignes:[[
       bar8('', [['E',5,'A',1],['D',7,'A',4],['A',7,'E'],['G',7,'D'],
-                ['G',5,'C'],['A',3,'C'],['D',5,'G'],['E',3,'G']]),
+                ['G',5,'C'],['A',3,'C'],['D',5,'G'],['E',3,'G']], 2),
       bar8('', [['E',3,'G'],['D',5,'G'],['A',5,'D'],['G',5,'C'],
-                ['G',3,'B♭'],['A',1,'B♭'],['D',3,'F'],['E',1,'F']]),
+                ['G',3,'B♭'],['A',1,'B♭'],['D',3,'F'],['E',1,'F']], 2),
     ]],
     legendes:[ noteSeq(['A','A','E','D','C','C','G','G']) + ' &nbsp;—&nbsp; ' + noteSeq(['G','G','D','C','B♭','B♭','F','F']) ],
-    note:'Trois paires sur quatre sont des <b>octaves</b> (E5–D7, G5–A3, D5–E3) ; la deuxième garde la <b>même case</b> d\'une corde à l\'autre. Chaque mesure est écrite deux fois dans la méthode.' },
+    note:'Trois paires sur quatre sont des <b>octaves</b> (E5–D7, G5–A3, D5–E3) ; la deuxième garde la <b>même case</b> d\'une corde à l\'autre. La méthode écrit chaque mesure <b>deux fois de suite</b> — quatre mesures en tout, entre barres de reprise.' },
 ];
 
 const pluckList = document.getElementById('pluck-list');

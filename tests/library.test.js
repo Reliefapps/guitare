@@ -147,13 +147,18 @@ test('la feuille en Em est transposée en Am, sans recopier les paroles', () => 
   assert.deepEqual(cartes.map(c => c.querySelector('.grille-nom').textContent),
                    ['Couplet', 'Refrain', 'Final']);
 
+  /* une ligne = une ligne chantée, pas une rangée du scan : la colonne y est
+     étroite et replie chaque ligne de refrain sur deux rangées */
   assert.deepEqual(lire(cartes[0]), [['Am', 'Am'], ['Dm', 'Am'],
                                      ['Am', 'Dm'], ['E7', 'Am']]);
-  assert.deepEqual(lire(cartes[1]), [['Am', 'Am'], ['Dm', 'Am'],
-                                     ['Dm', 'Am'], ['Dm', 'E7'],
-                                     ['Am', 'Am'], ['Dm', 'Am'],
-                                     ['Dm', 'Am', 'E7'], ['Am']]);
-  assert.deepEqual(lire(cartes[2]), [['Dm', 'Am', 'E7'], ['Am']]);
+  assert.deepEqual(lire(cartes[1]), [['Am', 'Am', 'Dm', 'Am'],
+                                     ['Dm', 'Am', 'Dm', 'E7'],
+                                     ['Am', 'Am', 'Dm', 'Am'],
+                                     ['Dm', 'Am', 'E7', 'Am']]);
+  assert.deepEqual(lire(cartes[2]), [['Dm', 'Am', 'E7', 'Am']]);
+  /* le refrain fait quatre lignes de quatre accords : deux couplets de long */
+  assert.equal(lire(cartes[1]).length, 4);
+  lire(cartes[1]).forEach(l => assert.equal(l.length, 4));
 
   /* les lignes sont numérotées comme sur le scan */
   cartes.forEach(c => {
@@ -179,6 +184,35 @@ test('le couplet transposé est exactement celui de l\'exercice en Am', () => {
   assert.deepEqual(sansSeptieme(suite), sansSeptieme(mesures));
   assert.deepEqual(suite, ['Am', 'Am', 'Dm', 'Am', 'Am', 'Dm', 'E7', 'Am']);
   assert.deepEqual(mesures, ['Am', 'Am', 'Dm', 'Am', 'Am', 'Dm', 'E', 'Am']);
+});
+
+test('le refrain de la feuille recouvre le pré-refrain puis le refrain du tuto', () => {
+  const { doc } = load();
+  openTab(doc, 'library');
+  const demiGrille = nom => {
+    const carte = [...doc.querySelectorAll('#exam-grilles .prog-card')]
+      .find(c => c.querySelector('.grille-nom').textContent === nom);
+    return [...carte.querySelectorAll('.prog-line')].map(l =>
+      [...l.querySelectorAll('.chip')].map(c => c.textContent));
+  };
+  const tuto = [...demiGrille('Pré-refrain'), ...demiGrille('Refrain')];
+
+  ouvreDoc(doc, 'saint-jean');
+  const feuille = [...doc.querySelectorAll('#sj-grilles .prog-card')]
+    .find(c => c.querySelector('.grille-nom').textContent === 'Refrain');
+  const lignes = [...feuille.querySelectorAll('.ligne-accords')].map(l =>
+    [...l.querySelectorAll('.chip')].map(c => c.textContent));
+
+  assert.equal(lignes.length, tuto.length, 'quatre lignes de chaque côté');
+  /* lignes 1 et 4 : identiques au E7 près (le tuto écrit E(7)) */
+  const sansSeptieme = a => a.map(c => c === 'E7' || c === 'E(7)' ? 'E' : c);
+  assert.deepEqual(sansSeptieme(lignes[0]), sansSeptieme(tuto[0]));
+  assert.deepEqual(sansSeptieme(lignes[3]), sansSeptieme(tuto[3]));
+  /* ligne 3 : le tuto coupe la mesure en Am/Dm là où la feuille reste sur Dm */
+  assert.deepEqual(lignes[2], ['Am', 'Am', 'Dm', 'Am']);
+  assert.deepEqual(tuto[2], ['Am', 'Am', 'Am', 'Dm', 'Am']);
+  /* ligne 2 : la seule qui change vraiment d'accords */
+  assert.notDeepEqual(sansSeptieme(lignes[1]), sansSeptieme(tuto[1]));
 });
 
 test('les 2 pages du PDF sont empilées et visibles', () => {

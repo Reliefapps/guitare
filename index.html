@@ -1273,10 +1273,10 @@
         <p class="hint">La feuille ci-dessous est écrite en <b>Em</b>. Le tuto de l'onglet <b>Exercice en Am</b> la joue en <b>Am</b> — une quarte plus haut, avec des accords plus ouverts. C'est la même chanson : trois accords à remplacer, partout et sans exception.</p>
         <div class="transpo" id="sj-transpo"></div>
         <p class="hint">L'autre chemin, si tu préfères garder les accords de la feuille : <b>capo case 5</b>. Les mêmes formes Em, Am et B7 sonnent alors exactement Am, Dm et E7.</p>
-        <p class="hint">Les paroles restent sur la feuille — ici, seulement les accords, <b>ligne par ligne</b> : les numéros suivent les lignes de paroles du scan, dans l'ordre où elles sont écrites.</p>
+        <p class="hint">Les paroles restent sur la feuille — ici, seulement les accords, <b>ligne par ligne</b>, dans l'ordre où elles se chantent. Attention en te repérant sur le scan : sa colonne est étroite, et <b>une ligne du refrain y tient sur deux rangées</b> — la fin de la ligne est renvoyée dessous. Une ligne de refrain, c'est bien quatre accords.</p>
         <div class="prog-list" id="sj-grilles"></div>
         <div class="prog-legend">
-          Le <b>couplet</b> est, à la septième près, la grille « Couplet » de l'exercice en Am : le tuto écrit <b>E</b> là où la feuille donne <b>E7</b> — même accord de dominante, la septième ne fait qu'appuyer le retour sur Am. Le <b>refrain</b>, lui, diffère vraiment entre les deux : celui-ci suit les lignes de paroles, l'exercice suit le découpage du tuto — garde celui que tu joues.
+          Le <b>couplet</b> est, à la septième près, la grille « Couplet » de l'exercice en Am : le tuto écrit <b>E</b> là où la feuille donne <b>E7</b> — même accord de dominante, la septième ne fait qu'appuyer le retour sur Am. Le <b>refrain</b>, lui, correspond au « Pré-refrain » <i>puis</i> au « Refrain » du tuto, une ligne pour chaque demi-grille : les lignes <b>1</b> et <b>4</b> sont identiques des deux côtés, la <b>3</b> ne diffère que par la coupure (le tuto partage la mesure en <b>Am / Dm</b> là où la feuille reste sur <b>Dm</b>), et seule la <b>2</b> change vraiment d'accords. Garde celle que tu joues.
         </div>
       </section>
 
@@ -3502,13 +3502,13 @@ nouveau();
   const TRANSPO = [['Em','Am'], ['Am','Dm'], ['B7','E7']];
 
   const EN_AM = [
-    { nom:'Couplet', sous:'4 lignes de paroles',
+    { nom:'Couplet', sous:'4 lignes, deux accords chacune',
       lignes:[ ['Am','Am'], ['Dm','Am'], ['Am','Dm'], ['E7','Am'] ] },
-    { nom:'Refrain', sous:'8 lignes de paroles',
-      lignes:[ ['Am','Am'], ['Dm','Am'], ['Dm','Am'], ['Dm','E7'],
-               ['Am','Am'], ['Dm','Am'], ['Dm','Am','E7'], ['Am'] ] },
-    { nom:'Final', sous:'les deux dernières lignes, reprises seules',
-      lignes:[ ['Dm','Am','E7'], ['Am'] ] },
+    { nom:'Refrain', sous:'4 lignes, quatre accords chacune — deux fois plus long que le couplet',
+      lignes:[ ['Am','Am','Dm','Am'], ['Dm','Am','Dm','E7'],
+               ['Am','Am','Dm','Am'], ['Dm','Am','E7','Am'] ] },
+    { nom:'Final', sous:'la dernière ligne du refrain, reprise seule',
+      lignes:[ ['Dm','Am','E7','Am'] ] },
   ];
 
   const wrapTranspo = document.getElementById('sj-transpo');

@@ -513,6 +513,21 @@
   #exam-grilles .measure.demi{gap:3px; flex-wrap:wrap;}
   #exam-grilles .measure.demi .chip{font-size:11px; padding:4px 7px;}
 
+  /* la table de transposition d'une tonalité à l'autre */
+  .transpo{display:flex; flex-wrap:wrap; gap:10px; margin:14px 0 6px;}
+  .transpo-paire{
+    display:flex; align-items:center; gap:8px; background:var(--card);
+    border:1px solid var(--line); border-radius:10px; padding:6px 11px;
+  }
+  .transpo-fleche{color:var(--ink-soft); font-weight:700;}
+  /* les accords d'une ligne de paroles, numérotée comme sur la feuille */
+  .ligne-accords{display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:7px 0;}
+  .ligne-accords + .ligne-accords{border-top:1px dashed var(--line);}
+  .ligne-num{
+    font-family:"Spline Sans Mono",monospace; font-size:12px; font-weight:700;
+    color:var(--ink-soft); min-width:20px; text-align:right;
+  }
+
   /* ================= visionneuse de partition ================= */
   /* visionneuse */
   .viewer{margin-top:20px;}
@@ -1253,6 +1268,18 @@
           <span class="chip chip-soft">accordage <span class="mono">E A D G B E</span></span>
         </div>
       </div>
+      <section class="fiche-bloc" id="sj-en-am">
+        <h3>La même chanson en Am</h3>
+        <p class="hint">La feuille ci-dessous est écrite en <b>Em</b>. Le tuto de l'onglet <b>Exercice en Am</b> la joue en <b>Am</b> — une quarte plus haut, avec des accords plus ouverts. C'est la même chanson : trois accords à remplacer, partout et sans exception.</p>
+        <div class="transpo" id="sj-transpo"></div>
+        <p class="hint">L'autre chemin, si tu préfères garder les accords de la feuille : <b>capo case 5</b>. Les mêmes formes Em, Am et B7 sonnent alors exactement Am, Dm et E7.</p>
+        <p class="hint">Les paroles restent sur la feuille — ici, seulement les accords, <b>ligne par ligne</b> : les numéros suivent les lignes de paroles du scan, dans l'ordre où elles sont écrites.</p>
+        <div class="prog-list" id="sj-grilles"></div>
+        <div class="prog-legend">
+          Le <b>couplet</b> est, à la septième près, la grille « Couplet » de l'exercice en Am : le tuto écrit <b>E</b> là où la feuille donne <b>E7</b> — même accord de dominante, la septième ne fait qu'appuyer le retour sur Am. Le <b>refrain</b>, lui, diffère vraiment entre les deux : celui-ci suit les lignes de paroles, l'exercice suit le découpage du tuto — garde celui que tu joues.
+        </div>
+      </section>
+
       <div class="viewer">
         <div class="viewer-bar" id="sj-bar">
           <button class="pgbtn ghost" id="sj-prev" aria-label="Page précédente">←</button>
@@ -3464,6 +3491,56 @@ nouveau();
 
   const carteRyt = document.getElementById('exam-rythmique');
   if (carteRyt) carteRyt.appendChild(rythmiqueSVG());
+
+  /* ============================================================
+     La feuille des Amants de Saint Jean, transposée en Am
+     Elle est écrite en Em : Em \u2192 Am, Am \u2192 Dm, B7 \u2192 E7, soit
+     une quarte plus haut — exactement la tonalité du tuto Médiator Bleu.
+     On ne recopie pas les paroles : les lignes sont numérotées comme
+     sur le scan, qui reste la référence pour les mots.
+     ============================================================ */
+  const TRANSPO = [['Em','Am'], ['Am','Dm'], ['B7','E7']];
+
+  const EN_AM = [
+    { nom:'Couplet', sous:'4 lignes de paroles',
+      lignes:[ ['Am','Am'], ['Dm','Am'], ['Am','Dm'], ['E7','Am'] ] },
+    { nom:'Refrain', sous:'8 lignes de paroles',
+      lignes:[ ['Am','Am'], ['Dm','Am'], ['Dm','Am'], ['Dm','E7'],
+               ['Am','Am'], ['Dm','Am'], ['Dm','Am','E7'], ['Am'] ] },
+    { nom:'Final', sous:'les deux dernières lignes, reprises seules',
+      lignes:[ ['Dm','Am','E7'], ['Am'] ] },
+  ];
+
+  const wrapTranspo = document.getElementById('sj-transpo');
+  if (wrapTranspo) TRANSPO.forEach(([avant, apres])=>{
+    const p = document.createElement('div');
+    p.className = 'transpo-paire';
+    p.appendChild(pastille(avant));
+    const f = document.createElement('span');
+    f.className = 'transpo-fleche';
+    f.textContent = '\u2192';
+    p.append(f, pastille(apres));
+    wrapTranspo.appendChild(p);
+  });
+
+  const wrapSj = document.getElementById('sj-grilles');
+  if (wrapSj) EN_AM.forEach(part=>{
+    const card = document.createElement('article');
+    card.className = 'prog-card';
+    card.innerHTML = '<div class="grille-nom">' + part.nom + '</div>'
+                   + '<div class="prog-sub">' + part.sous + '</div>';
+    part.lignes.forEach((accords, i)=>{
+      const row = document.createElement('div');
+      row.className = 'ligne-accords';
+      const num = document.createElement('span');
+      num.className = 'ligne-num';
+      num.textContent = i + 1;
+      row.appendChild(num);
+      accords.forEach(sym => row.appendChild(pastille(sym)));
+      card.appendChild(row);
+    });
+    wrapSj.appendChild(card);
+  });
 
   montePartition({
     prefixe:'sj', pages:PAGES, sheet:'sj-sheet',

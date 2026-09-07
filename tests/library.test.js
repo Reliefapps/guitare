@@ -128,6 +128,59 @@ test('la rythmique 3/4 est dessinée : trois temps, trois coups vers le bas', ()
   assert.deepEqual(textes, ['3', '4', '1', 'to', '2', 'ta', '3', 'ta']);
 });
 
+test('la feuille en Em est transposée en Am, sans recopier les paroles', () => {
+  const { doc } = load();
+  openTab(doc, 'library');
+  ouvreDoc(doc, 'saint-jean');
+  const bloc = doc.getElementById('sj-en-am');
+  assert.ok(bloc, 'le bloc « la même chanson en Am » est absent');
+  assert.equal(isVisible(bloc), true);
+
+  /* la table de transposition : une quarte plus haut, cinq demi-tons */
+  const paires = [...doc.querySelectorAll('#sj-transpo .transpo-paire')].map(p =>
+    [...p.querySelectorAll('.chip')].map(c => c.textContent));
+  assert.deepEqual(paires, [['Em', 'Am'], ['Am', 'Dm'], ['B7', 'E7']]);
+
+  const lire = carte => [...carte.querySelectorAll('.ligne-accords')].map(l =>
+    [...l.querySelectorAll('.chip')].map(c => c.textContent));
+  const cartes = [...doc.querySelectorAll('#sj-grilles .prog-card')];
+  assert.deepEqual(cartes.map(c => c.querySelector('.grille-nom').textContent),
+                   ['Couplet', 'Refrain', 'Final']);
+
+  assert.deepEqual(lire(cartes[0]), [['Am', 'Am'], ['Dm', 'Am'],
+                                     ['Am', 'Dm'], ['E7', 'Am']]);
+  assert.deepEqual(lire(cartes[1]), [['Am', 'Am'], ['Dm', 'Am'],
+                                     ['Dm', 'Am'], ['Dm', 'E7'],
+                                     ['Am', 'Am'], ['Dm', 'Am'],
+                                     ['Dm', 'Am', 'E7'], ['Am']]);
+  assert.deepEqual(lire(cartes[2]), [['Dm', 'Am', 'E7'], ['Am']]);
+
+  /* les lignes sont numérotées comme sur le scan */
+  cartes.forEach(c => {
+    const nums = [...c.querySelectorAll('.ligne-num')].map(n => n.textContent);
+    assert.deepEqual(nums, nums.map((_, i) => String(i + 1)));
+  });
+});
+
+test('le couplet transposé est exactement celui de l\'exercice en Am', () => {
+  const { doc } = load();
+  openTab(doc, 'library');
+  /* les huit mesures du couplet de l'exercice, dans l'ordre */
+  const exo = [...doc.querySelectorAll('#exam-grilles .prog-card')]
+    .find(c => c.querySelector('.grille-nom').textContent === 'Couplet');
+  const mesures = [...exo.querySelectorAll('.measure .chip')].map(c => c.textContent);
+  /* les mêmes huit, relues ligne par ligne sur la feuille transposée */
+  ouvreDoc(doc, 'saint-jean');
+  const couplet = doc.querySelector('#sj-grilles .prog-card');
+  const suite = [...couplet.querySelectorAll('.chip')].map(c => c.textContent);
+  /* seule différence : le tuto écrit E là où la feuille donne E7 — même
+     accord de dominante, la septième ne fait qu'appuyer le retour sur Am */
+  const sansSeptieme = a => a.map(c => c === 'E7' ? 'E' : c);
+  assert.deepEqual(sansSeptieme(suite), sansSeptieme(mesures));
+  assert.deepEqual(suite, ['Am', 'Am', 'Dm', 'Am', 'Am', 'Dm', 'E7', 'Am']);
+  assert.deepEqual(mesures, ['Am', 'Am', 'Dm', 'Am', 'Am', 'Dm', 'E', 'Am']);
+});
+
 test('les 2 pages du PDF sont empilées et visibles', () => {
   const { doc } = load();
   openTab(doc, 'library');

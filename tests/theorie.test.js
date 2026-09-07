@@ -3,55 +3,103 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { load, isVisible, openTab } = require('./helpers');
 
-/* ============ la gamme de La mineur, sur la fiche guitare ============ */
+/* ============ les gammes de La, sur la fiche guitare ============ */
 
-test('la gamme de La mineur est rendue en deux positions sur la fiche guitare', () => {
+/* les quatre grilles attendues : deux gammes × deux positions */
+const POSITIONS = [
+  { id:'gamme-mineur-ouverte', f0:0, suite:'A B C D E F G A B C D E F G A', ouvert:true,  cases:[0,5] },
+  { id:'gamme-mineur-fermee',  f0:3, suite:'A B C D E F G A B C D E F G A', ouvert:false, cases:[4,8] },
+  { id:'gamme-majeur-ouverte', f0:0, suite:'A B C♯ D E F♯ G♯ A B C♯ D E F♯ G♯ A', ouvert:true,  cases:[0,5] },
+  { id:'gamme-majeur-fermee',  f0:3, suite:'A B C♯ D E F♯ G♯ A B C♯ D E F♯ G♯ A', ouvert:false, cases:[4,7] },
+];
+
+/* hauteur d'un nom de note, altérations comprises (CHROMA est plus bas) */
+function hauteur(nom){
+  return (CHROMA.indexOf(nom[0]) + (/[#♯]/.test(nom) ? 1 : 0)) % 12;
+}
+/* les six cordes de haut en bas, en demi-tons absolus : Mi aigu → Mi grave */
+const CORDES = [64, 59, 55, 50, 45, 40];
+
+/* relit une pastille du diagramme : sa corde (position verticale) et sa case
+   (position horizontale, les cordes à vide étant à gauche du sillet) */
+function lirePastille(g, f0){
+  const c = g.querySelector('circle');
+  const nut = f0 === 0 ? 70 : 44;
+  const cx = +c.getAttribute('cx');
+  return {
+    nom: g.getAttribute('data-note'),
+    corde: Math.round((+c.getAttribute('cy') - 24) / 34),
+    case: cx < nut ? 0 : Math.round((cx - nut) / 62 + 0.5) + f0,
+  };
+}
+
+test('les deux gammes de La sont rendues, chacune en deux positions', () => {
   const { doc } = load();
-  const sec = doc.getElementById('gamme-am');
-  assert.ok(sec, 'section #gamme-am absente');
+  const sec = doc.getElementById('gammes');
+  assert.ok(sec, 'section #gammes absente');
   assert.equal(isVisible(sec), true);
-  const blocs = [...doc.querySelectorAll('#gamme-list .tab-block')];
-  assert.deepEqual(blocs.map(b => b.id), ['gamme-ouverte', 'gamme-fermee']);
-  for (const b of blocs){
-    const svg = b.querySelector('.board-scroll svg');
-    assert.ok(svg, b.id + ' : pas de diagramme');
+  /* les blocs sont groupés par gamme, dans l'ordre mineure puis majeure */
+  assert.deepEqual([...doc.querySelectorAll('#gamme-list > .family')].map(f => f.id),
+    ['gamme-mineur', 'gamme-majeur']);
+  assert.deepEqual([...doc.querySelectorAll('#gamme-list .tab-block')].map(b => b.id),
+    POSITIONS.map(p => p.id));
+  for (const pos of POSITIONS){
+    const svg = doc.querySelector('#' + pos.id + ' .board-scroll svg');
+    assert.ok(svg, pos.id + ' : pas de diagramme');
     /* 15 notes = deux octaves complètes, dans l'ordre de la gamme */
     const notes = [...svg.querySelectorAll('.gamme-note')].map(g => g.getAttribute('data-note'));
-    assert.equal(notes.join(''), 'ABCDEFGABCDEFGA', b.id + ' : la suite des notes est fausse');
+    assert.equal(notes.join(' '), pos.suite, pos.id + ' : la suite des notes est fausse');
   }
 });
 
-test('la position ouverte reste sous la case 5, la fermée entre les cases 4 et 8', () => {
+test('chaque pastille tombe bien sur la note qu\'elle annonce', () => {
   const { doc } = load();
-  /* on lit la case depuis le numéro affiché : les pastilles à gauche du sillet
-     sont les cordes à vide, celles à droite tombent au milieu de leur case */
-  function cases(svgSel, nutX, col){
-    return [...doc.querySelectorAll(svgSel + ' .gamme-note circle')].map(c => {
-      const cx = +c.getAttribute('cx');
-      return cx < nutX ? 0 : Math.round((cx - nutX) / col + 0.5);
-    });
+  for (const pos of POSITIONS){
+    const pastilles = [...doc.querySelectorAll('#' + pos.id + ' .gamme-note')]
+      .map(g => lirePastille(g, pos.f0));
+    let precedente = -Infinity;
+    for (const p of pastilles){
+      const son = CORDES[p.corde] + p.case;
+      assert.equal(son % 12, hauteur(p.nom),
+        `${pos.id} : corde ${p.corde} case ${p.case} ne sonne pas ${p.nom}`);
+      assert.ok(son > precedente,
+        `${pos.id} : ${p.nom} ne monte pas par rapport à la note précédente`);
+      precedente = son;
+    }
+    /* du A grave au A aigu : exactement deux octaves */
+    const son = p => CORDES[p.corde] + p.case;
+    assert.equal(son(pastilles[pastilles.length - 1]) - son(pastilles[0]), 24,
+      pos.id + ' : la gamme ne couvre pas deux octaves');
   }
-  const ouverte = cases('#gamme-ouverte svg', 70, 62);
-  assert.ok(ouverte.includes(0), 'la position ouverte doit utiliser des cordes à vide');
-  assert.ok(Math.max(...ouverte) <= 5, 'la position ouverte ne dépasse pas la case 5');
-  /* position fermée : le bord gauche du diagramme est la frette 3 */
-  const fermee = [...doc.querySelectorAll('#gamme-fermee svg .gamme-note circle')]
-    .map(c => Math.round((+c.getAttribute('cx') - 44) / 62 + 0.5) + 3);
-  assert.equal(Math.min(...fermee), 4, 'la position fermée commence case 4');
-  assert.equal(Math.max(...fermee), 8, 'la position fermée finit case 8');
 });
 
-test('les deux exercices de la gamme sont décrits et navigables', () => {
+test('les positions ouvertes restent sous la case 5, les fermées n\'utilisent aucune corde à vide', () => {
   const { doc } = load();
-  const txt = doc.getElementById('gamme-am').textContent;
+  for (const pos of POSITIONS){
+    const cases = [...doc.querySelectorAll('#' + pos.id + ' .gamme-note')]
+      .map(g => lirePastille(g, pos.f0).case);
+    assert.equal(cases.includes(0), pos.ouvert,
+      pos.id + ' : les cordes à vide ne sont pas au bon endroit');
+    assert.deepEqual([Math.min(...cases), Math.max(...cases)], pos.cases,
+      pos.id + ' : l\'étendue des cases est fausse');
+  }
+});
+
+test('les exercices des gammes sont décrits et navigables', () => {
+  const { doc } = load();
+  const txt = doc.getElementById('gammes').textContent;
   assert.match(txt, /Deux octaves, aller-retour/);
   assert.match(txt, /D'une octave à l'autre/);
+  assert.match(txt, /Mineure puis majeure/);
   assert.match(txt, /A B C D E F G/);
+  assert.match(txt, /A B C♯ D E F♯ G♯/);
   /* le sommaire collant et le menu latéral y mènent */
-  assert.ok(doc.querySelector('#page-guitare nav.sticky a[href="#gamme-am"]'));
-  assert.ok(doc.querySelector('#sidenav-links a[href="#gamme-am"]'));
-  assert.ok(doc.querySelector('#sidenav-links a[href="#gamme-ouverte"]'));
-  assert.ok(doc.querySelector('#sidenav-links a[href="#gamme-fermee"]'));
+  assert.ok(doc.querySelector('#page-guitare nav.sticky a[href="#gammes"]'));
+  assert.ok(doc.querySelector('#sidenav-links a[href="#gammes"]'));
+  for (const pos of POSITIONS){
+    assert.ok(doc.querySelector('#sidenav-links a[href="#' + pos.id + '"]'),
+      'lien latéral manquant : ' + pos.id);
+  }
 });
 
 /* ============ l'onglet théorie ============ */
@@ -167,7 +215,7 @@ test('une nouvelle gamme réinitialise les cases et garde le score', () => {
 
 test('les liens croisés gamme ↔ théorie changent de page sans recharger', () => {
   const { doc } = load();
-  const versTheorie = doc.querySelector('#gamme-am a[data-goto="theorie"]');
+  const versTheorie = doc.querySelector('#gammes a[data-goto="theorie"]');
   assert.ok(versTheorie, 'lien vers la théorie absent de la section gamme');
   versTheorie.click();
   assert.equal(doc.getElementById('page-theorie').hidden, false);

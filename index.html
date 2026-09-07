@@ -708,7 +708,7 @@
     <a href="#exercices">5 · Les exercices</a>
     <a href="#progressions">6 · Les progressions</a>
     <a href="#arpeges">7 · Les arpèges</a>
-    <a href="#gamme-am">8 · La gamme de Am</a>
+    <a href="#gammes">8 · Les gammes de La</a>
   </div>
 </nav>
 
@@ -815,17 +815,18 @@
   </div>
 </section>
 
-<!-- ================= 8. LA GAMME DE LA MINEUR ================= -->
-<section id="gamme-am">
+<!-- ================= 8. LES GAMMES DE LA ================= -->
+<section id="gammes">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">8</span><h2>La gamme de La mineur</h2></div>
-    <p class="hint">Deux octaves complètes — du <b>A</b> grave (corde de La à vide, ou case 5 de la corde de Mi grave) au <b>A</b> aigu de la case 5 de la chanterelle. Les mêmes couleurs que partout ailleurs, le <b>A</b> est cerclé : c'est le début de chaque octave. Pourquoi ces notes-là ? La construction de la gamme est expliquée dans l'onglet <a href="#/theorie" data-goto="theorie">Théorie</a>.</p>
+    <div class="sec-head"><span class="sec-num">8</span><h2>Les gammes de La</h2></div>
+    <p class="hint">La même gamme dans ses deux couleurs : <b>mineure</b> (A B C D E F G) et <b>majeure</b> (A B C♯ D E F♯ G♯). Deux octaves complètes à chaque fois — du <b>A</b> grave (corde de La à vide, ou case 5 de la corde de Mi grave) au <b>A</b> aigu de la case 5 de la chanterelle — et deux positions par gamme : <b>ouverte</b>, avec les cordes à vide, et <b>fermée</b>, qui n'en utilise aucune et se déplace donc partout sur le manche. Les mêmes couleurs que partout ailleurs, le <b>A</b> est cerclé : c'est le début de chaque octave. Pourquoi ces notes-là ? La construction des deux gammes est expliquée dans l'onglet <a href="#/theorie" data-goto="theorie">Théorie</a>.</p>
     <div id="gamme-list"></div>
     <div class="prog-legend exo-consignes">
-      <strong>Les deux exercices :</strong>
+      <strong>Les exercices — chacun à faire dans les deux gammes :</strong>
       <ol class="exo-steps">
         <li><b>Deux octaves, aller-retour.</b> Monte la gamme du A grave au A aigu puis redescends, sans t'arrêter en haut — d'abord en <b>position ouverte</b>, puis en <b>position fermée</b>. Lentement, au métronome, en nommant chaque note à voix haute.</li>
-        <li><b>D'une octave à l'autre.</b> Joue <b>A B C D E F G</b> dans l'octave du haut, puis enchaîne <b>A B C D E F G</b> dans l'octave du bas, sans casser la pulsation. Le but : savoir où habite chaque note dans les deux octaves, dans les deux positions.</li>
+        <li><b>D'une octave à l'autre.</b> Joue les sept notes dans l'octave du haut — <b>A B C D E F G</b> en mineur, <b>A B C♯ D E F♯ G♯</b> en majeur — puis enchaîne les mêmes dans l'octave du bas, sans casser la pulsation. Le but : savoir où habite chaque note dans les deux octaves, dans les deux positions.</li>
+        <li><b>Mineure puis majeure.</b> Reste dans la même position et enchaîne les deux gammes en boucle. Il n'y a que <b>trois notes</b> qui changent — C, F et G deviennent C♯, F♯ et G♯, un demi-ton plus haut — et c'est ce déplacement-là que l'oreille doit apprendre à reconnaître.</li>
       </ol>
       <div style="margin-top:8px">Ne valide un exercice que si tu le joues <b>deux fois de suite sans hésiter</b> — c'est l'hésitation qu'on chasse, pas la vitesse.</div>
     </div>
@@ -2028,36 +2029,68 @@ for (const exo of ARP_EXOS){
 }
 
 /* ============================================================
-   8. La gamme de La mineur — deux octaves, deux positions
+   8. Les gammes de La — mineure et majeure, deux octaves,
+   deux positions chacune (ouverte, puis fermée).
    Cordes de haut en bas comme sur les schémas : Mi aigu → Mi grave.
    s : indice de corde (0 = Mi aigu … 5 = Mi grave) · f : case (0 = à vide)
    ============================================================ */
 const GAMME_CORDES = ['E','B','G','D','A','E'];
-const GAMME_AM = [
-  { id:'ouverte', titre:'Position ouverte', sub:'cases 0 à 5 — tout à gauche du manche, avec les cordes à vide',
-    f0:0, f1:5,
-    notes:[   /* dans l'ordre de la gamme, du A grave au A aigu */
-      {s:4,f:0,n:'A'},{s:4,f:2,n:'B'},{s:4,f:3,n:'C'},
-      {s:3,f:0,n:'D'},{s:3,f:2,n:'E'},{s:3,f:3,n:'F'},
-      {s:2,f:0,n:'G'},{s:2,f:2,n:'A'},
-      {s:1,f:0,n:'B'},{s:1,f:1,n:'C'},{s:1,f:3,n:'D'},
-      {s:0,f:0,n:'E'},{s:0,f:1,n:'F'},{s:0,f:3,n:'G'},{s:0,f:5,n:'A'},
-    ],
-    legende:'Les cordes à vide font partie de la gamme : <b>A</b> (La), <b>D</b> (Ré), <b>G</b> (Sol), <b>B</b> (Si) et <b>E</b> (les deux Mi). L\'octave du bas se joue sur les cordes La et Ré, celle du haut sur Sol, Si et Mi aigu.' },
-  { id:'fermee', titre:'Position fermée (V)', sub:'cases 4 à 8 — la même gamme, sans aucune corde à vide',
-    f0:3, f1:9,
-    notes:[
-      {s:5,f:5,n:'A'},{s:5,f:7,n:'B'},{s:5,f:8,n:'C'},
-      {s:4,f:5,n:'D'},{s:4,f:7,n:'E'},{s:4,f:8,n:'F'},
-      {s:3,f:5,n:'G'},{s:3,f:7,n:'A'},
-      {s:2,f:4,n:'B'},{s:2,f:5,n:'C'},{s:2,f:7,n:'D'},
-      {s:1,f:5,n:'E'},{s:1,f:6,n:'F'},{s:1,f:8,n:'G'},
-      {s:0,f:5,n:'A'},
-    ],
-    legende:'Un doigt par case : <b>index</b> cases 4–5, <b>majeur</b> case 6, <b>annulaire</b> case 7, <b>auriculaire</b> case 8. Comme rien n\'est à vide, cette forme se déplace : la même position démarrée ailleurs donne une autre gamme mineure.' },
+const GAMMES = [
+  { id:'mineur', titre:'La mineur', suite:['A','B','C','D','E','F','G'],
+    positions:[
+      { id:'ouverte', titre:'Position ouverte', court:'ouverte',
+        sub:'cases 0 à 5 — tout à gauche du manche, avec les cordes à vide',
+        f0:0, f1:5,
+        notes:[   /* dans l'ordre de la gamme, du A grave au A aigu */
+          {s:4,f:0,n:'A'},{s:4,f:2,n:'B'},{s:4,f:3,n:'C'},
+          {s:3,f:0,n:'D'},{s:3,f:2,n:'E'},{s:3,f:3,n:'F'},
+          {s:2,f:0,n:'G'},{s:2,f:2,n:'A'},
+          {s:1,f:0,n:'B'},{s:1,f:1,n:'C'},{s:1,f:3,n:'D'},
+          {s:0,f:0,n:'E'},{s:0,f:1,n:'F'},{s:0,f:3,n:'G'},{s:0,f:5,n:'A'},
+        ],
+        legende:'Les cordes à vide font partie de la gamme : <b>A</b> (La), <b>D</b> (Ré), <b>G</b> (Sol), <b>B</b> (Si) et <b>E</b> (les deux Mi). L\'octave du bas se joue sur les cordes La et Ré, celle du haut sur Sol, Si et Mi aigu.' },
+      { id:'fermee', titre:'Position fermée (V)', court:'fermée',
+        sub:'cases 4 à 8 — la même gamme, sans aucune corde à vide',
+        f0:3, f1:9,
+        notes:[
+          {s:5,f:5,n:'A'},{s:5,f:7,n:'B'},{s:5,f:8,n:'C'},
+          {s:4,f:5,n:'D'},{s:4,f:7,n:'E'},{s:4,f:8,n:'F'},
+          {s:3,f:5,n:'G'},{s:3,f:7,n:'A'},
+          {s:2,f:4,n:'B'},{s:2,f:5,n:'C'},{s:2,f:7,n:'D'},
+          {s:1,f:5,n:'E'},{s:1,f:6,n:'F'},{s:1,f:8,n:'G'},
+          {s:0,f:5,n:'A'},
+        ],
+        legende:'Un doigt par case : <b>index</b> cases 4–5, <b>majeur</b> case 6, <b>annulaire</b> case 7, <b>auriculaire</b> case 8. Comme rien n\'est à vide, cette forme se déplace : la même position démarrée ailleurs donne une autre gamme mineure.' },
+    ]},
+  { id:'majeur', titre:'La majeur', suite:['A','B','C♯','D','E','F♯','G♯'],
+    positions:[
+      { id:'ouverte', titre:'Position ouverte', court:'ouverte',
+        sub:'cases 0 à 5 — la mineure, avec C, F et G décalés d\'une case',
+        f0:0, f1:5,
+        notes:[
+          {s:4,f:0,n:'A'},{s:4,f:2,n:'B'},{s:4,f:4,n:'C♯'},
+          {s:3,f:0,n:'D'},{s:3,f:2,n:'E'},{s:3,f:4,n:'F♯'},
+          {s:2,f:1,n:'G♯'},{s:2,f:2,n:'A'},
+          {s:1,f:0,n:'B'},{s:1,f:2,n:'C♯'},{s:1,f:3,n:'D'},
+          {s:0,f:0,n:'E'},{s:0,f:2,n:'F♯'},{s:0,f:4,n:'G♯'},{s:0,f:5,n:'A'},
+        ],
+        legende:'Pose la mineure à côté : c\'est exactement la même grille, avec <b>C</b>, <b>F</b> et <b>G</b> poussés d\'une case vers la droite. La corde de <b>Sol à vide</b> sort donc de la gamme (c\'est <b>G♯</b> case 1 qui la remplace) ; les cordes à vide qui restent sont <b>A</b>, <b>D</b>, <b>B</b> et <b>E</b>.' },
+      { id:'fermee', titre:'Position fermée', court:'fermée',
+        sub:'cases 4 à 7 — un doigt par case, aucune corde à vide',
+        f0:3, f1:8,
+        notes:[
+          {s:5,f:5,n:'A'},{s:5,f:7,n:'B'},
+          {s:4,f:4,n:'C♯'},{s:4,f:5,n:'D'},{s:4,f:7,n:'E'},
+          {s:3,f:4,n:'F♯'},{s:3,f:6,n:'G♯'},{s:3,f:7,n:'A'},
+          {s:2,f:4,n:'B'},{s:2,f:6,n:'C♯'},{s:2,f:7,n:'D'},
+          {s:1,f:5,n:'E'},{s:1,f:7,n:'F♯'},
+          {s:0,f:4,n:'G♯'},{s:0,f:5,n:'A'},
+        ],
+        legende:'Un doigt par case, sans stretch : <b>index</b> case 4, <b>majeur</b> case 5, <b>annulaire</b> case 6, <b>auriculaire</b> case 7. Rien n\'est à vide, donc la forme se déplace telle quelle : deux cases plus haut elle donne <b>B</b> majeur, cinq cases plus haut <b>D</b> majeur.' },
+    ]},
 ];
 
-function gammeSVG(pos){
+function gammeSVG(gamme, pos){
   const COL = 62, ROW = 34, TOPY = 24, GUT = 30;
   const nF = pos.f1 - pos.f0;
   const NUTX = GUT + (pos.f0 === 0 ? 40 : 14);   /* de la place pour les cordes à vide */
@@ -2067,7 +2100,7 @@ function gammeSVG(pos){
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
   svg.setAttribute('width', W);
   svg.setAttribute('role','img');
-  svg.setAttribute('aria-label','Gamme de La mineur — ' + pos.titre);
+  svg.setAttribute('aria-label','Gamme de ' + gamme.titre + ' — ' + pos.titre);
   /* repères de cases */
   for (const f of [3,5,7,9]){
     if (f <= pos.f0 || f > pos.f1) continue;
@@ -2105,10 +2138,12 @@ function gammeSVG(pos){
     const y = TOPY + note.s*ROW;
     const cx = note.f === 0 ? GUT + 16 : NUTX + (note.f - pos.f0 - 0.5)*COL;
     const g = el('g',{class:'gamme-note','data-note':note.n}, svg);
-    el('circle',{cx, cy:y, r:14, fill:NOTE_COLORS[note.n],
+    el('circle',{cx, cy:y, r:14, fill:NOTE_COLORS[note.n[0]],
       stroke: note.n === 'A' ? '#F3EADD' : 'none', 'stroke-width': note.n === 'A' ? 2.5 : 0}, g);
+    /* les dièses prennent deux caractères : on rétrécit un peu pour rester dans la pastille */
     const t = el('text',{x:cx, y:y+4.5, 'text-anchor':'middle', fill:'#fff',
-      'font-family':'Spline Sans Mono,monospace','font-size':'13','font-weight':'700'}, g);
+      'font-family':'Spline Sans Mono,monospace',
+      'font-size': note.n.length > 1 ? '11' : '13','font-weight':'700'}, g);
     t.textContent = note.n;
   }
   return svg;
@@ -2119,30 +2154,39 @@ function gammeSeq(names){
 }
 
 const gammeList = document.getElementById('gamme-list');
-for (const pos of GAMME_AM){
-  const block = document.createElement('div');
-  block.className = 'tab-block';
-  block.id = 'gamme-' + pos.id;
-  block.innerHTML = `<div class="tab-head"><span class="tab-title">${pos.titre}</span>
-    <span class="tab-sub">${pos.sub}</span></div>`;
-  const panel = document.createElement('div');
-  panel.className = 'board-panel';
-  panel.style.margin = '8px 14px 4px';
-  const scroll = document.createElement('div');
-  scroll.className = 'board-scroll';
-  scroll.appendChild(gammeSVG(pos));
-  panel.appendChild(scroll);
-  block.appendChild(panel);
-  const seq = document.createElement('div');
-  seq.className = 'tab-note';
-  seq.innerHTML = 'Octave du bas : ' + gammeSeq(['A','B','C','D','E','F','G']) +
-    ' &nbsp;·&nbsp; octave du haut : ' + gammeSeq(['A','B','C','D','E','F','G','A']);
-  block.appendChild(seq);
-  const lg = document.createElement('div');
-  lg.className = 'tab-note';
-  lg.innerHTML = pos.legende;
-  block.appendChild(lg);
-  gammeList.appendChild(block);
+for (const gamme of GAMMES){
+  const fam = document.createElement('div');
+  fam.className = 'family';
+  fam.id = 'gamme-' + gamme.id;
+  fam.innerHTML = `<h3><span class="swatch" style="background:${NOTE_COLORS.A}"></span>${gamme.titre}
+    <span class="tab-sub">${gammeSeq(gamme.suite)}</span></h3>`;
+  for (const pos of gamme.positions){
+    const block = document.createElement('div');
+    block.className = 'tab-block';
+    block.id = 'gamme-' + gamme.id + '-' + pos.id;
+    block.innerHTML = `<div class="tab-head"><span class="tab-title">${pos.titre}</span>
+      <span class="tab-sub">${pos.sub}</span></div>`;
+    const panel = document.createElement('div');
+    panel.className = 'board-panel';
+    panel.style.margin = '8px 14px 4px';
+    const scroll = document.createElement('div');
+    scroll.className = 'board-scroll';
+    scroll.appendChild(gammeSVG(gamme, pos));
+    panel.appendChild(scroll);
+    block.appendChild(panel);
+    const noms = pos.notes.map(n => n.n);
+    const seq = document.createElement('div');
+    seq.className = 'tab-note';
+    seq.innerHTML = 'Octave du bas : ' + gammeSeq(noms.slice(0,7)) +
+      ' &nbsp;·&nbsp; octave du haut : ' + gammeSeq(noms.slice(7));
+    block.appendChild(seq);
+    const lg = document.createElement('div');
+    lg.className = 'tab-note';
+    lg.innerHTML = pos.legende;
+    block.appendChild(lg);
+    fam.appendChild(block);
+  }
+  gammeList.appendChild(fam);
 }
 
 /* ============================================================
@@ -2183,10 +2227,12 @@ ARP_EXOS.forEach(exo=>{
     exo.accords.map(a=>`<span class="mono-b" style="color:${NOTE_COLORS[CHORDS[a.id].root[0]]}">${CHORDS[a.id].name || a.id}</span>`).join(' · '),
     'lvl2');
 });
-lvl1Links['gamme-am'] = navLink('#gamme-am','8 · La gamme de Am','lvl1');
-for (const pos of GAMME_AM){
-  navLink('#gamme-'+pos.id,
-    `<span class="sw" style="background:${NOTE_COLORS.A}"></span>${pos.titre}`,'lvl2');
+lvl1Links['gammes'] = navLink('#gammes','8 · Les gammes de La','lvl1');
+for (const gamme of GAMMES){
+  for (const pos of gamme.positions){
+    navLink('#gamme-'+gamme.id+'-'+pos.id,
+      `<span class="sw" style="background:${NOTE_COLORS.A}"></span>${gamme.titre} · ${pos.court}`,'lvl2');
+  }
 }
 
 /* section active pendant le défilement */
@@ -2198,7 +2244,7 @@ const spy = makeSpy((entries)=>{
     }
   }
 }, { rootMargin:'-15% 0px -70% 0px' });
-for (const id of ['manche','accords','barres','rythmiques','exercices','progressions','arpeges','gamme-am']){
+for (const id of ['manche','accords','barres','rythmiques','exercices','progressions','arpeges','gammes']){
   spy.observe(document.getElementById(id));
 }
 

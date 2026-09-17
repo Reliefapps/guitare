@@ -9,9 +9,9 @@ const NOTE_COLORS = { C:'#0E9594', D:'#8E44AD', E:'#2E8B57', F:'#DE4229',
 const CORDES = ['G','D','A','E'];          /* de haut en bas */
 const SOLFEGE = /^(do|ré|re|mi|fa|sol|la|si)$/i;
 
-/* le contenu ajouté à partir des cours des 28 août et 4 septembre 2026 */
+/* le contenu ajouté à partir des cours des 28 août, 4 et 17 septembre 2026 */
 const NOUVEAU = ['#routine', '#pluck-avance', '#impro', '#notes-manche', '#triades',
-                 '#gammes'];
+                 '#gammes', '#pentatonique', '#u2'];
 
 /* hauteur d'un nom de note écrit, altérations comprises */
 function hauteur(nom){
@@ -61,6 +61,7 @@ test('les noms de cordes et de notes des SVG basse sont des lettres', () => {
   const { doc } = load();
   openTab(doc, 'basse');
   const svgs = [...doc.querySelectorAll('#pluck-list svg'), ...doc.querySelectorAll('#forme-list svg'),
+                ...doc.querySelectorAll('#penta-list svg'), ...doc.querySelectorAll('#u2-tab svg'),
                 doc.getElementById('fretboard-basse')];
   const suspects = [];
   for (const svg of svgs){
@@ -75,7 +76,7 @@ test('les noms de cordes et de notes des SVG basse sont des lettres', () => {
 test('chaque note des tablatures est colorée selon la note réellement jouée', () => {
   const { doc } = load();
   openTab(doc, 'basse');
-  const svgs = [...doc.querySelectorAll('#pluck-list .tab-scroll svg')];
+  const svgs = [...doc.querySelectorAll('#pluck-list .tab-scroll svg, #penta-list .tab-scroll svg, #u2-tab .tab-scroll svg')];
   assert.ok(svgs.length > 0);
   for (const svg of svgs){
     for (const n of lireTablature(svg)){

@@ -9,9 +9,10 @@ test('la routine affiche ses quatre cartes et leurs liens internes', () => {
   const cartes = [...doc.querySelectorAll('#routine .routine-card')];
   assert.equal(cartes.length, 4);
   cartes.forEach(c => assert.equal(isVisible(c), true));
-  /* l'ordre des cartes est l'ordre de la séance */
+  /* l'ordre des cartes est l'ordre de la séance, celle du 17 septembre 2026 */
   const liens = [...doc.querySelectorAll('#routine .routine-link')].map(a => a.getAttribute('href'));
-  assert.deepEqual(liens, ['#notes-manche', '#px-p2', '#px-p4', '#impro']);
+  assert.deepEqual(liens, ['#px-p4', '#impro', '#pentatonique', '#u2']);
+  assert.match(doc.querySelector('#routine .hint').textContent, /17 septembre 2026/);
   liens.forEach(h => assert.ok(doc.getElementById(h.slice(1)), h + ' ne mène nulle part'));
 });
 
@@ -32,10 +33,19 @@ test("la section improvisation porte la piste du cours, en fenêtre à part", ()
   win.open = (url, nom) => { appels.push({ url, nom }); return { focus(){} }; };
   lien.dispatchEvent(new win.MouseEvent('click', { bubbles: true, cancelable: true }));
   assert.deepEqual(appels, [{ url: lien.href, nom: 'piste-batterie' }]);
-  /* les deux règles du cours sont mises en avant */
-  assert.match(doc.querySelector('#impro .rule').textContent,
-    /fondamentale au changement d'accord/);
+  /* les règles du cours sont mises en avant, celle du 17 septembre comprise */
+  const regle = doc.querySelector('#impro .rule').textContent;
+  assert.match(regle, /fondamentale au changement d'accord/);
+  assert.match(regle, /fondamentale sur le premier temps de chaque mesure/);
   assert.equal(doc.querySelectorAll('#impro .steps li').length, 6);
+  /* le retour du cours du 17 septembre : temps forts, power chord, tierce en touche */
+  const retour = doc.getElementById('impro-retour');
+  assert.ok(retour, 'retour du 17 septembre absent');
+  assert.equal(isVisible(retour), true);
+  for (const bout of ['17 septembre 2026', 'Temps forts, temps faibles', 'power chord',
+                      'La tierce en touche', 'D♯', 'Une forme à la fois']){
+    assert.ok(retour.textContent.includes(bout), 'manque : ' + bout);
+  }
 });
 
 test("les deux formes d'arpège ne diffèrent que par la tierce", () => {
@@ -79,9 +89,15 @@ test('les 4 exercices avancés sont rendus et visibles', () => {
   assert.equal(blocs.length, 4);
   assert.deepEqual(blocs.map(b => b.id), ['px-p1','px-p2','px-p3','px-p4']);
   blocs.forEach(b => assert.equal(isVisible(b), true, b.id + ' rendu mais pas visible'));
-  /* l'exercice #2 est la priorité de la semaine */
+  /* depuis le 17 septembre 2026, l'exercice #4 est la priorité de la semaine */
   const prio = doc.querySelector('#pluck-list .tab-block.prio');
-  assert.equal(prio.id, 'px-p2');
+  assert.equal(prio.id, 'px-p4');
+  assert.match(doc.getElementById('px-p4').textContent, /17 septembre 2026/);
+  /* seul le #3 reste optionnel */
+  const optionnels = [...doc.querySelectorAll('#pluck-list .tab-block')]
+    .filter(b => /si tu as le temps/.test(b.querySelector('.tab-head').textContent))
+    .map(b => b.id);
+  assert.deepEqual(optionnels, ['px-p3']);
   assert.equal(prio.querySelectorAll('.prio-badge').length, 1);
   assert.equal(doc.querySelectorAll('#pluck-list .prio-badge').length, 1);
   /* la règle commune est bien mise en avant */

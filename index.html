@@ -617,6 +617,15 @@
   .quiz-btn:disabled{opacity:.45; cursor:default;}
   .quiz-score{font-family:"Spline Sans Mono",monospace; font-size:13px; font-weight:700;
     color:var(--ink-soft); margin-left:auto;}
+  /* choisir sa gamme plutôt que la tirer au sort */
+  .quiz-choix{display:inline-flex; align-items:center; gap:6px;
+    font-family:"Spline Sans Mono",monospace; font-size:12.5px; color:var(--ink-soft);}
+  .quiz-select{
+    font-family:"Spline Sans Mono",monospace; font-size:12.5px; font-weight:700;
+    color:var(--ink); background:var(--paper); border:1px solid var(--line);
+    border-radius:8px; padding:6px 8px; cursor:pointer;
+  }
+  .quiz-select:hover{border-color:var(--ink-soft);}
   .quiz-slots{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;}
   .quiz-slot{
     font-family:"Spline Sans Mono",monospace; font-weight:700; font-size:15px;
@@ -1229,7 +1238,7 @@
 <section id="jeu">
   <div class="wrap">
     <div class="sec-head"><span class="sec-num">2</span><h2>Le jeu — trouve la gamme</h2></div>
-    <p class="hint">Une fondamentale et un type de gamme sont donnés. À toi de trouver <b>les six autres notes</b>, dans l'ordre, en cliquant sur la palette — aide-toi de la formule <b>W H W W H W W</b> (mineur) ou <b>W W H W W W H</b> (majeur) de la section précédente.</p>
+    <p class="hint">Une fondamentale et un type de gamme sont donnés. À toi de trouver <b>les six autres notes</b>, dans l'ordre, en cliquant sur la palette — aide-toi de la formule <b>W H W W H W W</b> (mineur) ou <b>W W H W W W H</b> (majeur) de la section précédente. Par défaut la gamme est tirée au sort ; tu peux aussi <b>choisir la fondamentale et le type</b> pour t'entraîner sur E mineur ou A majeur, par exemple.</p>
     <div class="prog-card" id="quiz-zone">
       <div class="prog-title" id="quiz-prompt"></div>
       <div class="quiz-slots" id="quiz-slots"></div>
@@ -1237,6 +1246,16 @@
       <div class="quiz-actions">
         <button class="quiz-btn" type="button" id="quiz-undo">← Effacer</button>
         <button class="quiz-btn" type="button" id="quiz-new">Nouvelle gamme →</button>
+        <label class="quiz-choix">Fondamentale
+          <select class="quiz-select" id="quiz-root"><option value="">au hasard</option></select>
+        </label>
+        <label class="quiz-choix">Gamme
+          <select class="quiz-select" id="quiz-type">
+            <option value="">au hasard</option>
+            <option value="mineur">mineur</option>
+            <option value="majeur">majeur</option>
+          </select>
+        </label>
         <span class="quiz-score" id="quiz-score"></span>
       </div>
       <div class="tab-note" id="quiz-feedback"></div>
@@ -3549,12 +3568,44 @@ const PALETTE_DIESES = CHROMA.map(note => ({ note }));
    de bémols : ce qu'on affiche reste juste.
    ------------------------------------------------------------ */
 const RACINES = { majeur:['C','G','D','A','E','B'], mineur:['A','E','B','F#','C#'] };
+
+/* Au hasard, ou au choix : les deux sélecteurs (fondamentale, type) restent
+   vides pour un tirage au sort, sinon ils fixent la gamme. La liste des
+   fondamentales proposées suit le type choisi, pour ne jamais demander
+   une gamme qui s'écrirait avec des bémols. */
+const quizRoot = document.getElementById('quiz-root');
+const quizType = document.getElementById('quiz-type');
+function racinesPossibles(type){
+  return type ? RACINES[type] : CHROMA.filter(n => RACINES.majeur.includes(n) || RACINES.mineur.includes(n));
+}
+function remplirRacines(){
+  const avant = quizRoot.value;
+  const liste = racinesPossibles(quizType.value);
+  quizRoot.replaceChildren(...['', ...liste].map(n => {
+    const o = document.createElement('option');
+    o.value = n; o.textContent = n || 'au hasard';
+    return o;
+  }));
+  /* la fondamentale choisie reste si elle existe encore dans ce type */
+  quizRoot.value = liste.includes(avant) ? avant : '';
+}
+function choixGamme(){
+  let type = quizType.value, root = quizRoot.value;
+  if (!type){
+    /* fondamentale imposée : on tire parmi les types qui la contiennent */
+    const types = ['mineur', 'majeur'].filter(t => !root || RACINES[t].includes(root));
+    type = tirage(types);
+  }
+  if (!root) root = tirage(RACINES[type]);
+  return { type, root };
+}
+remplirRacines();
+
 jeuDeNotes({
   prefixe:'quiz',
   palette: PALETTE_DIESES,
   tirer(){
-    const type = Math.random() < 0.5 ? 'mineur' : 'majeur';
-    const root = tirage(RACINES[type]);
+    const { type, root } = choixGamme();
     const attendu = computeScale(root, type).slice(0, 7);
     const complete = attendu.join(' · ');
     return {
@@ -3566,6 +3617,9 @@ jeuDeNotes({
     };
   },
 });
+/* changer un choix lance tout de suite la gamme correspondante */
+quizType.addEventListener('change', () => { remplirRacines(); document.getElementById('quiz-new').click(); });
+quizRoot.addEventListener('change', () => document.getElementById('quiz-new').click());
 
 /* ------------------------------------------------------------
    Le jeu d'entraînement de la section « Construire un accord »

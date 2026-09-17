@@ -195,6 +195,77 @@ test('une note fausse est signalée, effacer permet de corriger', () => {
   assert.equal(remplies.slice(1).every(s => s.classList.contains('correct')), true);
 });
 
+test('on peut choisir la fondamentale et le type au lieu du hasard', () => {
+  const { doc } = load();
+  openTab(doc, 'theorie');
+  const zone = doc.getElementById('quiz-zone');
+  const root = doc.getElementById('quiz-root');
+  const type = doc.getElementById('quiz-type');
+  const fire = el => el.dispatchEvent(new doc.defaultView.Event('change', { bubbles:true }));
+
+  /* au départ, les deux sélecteurs sont sur « au hasard » */
+  assert.equal(root.value, '');
+  assert.equal(type.value, '');
+
+  /* E mineur : la gamme change tout de suite, sans toucher au score */
+  type.value = 'mineur'; fire(type);
+  root.value = 'E'; fire(root);
+  assert.equal(zone.dataset.root, 'E');
+  assert.equal(zone.dataset.type, 'mineur');
+  assert.match(doc.getElementById('quiz-prompt').textContent, /E mineur/);
+  assert.equal(doc.getElementById('quiz-slots').firstChild.textContent, 'E');
+  assert.equal(doc.getElementById('quiz-score').textContent, '');
+
+  /* le choix tient d'une manche à l'autre */
+  doc.getElementById('quiz-new').click();
+  assert.equal(zone.dataset.root, 'E');
+  assert.equal(zone.dataset.type, 'mineur');
+
+  /* A majeur, en changeant le type d'abord : E existe aussi en majeur, il reste */
+  type.value = 'majeur'; fire(type);
+  assert.equal(root.value, 'E');
+  assert.equal(zone.dataset.type, 'majeur');
+  root.value = 'A'; fire(root);
+  assert.equal(zone.dataset.root, 'A');
+  assert.match(doc.getElementById('quiz-prompt').textContent, /A majeur/);
+  const attendu = gammeAttendue('A', 'majeur');
+  for (const note of attendu.slice(1, 7)){
+    doc.querySelector(`#quiz-palette [data-note="${note}"]`).click();
+  }
+  assert.match(doc.getElementById('quiz-feedback').textContent, /✓/);
+});
+
+test('la liste des fondamentales suit le type : jamais de gamme à bémols', () => {
+  const { doc } = load();
+  openTab(doc, 'theorie');
+  const zone = doc.getElementById('quiz-zone');
+  const root = doc.getElementById('quiz-root');
+  const type = doc.getElementById('quiz-type');
+  const fire = el => el.dispatchEvent(new doc.defaultView.Event('change', { bubbles:true }));
+  const options = () => [...root.options].map(o => o.value).filter(Boolean);
+
+  /* au hasard : l'union des fondamentales des deux types, dans l'ordre chromatique */
+  assert.deepEqual(options(), ['C','C#','D','E','F#','G','A','B']);
+  type.value = 'mineur'; fire(type);
+  assert.deepEqual(options(), ['A','E','B','F#','C#']);
+  type.value = 'majeur'; fire(type);
+  assert.deepEqual(options(), ['C','G','D','A','E','B']);
+
+  /* C# n'existe qu'en mineur : le choisir avec le type au hasard impose le mineur */
+  type.value = ''; fire(type);
+  root.value = 'C#'; fire(root);
+  for (let i = 0; i < 5; i++){
+    doc.getElementById('quiz-new').click();
+    assert.equal(zone.dataset.root, 'C#');
+    assert.equal(zone.dataset.type, 'mineur');
+  }
+  /* revenir en majeur fait sauter C#, qui n'y est pas : retour au hasard */
+  type.value = 'majeur'; fire(type);
+  assert.equal(root.value, '');
+  assert.ok(['C','G','D','A','E','B'].includes(zone.dataset.root));
+  assert.equal(zone.dataset.type, 'majeur');
+});
+
 test('une nouvelle gamme réinitialise les cases et garde le score', () => {
   const { doc } = load();
   openTab(doc, 'theorie');

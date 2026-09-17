@@ -11,7 +11,7 @@ const SOLFEGE = /^(do|ré|re|mi|fa|sol|la|si)$/i;
 
 /* le contenu ajouté à partir des cours des 28 août, 4 et 17 septembre 2026 */
 const NOUVEAU = ['#routine', '#pluck-avance', '#impro', '#notes-manche', '#triades',
-                 '#gammes', '#pentatonique', '#u2'];
+                 '#gammes', '#pentatonique', '#u2', '#penta'];
 
 /* hauteur d'un nom de note écrit, altérations comprises */
 function hauteur(nom){

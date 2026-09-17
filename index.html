@@ -641,6 +641,33 @@
   #quiz-feedback{padding-left:0; padding-right:0; min-height:22px;}
   #quiz-feedback.juste{color:var(--c-E);}
   #quiz-feedback.faux{color:var(--c-F);}
+  /* les autres jeux : même retour vert / rouge que le premier */
+  .prog-card .tab-note{padding-left:0; padding-right:0; min-height:22px;}
+  .prog-card .tab-note.juste{color:var(--c-E);}
+  .prog-card .tab-note.faux{color:var(--c-F);}
+  /* ================= section 4 : la pentatonique ================= */
+  /* les notes qu'on retire de la gamme */
+  .scale-note.off{opacity:.25; text-decoration:line-through;}
+  /* les notes cliquables du jeu « barre les deux intruses » */
+  button.scale-note{border:0; cursor:pointer; line-height:1.2;}
+  button.scale-note:disabled{cursor:default;}
+  .scale-note.pick{box-shadow:0 0 0 3px var(--ink);}
+  .scale-note.correct{box-shadow:0 0 0 3px var(--c-E); opacity:.45;}
+  .scale-note.wrong{box-shadow:0 0 0 3px var(--c-F);}
+  /* les touches noires de la palette portent leurs deux noms */
+  .quiz-note-btn.duo, .quiz-slot.duo{font-size:11px; letter-spacing:-.02em; padding-left:5px; padding-right:5px;}
+  .quiz-note-btn.correct{box-shadow:0 0 0 3px var(--c-E);}
+  .quiz-note-btn.wrong{box-shadow:0 0 0 3px var(--c-F);}
+  .quiz-note-btn:disabled.correct, .quiz-note-btn:disabled.wrong{opacity:1;}
+  .formule{font-family:"Spline Sans Mono",monospace; font-size:13px; font-weight:700; color:var(--ink-soft); margin-left:10px; white-space:nowrap;}
+  /* la relative : les deux gammes côte à côte, une fois la réponse donnée */
+  .rel-compare{display:none; margin-top:14px; padding-top:10px; border-top:1px dashed var(--line);}
+  .rel-compare.on{display:block;}
+  .rel-line{display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:4px 0;}
+  .rel-name{font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:15px; min-width:130px;}
+  /* où poser la boîte : seule la corde de E grave répond au clic */
+  #box-fretboard .note-g.cible{cursor:pointer;}
+  #box-fretboard .note-g:focus{outline:none;}
 
   /* ================= navigation principale ================= */
   .mainnav{
@@ -1181,6 +1208,7 @@
     <a href="#construire">1 · Construire une gamme</a>
     <a href="#jeu">2 · Le jeu</a>
     <a href="#triades">3 · Construire un accord</a>
+    <a href="#penta">4 · La pentatonique</a>
   </div>
 </nav>
 
@@ -1240,6 +1268,78 @@
     <div class="prog-legend">
       <b>Le lien avec la basse :</b> ces trois notes jouées l'une après l'autre au lieu d'être plaquées ensemble, c'est un <b>arpège</b> — exactement ce que tu joues sur <a href="#/basse" data-goto="basse">la piste Am / G de la fiche basse</a>.
       Et remarque que <b>A mineur</b> et <b>C majeur</b> ont les mêmes sept notes : l'une est la gamme relative de l'autre. Les deux accords sortent donc de la même gamme, ce qui explique qu'on les croise sans arrêt dans les mêmes morceaux.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. LA PENTATONIQUE ============ -->
+<section id="penta">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">4</span><h2>La pentatonique</h2></div>
+    <p class="hint">Cinq notes au lieu de sept. La <b>pentatonique mineure</b>, c'est la gamme mineure naturelle de la section 1 <b>moins deux notes</b> : le <b>2ᵉ</b> et le <b>6ᵉ</b> degré. Sur A mineur, on enlève <b>B</b> et <b>F</b> : il reste <b>A · C · D · E · G</b>.</p>
+    <div id="penta-rows"></div>
+    <div class="prog-legend">
+      <b>Pourquoi ces deux-là ?</b> B et F sont les notes qui <b>bordent les demi-tons</b> de la gamme : B–C et E–F. Sans elles, il ne reste que des écarts de <b>W</b> ou de <b>W+H</b> (un ton et demi), plus aucun demi-ton — donc presque rien ne frotte avec les accords de la tonalité. C'est pour ça qu'on improvise dessus sans se poser de questions.
+      <div style="margin-top:8px">En degrés : <b>1 · ♭3 · 4 · 5 · ♭7</b> pour la mineure, <b>1 · 2 · 3 · 5 · 6</b> pour la majeure.</div>
+      <div style="margin-top:8px"><b>Le lien avec la section 3 :</b> la pentatonique de A mineur, c'est les quatre notes de <b>Am7</b> (A C E G) <b>plus le D</b>. L'accord est déjà dedans.</div>
+      <div style="margin-top:8px">La formule se pose sur <b>n'importe quelle fondamentale</b> — une lettre par degré, avec ♯ ou ♭ quand il faut :</div>
+      <div class="chord-out" id="penta-exemples"></div>
+    </div>
+
+    <p class="hint" id="intrus-intro"><b>Barre les deux intruses.</b> Une gamme mineure complète est affichée. Clique sur <b>les deux notes à retirer</b> pour obtenir la pentatonique mineure — le 2ᵉ et le 6ᵉ degré, ceux qui bordent les demi-tons.</p>
+    <div class="prog-card" id="intrus-zone">
+      <div class="prog-title" id="intrus-prompt"></div>
+      <div class="chord-line" id="intrus-line"></div>
+      <div class="quiz-actions">
+        <button class="quiz-btn" type="button" id="intrus-new">Nouvelle gamme →</button>
+        <span class="quiz-score" id="intrus-score"></span>
+      </div>
+      <div class="tab-note" id="intrus-feedback"></div>
+    </div>
+
+    <p class="hint" id="pj-intro"><b>Trouve la penta.</b> Comme au jeu de la section 2 : une fondamentale et un type sont donnés, à toi de trouver <b>les quatre autres notes</b>, dans l'ordre, avec la formule sous les yeux. Les touches noires de la palette portent leurs deux noms : c'est la <b>hauteur</b> qui compte, et la correction écrit la bonne orthographe.</p>
+    <div class="prog-card" id="pj-zone">
+      <div class="prog-title" id="pj-prompt"></div>
+      <div class="quiz-slots" id="pj-slots"></div>
+      <div class="quiz-palette" id="pj-palette"></div>
+      <div class="quiz-actions">
+        <button class="quiz-btn" type="button" id="pj-undo">← Effacer</button>
+        <button class="quiz-btn" type="button" id="pj-new">Nouvelle penta →</button>
+        <span class="quiz-score" id="pj-score"></span>
+      </div>
+      <div class="tab-note" id="pj-feedback"></div>
+    </div>
+
+    <p class="hint" id="rel-intro"><b>La relative.</b> À la fin de la section 3, on a vu que <b>A mineur</b> et <b>C majeur</b> ont les mêmes sept notes. Pareil pour les pentas : <b>A</b> mineure et <b>C</b> majeure, ce sont <b>les mêmes cinq notes</b>, avec un autre point de départ — la majeure commence un ton et demi au-dessus de la mineure. En pratique : un morceau en <b>G majeur</b>, et tu joues la boîte de <b>E mineur</b>.</p>
+    <div class="prog-card" id="rel-zone">
+      <div class="prog-title" id="rel-prompt"></div>
+      <div class="chord-line" id="rel-notes"></div>
+      <div class="quiz-palette" id="rel-palette"></div>
+      <div class="rel-compare" id="rel-compare"></div>
+      <div class="quiz-actions">
+        <button class="quiz-btn" type="button" id="rel-new">Nouvelle question →</button>
+        <span class="quiz-score" id="rel-score"></span>
+      </div>
+      <div class="tab-note" id="rel-feedback"></div>
+    </div>
+
+    <p class="hint" id="box-intro"><b>Où poser la boîte.</b> Une tonalité est annoncée. Clique <b>sa fondamentale sur la corde de E grave</b>, entre les cases 0 et 12 : c'est là que se pose la <b>boîte position 1</b> de la pentatonique mineure. La forme ne change jamais, elle glisse le long du manche.</p>
+    <div class="prog-card" id="box-zone">
+      <div class="prog-title" id="box-prompt"></div>
+      <div class="board-panel" style="margin-top:12px">
+        <div class="board-scroll">
+          <svg id="box-fretboard" xmlns="http://www.w3.org/2000/svg" role="img"></svg>
+        </div>
+      </div>
+      <div class="quiz-actions">
+        <button class="quiz-btn" type="button" id="box-new">Nouvelle tonalité →</button>
+        <span class="quiz-score" id="box-score"></span>
+      </div>
+      <div class="tab-note" id="box-feedback"></div>
+    </div>
+
+    <div class="callout">
+      <b>Le lien avec le manche et la basse :</b> les <a href="#/basse" data-goto="basse" data-anchor="pentatonique">six formes de la pentatonique de la fiche basse</a> sont cette même gamme, en boîtes. Sur la guitare, reprends <a href="#/guitare" data-goto="guitare" data-anchor="gammes">Les gammes de La</a> : joue la gamme de <b>A</b> mineur complète, puis la même en sautant <b>B</b> et <b>F</b>, et écoute la différence.
     </div>
   </div>
 </section>
@@ -1384,7 +1484,13 @@ window.makeSpy = function(cb, opts){
   tabs.forEach(t => t.addEventListener('click', () => show(t.dataset.page, true)));
   /* liens d'une page vers une autre, écrits en dur dans le HTML */
   document.querySelectorAll('a[data-goto]').forEach(a =>
-    a.addEventListener('click', e => { e.preventDefault(); show(a.dataset.goto, true); }));
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      show(a.dataset.goto, true);
+      /* data-anchor : on descend jusqu'à la section visée une fois la page affichée */
+      const cible = a.dataset.anchor && document.getElementById(a.dataset.anchor);
+      if (cible && cible.scrollIntoView) try { cible.scrollIntoView(); } catch (err) {}
+    }));
   /* rendue accessible pour les liens d'une page vers une autre */
   window.gotoPage = show;
   /* ancre de page au chargement, sinon guitare par défaut */
@@ -3174,26 +3280,74 @@ function computeScale(root, type){
   return notes;
 }
 
-/* rend une gamme : les 8 notes + les 7 intervalles W/H entre elles */
-function ligneGamme(root, type){
+/* ------------------------------------------------------------
+   Épellation : une lettre par degré
+   Une gamme s'écrit avec chaque lettre une fois — G mineur prend un B♭,
+   jamais un A♯. On avance dans les lettres selon le degré, puis on pose
+   ♯ ou ♭ selon l'écart réel en demi-tons.
+   ------------------------------------------------------------ */
+const LETTRES = ['C','D','E','F','G','A','B'];
+const NATUREL = { C:0, D:2, E:4, F:5, G:7, A:9, B:11 };
+/* hauteur d'un nom écrit, altérations comprises (# ou ♯, b ou ♭) */
+function hauteur(nom){
+  let h = NATUREL[nom[0]];
+  for (const c of nom.slice(1)){
+    if (c === '#' || c === '♯') h += 1;
+    if (c === 'b' || c === '♭') h -= 1;
+  }
+  return ((h % 12) + 12) % 12;
+}
+/* degres = [ [pas de lettre, demi-tons] ] depuis la fondamentale */
+function epeler(root, degres){
+  const l0 = LETTRES.indexOf(root[0]);
+  return degres.map(([pas, demi]) => {
+    const lettre = LETTRES[(l0 + pas) % 7];
+    let alt = (hauteur(root) + demi - NATUREL[lettre]) % 12;
+    alt = ((alt % 12) + 12) % 12;
+    if (alt > 6) alt -= 12;
+    return lettre + (alt > 0 ? '♯'.repeat(alt) : '♭'.repeat(-alt));
+  });
+}
+const DEGRES = {
+  gammeMineure:[[0,0],[1,2],[2,3],[3,5],[4,7],[5,8],[6,10]],   /* 1 2 ♭3 4 5 ♭6 ♭7 */
+  mineur:[[0,0],[2,3],[3,5],[4,7],[6,10]],                     /* 1 ♭3 4 5 ♭7 */
+  majeur:[[0,0],[1,2],[2,4],[4,7],[5,9]],                      /* 1 2 3 5 6 */
+};
+function penta(root, type){ return epeler(root, DEGRES[type]); }
+function gammeMineure(root){ return epeler(root, DEGRES.gammeMineure); }
+/* les douze fondamentales de chaque type, avec l'orthographe d'usage —
+   les deux listes se répondent : la relative d'une majeure est dans
+   l'autre liste, écrite avec les mêmes altérations */
+const RACINES_PENTA = {
+  majeur:['C','G','D','A','E','B','G♭','F','B♭','E♭','A♭','D♭'],
+  mineur:['A','E','B','F♯','C♯','G♯','E♭','D','G','C','F','B♭'],
+};
+
+/* rend une suite de notes avec les intervalles entre elles (en demi-tons) ;
+   off = les notes à griser, celles qu'on retire */
+const INTERVALLES = { 1:['H','½ ton'], 2:['W','1 ton'], 3:['W+H','1 ton ½'] };
+function ligneNotes(notes, demis, off){
   const div = document.createElement('div');
   div.className = 'scale-line';
-  const notes = computeScale(root, type);
   notes.forEach((note, i) => {
     const chip = document.createElement('span');
-    chip.className = 'scale-note';
+    chip.className = 'scale-note' + (off && off.includes(note) ? ' off' : '');
     chip.style.background = NOTE_COLORS[note[0]];
     chip.textContent = note;
     div.appendChild(chip);
-    if (i < 7){
-      const st = FORMULES[type][i];
+    if (i < demis.length){
+      const [sym, txt] = INTERVALLES[demis[i]];
       const sp = document.createElement('span');
-      sp.className = 'scale-int' + (st === 1 ? ' half' : '');
-      sp.innerHTML = (st === 2 ? 'W' : 'H') + `<i>${st === 2 ? '1 ton' : '½ ton'}</i>`;
+      sp.className = 'scale-int' + (demis[i] === 1 ? ' half' : '');
+      sp.innerHTML = sym + `<i>${txt}</i>`;
       div.appendChild(sp);
     }
   });
   return div;
+}
+/* rend une gamme : les 8 notes + les 7 intervalles W/H entre elles */
+function ligneGamme(root, type){
+  return ligneNotes(computeScale(root, type), FORMULES[type]);
 }
 
 /* ------------------------------------------------------------
@@ -3267,250 +3421,497 @@ for (const a of ACCORDS){
 }
 
 /* ------------------------------------------------------------
-   3. Le jeu — trouve la gamme
-   Une fondamentale et un type sont donnés (degré 1) ; à partir de la
-   palette, on retrouve les degrés 2 à 7, dans l'ordre.
+   3. Les jeux « cases + palette » — une seule fabrique
+   Trois jeux partagent la même mécanique : une fondamentale donnée,
+   des cases à remplir dans l'ordre depuis une palette, « ← Effacer »,
+   la vérification quand tout est rempli, un score. Seuls changent le
+   tirage, l'énoncé et le bilan : c'est ce que fournit cfg.
+     cfg = { prefixe, palette:[{note, label, duo}],
+             tirer() → { attendu, enonce, dataset, bilan(ok, justes) },
+             egal(a, b), libelle(note, i, ok, attendu) }
+   Les ids du DOM sont préfixés : <prefixe>-zone, -prompt, -slots,
+   -palette, -undo, -new, -score, -feedback.
+   ------------------------------------------------------------ */
+function jeuDeNotes(cfg){
+  const $ = s => document.getElementById(cfg.prefixe + '-' + s);
+  const zone = $('zone'), promptEl = $('prompt'), slotsEl = $('slots'),
+        paletteEl = $('palette'), feedback = $('feedback'), scoreEl = $('score'),
+        undoBtn = $('undo');
+  const egal = cfg.egal || ((a, b) => a === b);
+  const libelle = cfg.libelle || (note => note);
+  let etat, filled, done, bons = 0, total = 0;
+
+  /* la palette est statique : une fois pour toutes */
+  for (const p of cfg.palette){
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'quiz-note-btn' + (p.duo ? ' duo' : '');
+    b.style.background = NOTE_COLORS[p.note[0]];
+    b.textContent = p.label || p.note;
+    b.dataset.note = p.note;
+    b.addEventListener('click', () => jouer(p.note));
+    paletteEl.appendChild(b);
+  }
+
+  function slotBouton(note, idx){
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'quiz-slot filled';
+    b.style.background = NOTE_COLORS[note[0]];
+    const ok = done && egal(note, etat.attendu[idx + 1]);
+    b.textContent = libelle(note, idx + 1, ok, etat.attendu);
+    if (b.textContent.length > 3) b.classList.add('duo');
+    b.title = 'Effacer à partir d\'ici';
+    b.addEventListener('click', () => {
+      if (done) return;
+      for (let i = idx; i < filled.length; i++) filled[i] = null;
+      render();
+    });
+    return b;
+  }
+
+  function render(){
+    promptEl.innerHTML = etat.enonce;
+
+    const donne = document.createElement('span');
+    donne.className = 'quiz-slot given';
+    donne.style.background = NOTE_COLORS[etat.attendu[0][0]];
+    donne.textContent = etat.attendu[0];
+    const slots = [donne];
+    filled.forEach((note, i) => {
+      let el;
+      if (note == null){
+        el = document.createElement('span');
+        el.className = 'quiz-slot';
+      } else {
+        el = slotBouton(note, i);
+        if (done) el.classList.add(egal(note, etat.attendu[i + 1]) ? 'correct' : 'wrong');
+      }
+      slots.push(el);
+    });
+    slotsEl.replaceChildren(...slots);
+
+    const complet = filled.every(n => n != null);
+    [...paletteEl.children].forEach(b => b.disabled = done || complet);
+    undoBtn.disabled = done || filled.every(n => n == null);
+  }
+
+  function jouer(note){
+    if (done) return;
+    const i = filled.findIndex(n => n == null);
+    if (i === -1) return;
+    filled[i] = note;
+    render();
+    if (filled.every(n => n != null)) verifier();
+  }
+
+  function verifier(){
+    done = true;
+    total++;
+    const justes = filled.filter((n, i) => egal(n, etat.attendu[i + 1])).length;
+    const ok = justes === filled.length;
+    if (ok) bons++;
+    feedback.innerHTML = etat.bilan(ok, justes);
+    feedback.className = 'tab-note ' + (ok ? 'juste' : 'faux');
+    scoreEl.textContent = bons + ' / ' + total;
+    render();
+  }
+
+  function nouvelle(){
+    etat = cfg.tirer();
+    filled = new Array(etat.attendu.length - 1).fill(null);
+    done = false;
+    for (const k in etat.dataset) zone.dataset[k] = etat.dataset[k];
+    feedback.textContent = '';
+    feedback.className = 'tab-note';
+    render();
+  }
+
+  undoBtn.addEventListener('click', () => {
+    if (done) return;
+    for (let i = filled.length - 1; i >= 0; i--){
+      if (filled[i] != null){ filled[i] = null; break; }
+    }
+    render();
+  });
+  $('new').addEventListener('click', nouvelle);
+  nouvelle();
+}
+
+const tirage = liste => liste[Math.floor(Math.random() * liste.length)];
+const nomColore = n => `<b style="color:${NOTE_COLORS[n[0]]}">${n}</b>`;
+/* la palette des sections 2 et 3 : les 12 notes, écrites avec des dièses */
+const PALETTE_DIESES = CHROMA.map(note => ({ note }));
+
+/* ------------------------------------------------------------
+   Le jeu — trouve la gamme (section 2)
    Les fondamentales choisies ne demandent que des dièses, jamais
    de bémols : ce qu'on affiche reste juste.
    ------------------------------------------------------------ */
 const RACINES = { majeur:['C','G','D','A','E','B'], mineur:['A','E','B','F#','C#'] };
-const zone = document.getElementById('quiz-zone');
-const promptEl = document.getElementById('quiz-prompt');
-const slotsEl = document.getElementById('quiz-slots');
-const paletteEl = document.getElementById('quiz-palette');
-const feedback = document.getElementById('quiz-feedback');
-const scoreEl = document.getElementById('quiz-score');
-const undoBtn = document.getElementById('quiz-undo');
-let root, type, expected, filled, done, bons = 0, total = 0;
-
-/* la palette est statique : 12 notes, une fois pour toutes */
-CHROMA.forEach(note => {
-  const b = document.createElement('button');
-  b.type = 'button';
-  b.className = 'quiz-note-btn';
-  b.style.background = NOTE_COLORS[note[0]];
-  b.textContent = note;
-  b.dataset.note = note;
-  b.addEventListener('click', () => jouer(note));
-  paletteEl.appendChild(b);
+jeuDeNotes({
+  prefixe:'quiz',
+  palette: PALETTE_DIESES,
+  tirer(){
+    const type = Math.random() < 0.5 ? 'mineur' : 'majeur';
+    const root = tirage(RACINES[type]);
+    const attendu = computeScale(root, type).slice(0, 7);
+    const complete = attendu.join(' · ');
+    return {
+      attendu, dataset:{ type, root },
+      enonce:`Gamme de ${nomColore(root)} ${type}`,
+      bilan:(ok, justes) => ok
+        ? `✓ Bravo — la gamme de ${root} ${type}, c'est ${complete}.`
+        : `✗ ${justes} / 6 notes justes — la gamme complète est ${complete}.`,
+    };
+  },
 });
-
-function slotBouton(note, idx){
-  const b = document.createElement('button');
-  b.type = 'button';
-  b.className = 'quiz-slot filled';
-  b.style.background = NOTE_COLORS[note[0]];
-  b.textContent = note;
-  b.title = 'Effacer à partir d\'ici';
-  b.addEventListener('click', () => {
-    if (done) return;
-    for (let i = idx; i < filled.length; i++) filled[i] = null;
-    render();
-  });
-  return b;
-}
-
-function render(){
-  promptEl.innerHTML = `Gamme de <b style="color:${NOTE_COLORS[root[0]]}">${root}</b> ${type}`;
-
-  const donne = document.createElement('span');
-  donne.className = 'quiz-slot given';
-  donne.style.background = NOTE_COLORS[root[0]];
-  donne.textContent = root;
-  const slots = [donne];
-  filled.forEach((note, i) => {
-    let el;
-    if (note == null){
-      el = document.createElement('span');
-      el.className = 'quiz-slot';
-    } else {
-      el = slotBouton(note, i);
-      if (done) el.classList.add(note === expected[i+1] ? 'correct' : 'wrong');
-    }
-    slots.push(el);
-  });
-  slotsEl.replaceChildren(...slots);
-
-  const complet = filled.every(n => n != null);
-  [...paletteEl.children].forEach(b => b.disabled = done || complet);
-  undoBtn.disabled = done || filled.every(n => n == null);
-}
-
-function jouer(note){
-  if (done) return;
-  const i = filled.findIndex(n => n == null);
-  if (i === -1) return;
-  filled[i] = note;
-  render();
-  if (filled.every(n => n != null)) verifier();
-}
-
-function verifier(){
-  done = true;
-  total++;
-  const justes = filled.filter((n, i) => n === expected[i+1]).length;
-  if (justes === 6) bons++;
-  const gammeComplete = expected.slice(0, 7).join(' · ');
-  feedback.innerHTML = justes === 6
-    ? `✓ Bravo — la gamme de ${root} ${type}, c'est ${gammeComplete}.`
-    : `✗ ${justes} / 6 notes justes — la gamme complète est ${gammeComplete}.`;
-  feedback.className = 'tab-note ' + (justes === 6 ? 'juste' : 'faux');
-  scoreEl.textContent = bons + ' / ' + total;
-  render();
-}
-
-function nouvelle(){
-  type = Math.random() < 0.5 ? 'mineur' : 'majeur';
-  root = RACINES[type][Math.floor(Math.random() * RACINES[type].length)];
-  expected = computeScale(root, type);
-  filled = new Array(6).fill(null);
-  done = false;
-  zone.dataset.type = type;
-  zone.dataset.root = root;
-  feedback.textContent = '';
-  feedback.className = 'tab-note';
-  render();
-}
-
-undoBtn.addEventListener('click', () => {
-  if (done) return;
-  for (let i = filled.length - 1; i >= 0; i--){
-    if (filled[i] != null){ filled[i] = null; break; }
-  }
-  render();
-});
-document.getElementById('quiz-new').addEventListener('click', nouvelle);
-nouvelle();
 
 /* ------------------------------------------------------------
    Le jeu d'entraînement de la section « Construire un accord »
-   Même principe que le jeu de gamme, mais on ne demande que les notes
-   de l'accord : deux pour une triade, trois avec la septième. Il vit
-   dans son propre IIFE, sinon il faudrait renommer la moitié du jeu
-   précédent pour éviter les collisions.
+   Même mécanique, mais on ne demande que les notes de l'accord :
+   deux pour une triade, trois avec la septième.
    ------------------------------------------------------------ */
+jeuDeNotes({
+  prefixe:'acc',
+  palette: PALETTE_DIESES,
+  tirer(){
+    const type = Math.random() < 0.5 ? 'mineur' : 'majeur';
+    const root = tirage(RACINES[type]);
+    const sept = Math.random() < 0.5;
+    /* une note sur deux dans la gamme : degrés 1, 3, 5, et 7 pour la septième */
+    const g = computeScale(root, type);
+    const attendu = sept ? [g[0], g[2], g[4], g[6]] : [g[0], g[2], g[4]];
+    /* Am, Am7, C, Cmaj7 — le majeur ne porte pas de suffixe pour la triade */
+    const nom = type === 'mineur' ? root + (sept ? 'm7' : 'm') : root + (sept ? 'maj7' : '');
+    const complet = attendu.join(' · ');
+    return {
+      attendu, dataset:{ type, root, sept: sept ? '1' : '0' },
+      enonce:`Accord de ${nomColore(root)} ${type} — ` + (sept ? 'l\'accord de septième' : 'la triade'),
+      bilan:(ok, justes) => ok
+        ? `✓ Bravo — ${nom}, c'est ${complet}.`
+        : `✗ ${justes} / ${attendu.length - 1} notes justes — ${nom}, c'est ${complet}.`,
+    };
+  },
+});
+
+/* ============================================================
+   4. La pentatonique
+   ============================================================ */
+
+/* 4.1 — on enlève deux notes : A mineur, puis la même sans B ni F */
 (function(){
+  const rows = document.getElementById('penta-rows');
+  const card = document.createElement('article');
+  card.className = 'scale-row';
+  card.id = 'penta-am';
+  card.innerHTML = `<div class="scale-name" style="color:${NOTE_COLORS.A}">A mineur → A mineur pentatonique</div>
+    <div class="scale-desc">La gamme complète de la section 1, puis la même sans le 2ᵉ degré (B) ni le 6ᵉ (F). Il reste cinq notes, et plus un seul demi-ton entre elles.</div>`;
+  card.appendChild(ligneNotes(computeScale('A', 'mineur'), FORMULES.mineur, ['B', 'F']));
+  card.appendChild(ligneNotes(['A','C','D','E','G','A'], [3,2,2,3,2]));
+  const out = document.createElement('div');
+  out.className = 'chord-out';
+  out.innerHTML = accordSeq('A mineur penta', ['A','C','D','E','G']) +
+                  accordSeq('= Am7 + D', ['A','C','E','G','D']);
+  card.appendChild(out);
+  rows.appendChild(card);
 
-const zone = document.getElementById('acc-zone');
-const promptEl = document.getElementById('acc-prompt');
-const slotsEl = document.getElementById('acc-slots');
-const paletteEl = document.getElementById('acc-palette');
-const feedback = document.getElementById('acc-feedback');
-const scoreEl = document.getElementById('acc-score');
-const undoBtn = document.getElementById('acc-undo');
-let root, type, sept, attendu, filled, done, bons = 0, total = 0;
-
-CHROMA.forEach(note => {
-  const b = document.createElement('button');
-  b.type = 'button';
-  b.className = 'quiz-note-btn';
-  b.style.background = NOTE_COLORS[note[0]];
-  b.textContent = note;
-  b.dataset.note = note;
-  b.addEventListener('click', () => jouer(note));
-  paletteEl.appendChild(b);
-});
-
-/* Am, Am7, C, Cmaj7 — le majeur ne porte pas de suffixe pour la triade */
-function nomAccord(){
-  if (type === 'mineur') return root + (sept ? 'm7' : 'm');
-  return root + (sept ? 'maj7' : '');
-}
-
-function slotBouton(note, idx){
-  const b = document.createElement('button');
-  b.type = 'button';
-  b.className = 'quiz-slot filled';
-  b.style.background = NOTE_COLORS[note[0]];
-  b.textContent = note;
-  b.title = 'Effacer à partir d\'ici';
-  b.addEventListener('click', () => {
-    if (done) return;
-    for (let i = idx; i < filled.length; i++) filled[i] = null;
-    render();
-  });
-  return b;
-}
-
-function render(){
-  promptEl.innerHTML = `Accord de <b style="color:${NOTE_COLORS[root[0]]}">${root}</b> ${type} — ` +
-    (sept ? 'l\'accord de septième' : 'la triade');
-
-  const donne = document.createElement('span');
-  donne.className = 'quiz-slot given';
-  donne.style.background = NOTE_COLORS[root[0]];
-  donne.textContent = root;
-  const slots = [donne];
-  filled.forEach((note, i) => {
-    let el;
-    if (note == null){
-      el = document.createElement('span');
-      el.className = 'quiz-slot';
-    } else {
-      el = slotBouton(note, i);
-      if (done) el.classList.add(note === attendu[i+1] ? 'correct' : 'wrong');
-    }
-    slots.push(el);
-  });
-  slotsEl.replaceChildren(...slots);
-
-  const complet = filled.every(n => n != null);
-  [...paletteEl.children].forEach(b => b.disabled = done || complet);
-  undoBtn.disabled = done || filled.every(n => n == null);
-}
-
-function jouer(note){
-  if (done) return;
-  const i = filled.findIndex(n => n == null);
-  if (i === -1) return;
-  filled[i] = note;
-  render();
-  if (filled.every(n => n != null)) verifier();
-}
-
-function verifier(){
-  done = true;
-  total++;
-  const justes = filled.filter((n, i) => n === attendu[i+1]).length;
-  if (justes === filled.length) bons++;
-  const accordComplet = attendu.join(' · ');
-  feedback.innerHTML = justes === filled.length
-    ? `✓ Bravo — ${nomAccord()}, c'est ${accordComplet}.`
-    : `✗ ${justes} / ${filled.length} notes justes — ${nomAccord()}, c'est ${accordComplet}.`;
-  feedback.className = 'tab-note ' + (justes === filled.length ? 'juste' : 'faux');
-  scoreEl.textContent = bons + ' / ' + total;
-  render();
-}
-
-function nouveau(){
-  type = Math.random() < 0.5 ? 'mineur' : 'majeur';
-  root = RACINES[type][Math.floor(Math.random() * RACINES[type].length)];
-  sept = Math.random() < 0.5;
-  /* une note sur deux dans la gamme : degrés 1, 3, 5, et 7 pour la septième */
-  const gamme = computeScale(root, type);
-  attendu = sept ? [gamme[0], gamme[2], gamme[4], gamme[6]]
-                 : [gamme[0], gamme[2], gamme[4]];
-  filled = new Array(attendu.length - 1).fill(null);
-  done = false;
-  zone.dataset.type = type;
-  zone.dataset.root = root;
-  zone.dataset.sept = sept ? '1' : '0';
-  feedback.textContent = '';
-  feedback.className = 'tab-note';
-  render();
-}
-
-undoBtn.addEventListener('click', () => {
-  if (done) return;
-  for (let i = filled.length - 1; i >= 0; i--){
-    if (filled[i] != null){ filled[i] = null; break; }
-  }
-  render();
-});
-document.getElementById('acc-new').addEventListener('click', nouveau);
-nouveau();
-
+  /* la même formule sur d'autres fondamentales, épelée avec une lettre par degré */
+  document.getElementById('penta-exemples').innerHTML =
+    ['E', 'D', 'G'].map(r => accordSeq(r + 'm', penta(r, 'mineur'))).join('');
 })();
+
+/* 4.2 — barre les deux intruses */
+(function(){
+  const zone = document.getElementById('intrus-zone');
+  const promptEl = document.getElementById('intrus-prompt');
+  const lineEl = document.getElementById('intrus-line');
+  const feedback = document.getElementById('intrus-feedback');
+  const scoreEl = document.getElementById('intrus-score');
+  let root, gamme, picks, done, bons = 0, total = 0;
+  const INTRUS = [1, 5];   /* le 2ᵉ et le 6ᵉ degré, en indices */
+
+  function render(){
+    promptEl.innerHTML = `Gamme de ${nomColore(root)} mineur — clique les deux notes à retirer`;
+    lineEl.replaceChildren(...gamme.map((note, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'scale-note';
+      b.style.background = NOTE_COLORS[note[0]];
+      b.textContent = note;
+      b.dataset.note = note;
+      if (picks.includes(i)) b.classList.add(done ? (INTRUS.includes(i) ? 'correct' : 'wrong') : 'pick');
+      if (done && INTRUS.includes(i)) b.classList.add('off');
+      b.disabled = done;
+      b.addEventListener('click', () => choisir(i));
+      return b;
+    }));
+  }
+
+  function choisir(i){
+    if (done) return;
+    /* re-cliquer une note choisie la déselectionne */
+    if (picks.includes(i)){ picks = picks.filter(p => p !== i); render(); return; }
+    picks.push(i);
+    render();
+    if (picks.length === 2) verifier();
+  }
+
+  function verifier(){
+    done = true;
+    total++;
+    const ok = INTRUS.every(i => picks.includes(i));
+    if (ok) bons++;
+    const p = penta(root, 'mineur').join(' · ');
+    feedback.innerHTML = ok
+      ? `✓ Bravo — sans ${gamme[1]} ni ${gamme[5]}, il reste ${p} : la pentatonique de ${root} mineur.`
+      : `✗ Il fallait retirer ${gamme[1]} et ${gamme[5]}, le 2ᵉ et le 6ᵉ degré — la pentatonique de ${root} mineur, c'est ${p}.`;
+    feedback.className = 'tab-note ' + (ok ? 'juste' : 'faux');
+    scoreEl.textContent = bons + ' / ' + total;
+    render();
+  }
+
+  function nouvelle(){
+    root = tirage(RACINES_PENTA.mineur);
+    gamme = gammeMineure(root);
+    picks = [];
+    done = false;
+    zone.dataset.root = root;
+    feedback.textContent = '';
+    feedback.className = 'tab-note';
+    render();
+  }
+
+  document.getElementById('intrus-new').addEventListener('click', nouvelle);
+  nouvelle();
+})();
+
+/* 4.3 — trouve la penta : la fabrique, avec une palette qui connaît les
+   bémols. Les touches noires portent leurs deux noms ; on valide à la
+   hauteur, et la correction réécrit la note avec la bonne orthographe. */
+(function(){
+  const PALETTE_DUO = CHROMA.map(note => note.includes('#')
+    ? { note, duo:true, label: note[0] + '♯/' + LETTRES[(LETTRES.indexOf(note[0]) + 1) % 7] + '♭' }
+    : { note });
+  const labelDe = Object.fromEntries(PALETTE_DUO.map(p => [p.note, p.label || p.note]));
+  const FORMULE = { mineur:'1 · ♭3 · 4 · 5 · ♭7', majeur:'1 · 2 · 3 · 5 · 6' };
+  const ADJ = { mineur:'mineure', majeur:'majeure' };
+  jeuDeNotes({
+    prefixe:'pj',
+    palette: PALETTE_DUO,
+    egal:(a, b) => hauteur(a) === hauteur(b),
+    libelle:(note, i, ok, attendu) => ok ? attendu[i] : labelDe[note],
+    tirer(){
+      const type = Math.random() < 0.5 ? 'mineur' : 'majeur';
+      const root = tirage(RACINES_PENTA[type]);
+      const attendu = penta(root, type);
+      const complete = attendu.join(' · ');
+      return {
+        attendu, dataset:{ type, root },
+        enonce:`Pentatonique ${ADJ[type]} de ${nomColore(root)} <span class="formule">${FORMULE[type]}</span>`,
+        bilan:(ok, justes) => ok
+          ? `✓ Bravo — la pentatonique ${ADJ[type]} de ${root}, c'est ${complete}.`
+          : `✗ ${justes} / 4 notes justes — la pentatonique ${ADJ[type]} de ${root}, c'est ${complete}.`,
+      };
+    },
+  });
+})();
+
+/* 4.4 — la relative : mêmes cinq notes, deux noms */
+(function(){
+  const zone = document.getElementById('rel-zone');
+  const promptEl = document.getElementById('rel-prompt');
+  const notesEl = document.getElementById('rel-notes');
+  const paletteEl = document.getElementById('rel-palette');
+  const compareEl = document.getElementById('rel-compare');
+  const feedback = document.getElementById('rel-feedback');
+  const scoreEl = document.getElementById('rel-score');
+  const ADJ = { mineur:'mineure', majeur:'majeure' };
+  let donne, cible, done, bons = 0, total = 0;
+
+  function chips(notes){
+    return notes.map(note => {
+      const s = document.createElement('span');
+      s.className = 'scale-note';
+      s.style.background = NOTE_COLORS[note[0]];
+      s.textContent = note;
+      return s;
+    });
+  }
+  function ligneRelative(g){
+    const div = document.createElement('div');
+    div.className = 'rel-line';
+    const nom = document.createElement('span');
+    nom.className = 'rel-name';
+    nom.innerHTML = `${nomColore(g.root)} ${ADJ[g.type]}`;
+    div.append(nom, ...chips(penta(g.root, g.type)));
+    return div;
+  }
+
+  function nouvelle(){
+    const type = Math.random() < 0.5 ? 'mineur' : 'majeur';
+    const typeCible = type === 'mineur' ? 'majeur' : 'mineur';
+    const root = tirage(RACINES_PENTA[type]);
+    /* la relative majeure est un ton et demi plus haut, la mineure un ton et demi plus bas */
+    const h = (hauteur(root) + (type === 'mineur' ? 3 : 9)) % 12;
+    donne = { root, type };
+    cible = { root: RACINES_PENTA[typeCible].find(r => hauteur(r) === h), type: typeCible };
+    done = false;
+    zone.dataset.root = root;
+    zone.dataset.type = type;
+    zone.dataset.cible = cible.root;
+    promptEl.innerHTML = `Pentatonique ${ADJ[type]} de ${nomColore(root)} — quelle pentatonique <b>${ADJ[typeCible]}</b> a les mêmes cinq notes ?`;
+    notesEl.replaceChildren(...chips(penta(root, type)));
+    paletteEl.replaceChildren(...RACINES_PENTA[typeCible].map(r => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'quiz-note-btn';
+      b.style.background = NOTE_COLORS[r[0]];
+      b.textContent = r;
+      b.dataset.note = r;
+      b.addEventListener('click', () => repondre(r, b));
+      return b;
+    }));
+    compareEl.replaceChildren();
+    compareEl.classList.remove('on');
+    feedback.textContent = '';
+    feedback.className = 'tab-note';
+  }
+
+  function repondre(r, bouton){
+    if (done) return;
+    done = true;
+    total++;
+    const ok = r === cible.root;
+    if (ok) bons++;
+    [...paletteEl.children].forEach(b => {
+      b.disabled = true;
+      if (b.dataset.note === cible.root) b.classList.add('correct');
+    });
+    if (!ok) bouton.classList.add('wrong');
+    feedback.innerHTML = ok
+      ? `✓ Bravo — ${donne.root} ${ADJ[donne.type]} et ${cible.root} ${ADJ[cible.type]} : les mêmes cinq notes, un autre point de départ.`
+      : `✗ C'était ${cible.root} — ${donne.root} ${ADJ[donne.type]} et ${cible.root} ${ADJ[cible.type]} ont les mêmes cinq notes.`;
+    feedback.className = 'tab-note ' + (ok ? 'juste' : 'faux');
+    scoreEl.textContent = bons + ' / ' + total;
+    /* les deux gammes côte à côte : mêmes couleurs, même contenu */
+    compareEl.replaceChildren(ligneRelative(donne), ligneRelative(cible));
+    compareEl.classList.add('on');
+  }
+
+  document.getElementById('rel-new').addEventListener('click', nouvelle);
+  nouvelle();
+})();
+
+/* 4.5 — où poser la boîte : le manche partagé, en mode quiz maison.
+   On clique la fondamentale sur la corde de E grave ; une fois trouvée,
+   la boîte position 1 s'affiche à cet endroit. */
+(function(){
+  const zone = document.getElementById('box-zone');
+  const promptEl = document.getElementById('box-prompt');
+  const feedback = document.getElementById('box-feedback');
+  const scoreEl = document.getElementById('box-score');
+  const FRETS = 15;          /* 12 cases cliquables, 3 de plus pour que la boîte tienne */
+  const GRAVE = 5;           /* la corde de E grave est la dernière */
+  const fb = window.buildFretboard({
+    svg:'box-fretboard', frets:FRETS, gut:30,
+    label:'Le manche de la guitare, cases 0 à 15 : où poser la boîte',
+    strings:[
+      { open:'E', thick:1.1 }, { open:'B', thick:1.3 }, { open:'G', thick:1.6 },
+      { open:'D', thick:1.9 }, { open:'A', thick:2.3 }, { open:'E', thick:2.7 },
+    ],
+  });
+  if (!fb) return;
+  const pastilles = fb.notes.map((n, k) => ({
+    ...n, corde: Math.floor(k / (FRETS + 1)), fret: k % (FRETS + 1) }));
+  /* la boîte position 1, relative à la fondamentale sur la corde de E grave :
+     [corde, décalage en cases, degré] — cordes E, B, e : +0 / +3 ; A, D, G : +0 / +2 */
+  const BOITE = [
+    [5,0,'1'], [5,3,'♭3'], [4,0,'4'], [4,2,'5'], [3,0,'♭7'], [3,2,'1'],
+    [2,0,'♭3'], [2,2,'4'], [1,0,'5'], [1,3,'♭7'], [0,0,'1'], [0,3,'♭3'],
+  ];
+  const DEG = { '1':0, '♭3':1, '4':2, '5':3, '♭7':4 };
+  let root, cible, done, essais, bons = 0, total = 0;
+
+  /* tout le manche en pastilles muettes ; la corde de E grave est cliquable */
+  function neutre(){
+    for (const p of pastilles){
+      const cliquable = p.corde === GRAVE && p.fret <= 12;
+      p.g.style.display = '';
+      p.g.classList.toggle('cible', cliquable);
+      p.g.dataset.note = p.note;
+      delete p.g.dataset.box;
+      delete p.g.dataset.deg;
+      p.c.setAttribute('fill', cliquable ? '#6B5B4B' : '#453A2F');
+      p.c.setAttribute('r', cliquable ? 12 : 8);
+      p.c.setAttribute('stroke', 'none');
+      p.t.style.display = 'none';
+    }
+  }
+
+  function montrerBoite(f){
+    const noms = penta(root, 'mineur');
+    for (const p of pastilles) p.g.style.display = 'none';
+    for (const [corde, d, deg] of BOITE){
+      const p = pastilles[corde * (FRETS + 1) + f + d];
+      if (!p) continue;
+      const nom = noms[DEG[deg]];
+      p.g.style.display = '';
+      p.g.dataset.note = nom;
+      p.g.dataset.box = '1';
+      p.g.dataset.deg = deg;
+      p.c.setAttribute('fill', NOTE_COLORS[nom[0]]);
+      p.c.setAttribute('r', 14);
+      /* les fondamentales sont cerclées, comme dans « Les gammes de La » */
+      if (deg === '1'){ p.c.setAttribute('stroke', '#F3EADD'); p.c.setAttribute('stroke-width', '2.5'); }
+      p.t.textContent = nom;
+      p.t.setAttribute('font-size', nom.length > 1 ? '11' : '13');
+      p.t.setAttribute('y', +p.c.getAttribute('cy') + 4.5);
+      p.t.style.display = '';
+    }
+  }
+
+  for (const p of pastilles){
+    if (p.corde !== GRAVE || p.fret > 12) continue;
+    p.g.addEventListener('click', () => {
+      if (done) return;
+      essais++;
+      if (p.fret % 12 === cible){
+        done = true;
+        total++;
+        if (essais === 1) bons++;
+        montrerBoite(p.fret);
+        feedback.innerHTML = `✓ ${root}m, c'est la case ${p.fret} — voilà la boîte position 1 : ${penta(root, 'mineur').join(' · ')}, les fondamentales cerclées.`;
+        feedback.className = 'tab-note juste';
+        scoreEl.textContent = bons + ' / ' + total;
+      } else {
+        p.c.setAttribute('fill', NOTE_COLORS.F);
+        feedback.innerHTML = `✗ Case ${p.fret}, c'est ${p.note.replace('#', '♯')} — cherche encore.`;
+        feedback.className = 'tab-note faux';
+      }
+    });
+  }
+
+  function nouvelle(){
+    root = tirage(RACINES_PENTA.mineur);
+    cible = (hauteur(root) - hauteur('E') + 12) % 12;
+    done = false;
+    essais = 0;
+    zone.dataset.root = root;
+    zone.dataset.case = cible;
+    neutre();
+    promptEl.innerHTML = `Tonalité : ${nomColore(root + 'm')} — clique sa fondamentale sur la corde de E grave, entre les cases 0 et 12`;
+    feedback.textContent = '';
+    feedback.className = 'tab-note';
+  }
+
+  document.getElementById('box-new').addEventListener('click', nouvelle);
+  nouvelle();
+})();
+
+/* exposé pour les tests : la recette de la pentatonique, hors DOM */
+window.theorie = { penta, epeler, gammeMineure, hauteur };
+
 
 })();
 </script>

@@ -228,19 +228,19 @@ test('les liens croisés gamme ↔ théorie changent de page sans recharger', ()
 
 /* ============ la construction des accords ============ */
 
-test("l'onglet Théorie navigue désormais en trois sections", () => {
+test("l'onglet Théorie navigue désormais en quatre sections", () => {
   const { doc } = load();
   openTab(doc, 'theorie');
   const liens = [...doc.querySelectorAll('#page-theorie nav.sticky a')];
   assert.deepEqual(liens.map(a => a.getAttribute('href')),
-    ['#construire', '#jeu', '#triades']);
+    ['#construire', '#jeu', '#triades', '#penta']);
   liens.forEach(a => {
     const cible = doc.getElementById(a.getAttribute('href').slice(1));
     assert.ok(cible, a.getAttribute('href') + ' ne mène nulle part');
     assert.equal(isVisible(cible), true, a.getAttribute('href') + ' mène à une section masquée');
   });
   assert.deepEqual([...doc.querySelectorAll('#page-theorie .sec-num')].map(n => n.textContent),
-    ['1', '2', '3']);
+    ['1', '2', '3', '4']);
 });
 
 test("un accord se construit en sautant une note sur deux dans la gamme", () => {

@@ -674,11 +674,9 @@
   .rel-compare.on{display:block;}
   .rel-line{display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:4px 0;}
   .rel-name{font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:15px; min-width:130px;}
-  /* le jeu complet : les étapes acquises au-dessus, l'énoncé de l'étape en cours */
-  .jeu-acquis{display:grid; gap:2px; margin-top:10px; padding-bottom:8px; border-bottom:1px dashed var(--line);}
-  .jeu-acquis:empty{display:none;}
-  .jeu-etape{margin-top:12px; font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:15px;}
-  .jeu-etape i{font-family:"Instrument Sans",sans-serif; font-weight:400; font-style:normal; color:var(--ink-soft);}
+  /* le jeu complet : la formule et la consigne, sous la question */
+  .jeu-consigne{margin-top:6px; font-size:13px; color:var(--ink-soft);}
+  .jeu-consigne .formule{margin-left:0; margin-right:10px;}
   /* où poser la boîte : seule la corde de E grave répond au clic */
   #box-fretboard .note-g.cible{cursor:pointer;}
   #box-fretboard .note-g:focus{outline:none;}
@@ -1279,16 +1277,34 @@
 <section id="jeu">
   <div class="wrap">
     <div class="sec-head"><span class="sec-num">6</span><h2>Le jeu — de la gamme à la pentatonique</h2></div>
-    <p class="hint">Un seul jeu pour tout le chemin. Une fondamentale et un type sont tirés au sort, et on refait les sections dans l'ordre : <b>la gamme</b>, note par note, avec la formule W / H sous les yeux · <b>l'accord</b>, en sautant une note sur deux · <b>la septième</b>, une note de plus au même rythme · <b>la pentatonique</b>, la gamme moins deux degrés. Chaque étape réussie reste affichée au-dessus, pour construire la suivante dessus. Les touches noires de la palette portent leurs deux noms : c'est la <b>hauteur</b> qui compte, et la correction écrit la bonne orthographe.</p>
+    <p class="hint">Un seul jeu pour tout le chemin. Une question est tirée au sort — <b>trouve la gamme de A mineur</b>, <b>trouve la pentatonique majeure de B</b>… — et tu la complètes note par note, la formule sous les yeux. Par défaut tout est au hasard ; tu peux aussi <b>choisir la fondamentale</b>, <b>mineur ou majeur</b>, et <b>l'exercice</b> : la gamme, l'accord, l'accord de septième ou la pentatonique. Les touches noires de la palette portent leurs deux noms : c'est la <b>hauteur</b> qui compte, et la correction écrit la bonne orthographe.</p>
     <div class="prog-card" id="jeu-zone">
       <div class="prog-title" id="jeu-prompt"></div>
-      <div class="jeu-acquis" id="jeu-acquis"></div>
-      <div class="jeu-etape" id="jeu-etape"></div>
+      <div class="jeu-consigne" id="jeu-consigne"></div>
       <div class="quiz-slots" id="jeu-slots"></div>
       <div class="quiz-palette" id="jeu-palette"></div>
       <div class="quiz-actions">
         <button class="quiz-btn" type="button" id="jeu-undo">← Effacer</button>
-        <button class="quiz-btn" type="button" id="jeu-new">Nouvelle gamme →</button>
+        <button class="quiz-btn" type="button" id="jeu-new">Nouvelle question →</button>
+        <label class="quiz-choix">Fondamentale
+          <select class="quiz-select" id="jeu-root"><option value="">au hasard</option></select>
+        </label>
+        <label class="quiz-choix">Gamme
+          <select class="quiz-select" id="jeu-type">
+            <option value="">au hasard</option>
+            <option value="mineur">mineur</option>
+            <option value="majeur">majeur</option>
+          </select>
+        </label>
+        <label class="quiz-choix">Exercice
+          <select class="quiz-select" id="jeu-exo">
+            <option value="">au hasard</option>
+            <option value="gamme">la gamme</option>
+            <option value="accord">l'accord</option>
+            <option value="sept">l'accord de septième</option>
+            <option value="penta">la pentatonique</option>
+          </select>
+        </label>
         <span class="quiz-score" id="jeu-score"></span>
       </div>
       <div class="tab-note" id="jeu-feedback"></div>
@@ -3659,20 +3675,21 @@ function peindreBoite(p, nom, deg, box){
 })();
 
 /* ============================================================
-   6. Le jeu — de la gamme à la pentatonique : quatre étapes enchaînées
-   sur la même fondamentale. Une fois une étape réussie (ou corrigée),
-   ses notes restent affichées au-dessus, et la suivante se construit
-   dessus. La palette porte les deux noms des touches noires ; on valide
-   à la hauteur, et la correction réécrit la note avec la bonne
-   orthographe.
+   6. Le jeu — de la gamme à la pentatonique. Une question à la fois :
+   « trouve la gamme de A mineur », « trouve la pentatonique majeure de
+   B »… tirée au sort, ou fixée par les trois sélecteurs (fondamentale,
+   mineur / majeur, exercice). La palette porte les deux noms des touches
+   noires ; on valide à la hauteur, et la correction réécrit la note avec
+   la bonne orthographe.
    ============================================================ */
 (function(){
   const zone = document.getElementById('jeu-zone');
   if (!zone) return;
   const $ = s => document.getElementById('jeu-' + s);
-  const promptEl = $('prompt'), acquisEl = $('acquis'), etapeEl = $('etape'),
-        slotsEl = $('slots'), paletteEl = $('palette'), feedback = $('feedback'),
-        scoreEl = $('score'), undoBtn = $('undo'), newBtn = $('new');
+  const promptEl = $('prompt'), consigneEl = $('consigne'), slotsEl = $('slots'),
+        paletteEl = $('palette'), feedback = $('feedback'), scoreEl = $('score'),
+        undoBtn = $('undo'), newBtn = $('new'),
+        selRoot = $('root'), selType = $('type'), selExo = $('exo');
   const ADJ = { mineur:'mineure', majeur:'majeure' };
   /* les fondamentales dont la gamme complète s'écrit sans C♭ ni F♭ */
   const RACINES_JEU = {
@@ -3685,30 +3702,66 @@ function peindreBoite(p, nom, deg, box){
   const labelDe = Object.fromEntries(PALETTE.map(p => [p.note, p.label || p.note]));
   const egal = (a, b) => hauteur(a) === hauteur(b);
 
-  /* les quatre étapes d'une fondamentale : les notes attendues (les
-     `donnees` premières sont affichées), la formule, le nom de ce qu'on
-     obtient, et la consigne */
-  function etapes(root, type){
-    const g = gammeDe(root, type);
-    const triade = [g[0], g[2], g[4]];
-    return [
-      { titre:'La gamme', attendu:g, donnees:1,
-        formule: type === 'mineur' ? 'W H W W H W W' : 'W W H W W W H',
-        nom:`Gamme de ${root} ${type}`, consigne:'les six autres notes, dans l\'ordre' },
-      { titre:'L\'accord', attendu:triade, donnees:1, formule:'1 · 3 · 5',
-        nom: type === 'mineur' ? root + 'm' : root,
-        consigne:'une note sur deux dans la gamme : la tierce, puis la quinte' },
-      { titre:'La septième', attendu:triade.concat([g[6]]), donnees:3, formule:'1 · 3 · 5 · 7',
-        nom: type === 'mineur' ? root + 'm7' : root + 'maj7',
-        consigne:'une note de plus, en sautant encore une note' },
-      { titre:'La pentatonique', attendu:penta(root, type), donnees:1,
-        formule: type === 'mineur' ? '1 · ♭3 · 4 · 5 · ♭7' : '1 · 2 · 3 · 5 · 6',
-        nom:`Penta ${ADJ[type]} de ${root}`, consigne:'les quatre autres notes, dans l\'ordre' },
-    ];
-  }
+  /* les quatre exercices : la question, la formule, les notes attendues
+     (la fondamentale est donnée), le nom de ce qu'on obtient, la consigne */
+  const EXOS = {
+    gamme:{
+      question:(r, t) => `Trouve la gamme de ${nomColore(r)} ${t}`,
+      formule: t => t === 'mineur' ? 'W H W W H W W' : 'W W H W W W H',
+      attendu:(r, t) => gammeDe(r, t),
+      nom:(r, t) => `la gamme de ${r} ${t}`,
+      consigne:'les six autres notes, dans l\'ordre' },
+    accord:{
+      question:(r, t) => `Trouve l'accord de ${nomColore(r)} ${t}`,
+      formule:() => '1 · 3 · 5',
+      attendu:(r, t) => { const g = gammeDe(r, t); return [g[0], g[2], g[4]]; },
+      nom:(r, t) => t === 'mineur' ? r + 'm' : r,
+      consigne:'une note sur deux dans la gamme : la tierce, puis la quinte' },
+    sept:{
+      question:(r, t) => `Trouve l'accord de septième de ${nomColore(r)} ${t}`,
+      formule:() => '1 · 3 · 5 · 7',
+      attendu:(r, t) => { const g = gammeDe(r, t); return [g[0], g[2], g[4], g[6]]; },
+      nom:(r, t) => t === 'mineur' ? r + 'm7' : r + 'maj7',
+      consigne:'la tierce, la quinte, puis la septième' },
+    penta:{
+      question:(r, t) => `Trouve la pentatonique ${ADJ[t]} de ${nomColore(r)}`,
+      formule: t => t === 'mineur' ? '1 · ♭3 · 4 · 5 · ♭7' : '1 · 2 · 3 · 5 · 6',
+      attendu:(r, t) => penta(r, t),
+      nom:(r, t) => `la pentatonique ${ADJ[t]} de ${r}`,
+      consigne:'les quatre autres notes, dans l\'ordre' },
+  };
 
-  let root, type, liste, i, filled, done, bons = 0, total = 0;
-  const etape = () => liste[i];
+  /* Les sélecteurs. La liste des fondamentales suit le type : au hasard,
+     l'union des deux listes, dans l'ordre chromatique. Une fondamentale
+     qui n'existe que dans un type (C♯ mineur, D♭ majeur) impose ce type. */
+  function racinesPossibles(type){
+    if (type) return RACINES_JEU[type];
+    return [...new Set([...RACINES_JEU.majeur, ...RACINES_JEU.mineur])]
+      .sort((a, b) => hauteur(a) - hauteur(b) || b.includes('♯') - a.includes('♯'));
+  }
+  function remplirRacines(){
+    const avant = selRoot.value;
+    const liste = racinesPossibles(selType.value);
+    selRoot.replaceChildren(...['', ...liste].map(n => {
+      const o = document.createElement('option');
+      o.value = n; o.textContent = n || 'au hasard';
+      return o;
+    }));
+    selRoot.value = liste.includes(avant) ? avant : '';
+  }
+  function choix(){
+    let type = selType.value, root = selRoot.value, exo = selExo.value;
+    if (!type){
+      const types = ['mineur', 'majeur'].filter(t => !root || RACINES_JEU[t].includes(root));
+      type = tirage(types);
+    }
+    if (!root) root = tirage(RACINES_JEU[type]);
+    if (!exo) exo = tirage(Object.keys(EXOS));
+    return { root, type, exo };
+  }
+  remplirRacines();
+
+  let etat, filled, done, bons = 0, total = 0;
 
   for (const p of PALETTE){
     const b = document.createElement('button');
@@ -3721,32 +3774,13 @@ function peindreBoite(p, nom, deg, box){
     paletteEl.appendChild(b);
   }
 
-  function chip(note, cls){
-    const s = document.createElement('span');
-    s.className = cls;
-    s.style.background = NOTE_COLORS[note[0]];
-    s.textContent = note;
-    return s;
-  }
-  /* une étape passée : son nom, puis ses notes, épelées juste */
-  function ligneAcquise(e){
-    const div = document.createElement('div');
-    div.className = 'rel-line';
-    const nom = document.createElement('span');
-    nom.className = 'rel-name';
-    nom.textContent = e.nom;
-    div.append(nom, ...e.attendu.map(n => chip(n, 'scale-note')));
-    return div;
-  }
-
   function slotBouton(note, idx){
-    const e = etape();
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'quiz-slot filled';
     b.style.background = NOTE_COLORS[note[0]];
-    const ok = done && egal(note, e.attendu[e.donnees + idx]);
-    b.textContent = ok ? e.attendu[e.donnees + idx] : labelDe[note];
+    const ok = done && egal(note, etat.attendu[idx + 1]);
+    b.textContent = ok ? etat.attendu[idx + 1] : labelDe[note];
     if (b.textContent.length > 3) b.classList.add('duo');
     if (done) b.classList.add(ok ? 'correct' : 'wrong');
     b.title = 'Effacer à partir d\'ici';
@@ -3759,11 +3793,11 @@ function peindreBoite(p, nom, deg, box){
   }
 
   function render(){
-    const e = etape();
-    promptEl.innerHTML = `${nomColore(root)} ${type} — étape ${i + 1} / 4`;
-    acquisEl.replaceChildren(...liste.slice(0, i).map(ligneAcquise));
-    etapeEl.innerHTML = `${e.titre} <span class="formule">${e.formule}</span><br><i>${e.consigne}</i>`;
-    const slots = e.attendu.slice(0, e.donnees).map(n => chip(n, 'quiz-slot given'));
+    const donne = document.createElement('span');
+    donne.className = 'quiz-slot given';
+    donne.style.background = NOTE_COLORS[etat.attendu[0][0]];
+    donne.textContent = etat.attendu[0];
+    const slots = [donne];
     filled.forEach((note, k) => {
       if (note == null){
         const s = document.createElement('span');
@@ -3775,8 +3809,6 @@ function peindreBoite(p, nom, deg, box){
     const complet = filled.every(n => n != null);
     [...paletteEl.children].forEach(b => b.disabled = done || complet);
     undoBtn.disabled = done || filled.every(n => n == null);
-    newBtn.textContent = done && i < 3 ? 'Étape suivante →' : 'Nouvelle gamme →';
-    zone.dataset.etape = i + 1;
   }
 
   function jouer(note){
@@ -3789,37 +3821,34 @@ function peindreBoite(p, nom, deg, box){
   }
 
   function verifier(){
-    const e = etape();
     done = true;
     total++;
-    const justes = filled.filter((n, k) => egal(n, e.attendu[e.donnees + k])).length;
+    const justes = filled.filter((n, k) => egal(n, etat.attendu[k + 1])).length;
     const ok = justes === filled.length;
     if (ok) bons++;
-    const complete = e.attendu.join(' · ');
+    const complete = etat.attendu.join(' · ');
     feedback.innerHTML = ok
-      ? `✓ Bravo — ${e.nom}, c'est ${complete}.` + (i < 3 ? ' Étape suivante ?' : ' Le chemin est fait.')
-      : `✗ ${justes} / ${filled.length} notes justes — ${e.nom}, c'est ${complete}.` + (i < 3 ? ' On continue avec les bonnes notes.' : '');
+      ? `✓ Bravo — ${etat.nom}, c'est ${complete}.`
+      : `✗ ${justes} / ${filled.length} notes justes — ${etat.nom}, c'est ${complete}.`;
     feedback.className = 'tab-note ' + (ok ? 'juste' : 'faux');
     scoreEl.textContent = bons + ' / ' + total;
     render();
   }
 
-  function commencer(k){
-    i = k;
-    filled = new Array(etape().attendu.length - etape().donnees).fill(null);
+  function nouvelle(){
+    const { root, type, exo } = choix();
+    const e = EXOS[exo];
+    etat = { root, type, exo, attendu: e.attendu(root, type), nom: e.nom(root, type) };
+    filled = new Array(etat.attendu.length - 1).fill(null);
     done = false;
+    zone.dataset.root = root;
+    zone.dataset.type = type;
+    zone.dataset.exo = exo;
+    promptEl.innerHTML = e.question(root, type);
+    consigneEl.innerHTML = `<span class="formule">${e.formule(type)}</span>${e.consigne}`;
     feedback.textContent = '';
     feedback.className = 'tab-note';
     render();
-  }
-
-  function nouvelle(){
-    type = Math.random() < 0.5 ? 'mineur' : 'majeur';
-    root = tirage(RACINES_JEU[type]);
-    liste = etapes(root, type);
-    zone.dataset.root = root;
-    zone.dataset.type = type;
-    commencer(0);
   }
 
   undoBtn.addEventListener('click', () => {
@@ -3829,8 +3858,11 @@ function peindreBoite(p, nom, deg, box){
     }
     render();
   });
-  /* après une étape : la suivante ; sinon (ou après la quatrième) : une autre fondamentale */
-  newBtn.addEventListener('click', () => (done && i < 3) ? commencer(i + 1) : nouvelle());
+  newBtn.addEventListener('click', nouvelle);
+  /* changer un choix lance tout de suite la question correspondante */
+  selType.addEventListener('change', () => { remplirRacines(); nouvelle(); });
+  selRoot.addEventListener('change', nouvelle);
+  selExo.addEventListener('change', nouvelle);
   nouvelle();
 })();
 

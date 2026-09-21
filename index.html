@@ -1218,6 +1218,7 @@
     <a href="#jeu">2 · Le jeu</a>
     <a href="#triades">3 · Construire un accord</a>
     <a href="#penta">4 · La pentatonique</a>
+    <a href="#boites">5 · Les boîtes 1 et 4</a>
   </div>
 </nav>
 
@@ -1359,6 +1360,33 @@
 
     <div class="callout">
       <b>Le lien avec le manche et la basse :</b> les <a href="#/basse" data-goto="basse" data-anchor="pentatonique">six formes de la pentatonique de la fiche basse</a> sont cette même gamme, en boîtes. Sur la guitare, reprends <a href="#/guitare" data-goto="guitare" data-anchor="gammes">Les gammes de La</a> : joue la gamme de <b>A</b> mineur complète, puis la même en sautant <b>B</b> et <b>F</b>, et écoute la différence.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. LES BOÎTES 1 ET 4 ============ -->
+<section id="boites">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">5</span><h2>A mineur : les boîtes 1 et 4</h2></div>
+    <p class="hint">Le cours de guitare du <b>21 septembre 2026</b> : la pentatonique de <b>A mineur</b> se joue en <b>boîtes</b>, et on en apprend deux pour commencer, la <b>boîte 1</b> et la <b>boîte 4</b>. Ce sont les cinq notes de la section 4, <b>A · C · D · E · G</b>, rangées en un bloc de quatre cases : deux notes par corde, jamais plus. La pentatonique a cinq boîtes en tout, qui se suivent le long du manche ; celles-ci servent à <b>improviser</b> sur la piste ci-dessous.</p>
+    <div class="track-card" id="boites-track">
+      <div class="track-meta"><b>La piste d'improvisation</b> — en <b>A mineur</b>, tout ce qui sort des deux boîtes est juste. Lance-la, et garde-la ouverte dans une fenêtre à part pendant que tu lis les boîtes.</div>
+      <a class="play-link" id="boites-link" href="https://www.youtube.com/watch?v=22mWUkAi0PI" target="_blank" rel="noopener">▶ Piste d'improvisation · A mineur</a>
+    </div>
+    <div id="boites-list"></div>
+    <div class="prog-legend exo-consignes">
+      <strong>L'exercice — sur la piste, une boîte à la fois :</strong>
+      <ol class="exo-steps">
+        <li><b>Monte et descends la boîte 1.</b> Du <b>A</b> de la corde de E grave (case 5) jusqu'au <b>C</b> de la chanterelle (case 8), puis retour, en nommant chaque note. Tant que tu hésites sur une case, on ne va pas plus loin.</li>
+        <li><b>La même chose en boîte 4.</b> Cases 12 à 15, en partant du <b>E</b> de la corde de E grave. Les deux fondamentales sont cerclées : le <b>A</b> de la corde de A (case 12) et celui de la corde de G (case 14).</li>
+        <li><b>Improvise dans la boîte 1.</b> Lance la piste, et ne joue que les douze pastilles. Commence tes phrases sur <b>A</b> et finis-les sur <b>A</b> : entre les deux, l'ordre des notes et le rythme sont libres.</li>
+        <li><b>Improvise dans la boîte 4.</b> Même consigne, sept cases plus haut. Le son est plus aigu, les notes sont les mêmes.</li>
+        <li><b>Passe de l'une à l'autre.</b> Une phrase dans la boîte 1, une phrase dans la boîte 4, et on recommence. Le changement se fait <b>pendant un A</b>, la note commune aux deux.</li>
+      </ol>
+      <div style="margin-top:8px">Ne valide une étape que si tu la tiens <b>deux fois de suite sans chercher les cases</b> — c'est l'hésitation qu'on chasse, pas la vitesse.</div>
+    </div>
+    <div class="callout">
+      <b>Le lien avec la section 4 :</b> le jeu <a href="#box-zone">« Où poser la boîte »</a> pose la boîte 1 sur n'importe quelle fondamentale — la forme ne change pas, elle glisse. La boîte 4 glisse de la même façon : ses deux fondamentales sont sur les cordes de <b>A</b> et de <b>G</b>. Et sur la fiche guitare, <a href="#/guitare" data-goto="guitare" data-anchor="gammes">Les gammes de La</a> donnent la gamme complète : la boîte 1, c'est la position fermée <b>sans B ni F</b>.
     </div>
   </div>
 </section>
@@ -3857,6 +3885,24 @@ jeuDeNotes({
   nouvelle();
 })();
 
+/* une pastille du manche partagé, peinte comme une note de boîte : la couleur
+   de la note, son nom, son degré ; les fondamentales sont cerclées, comme
+   dans « Les gammes de La » */
+function peindreBoite(p, nom, deg, box){
+  p.g.style.display = '';
+  p.g.dataset.note = nom;
+  p.g.dataset.box = box;
+  p.g.dataset.deg = deg;
+  p.c.setAttribute('fill', NOTE_COLORS[nom[0]]);
+  p.c.setAttribute('r', 14);
+  if (deg === '1'){ p.c.setAttribute('stroke', '#F3EADD'); p.c.setAttribute('stroke-width', '2.5'); }
+  else p.c.setAttribute('stroke', 'none');
+  p.t.textContent = nom;
+  p.t.setAttribute('font-size', nom.length > 1 ? '11' : '13');
+  p.t.setAttribute('y', +p.c.getAttribute('cy') + 4.5);
+  p.t.style.display = '';
+}
+
 /* 4.5 — où poser la boîte : le manche partagé, en mode quiz maison.
    On clique la fondamentale sur la corde de E grave ; une fois trouvée,
    la boîte position 1 s'affiche à cet endroit. */
@@ -3908,20 +3954,7 @@ jeuDeNotes({
     for (const p of pastilles) p.g.style.display = 'none';
     for (const [corde, d, deg] of BOITE){
       const p = pastilles[corde * (FRETS + 1) + f + d];
-      if (!p) continue;
-      const nom = noms[DEG[deg]];
-      p.g.style.display = '';
-      p.g.dataset.note = nom;
-      p.g.dataset.box = '1';
-      p.g.dataset.deg = deg;
-      p.c.setAttribute('fill', NOTE_COLORS[nom[0]]);
-      p.c.setAttribute('r', 14);
-      /* les fondamentales sont cerclées, comme dans « Les gammes de La » */
-      if (deg === '1'){ p.c.setAttribute('stroke', '#F3EADD'); p.c.setAttribute('stroke-width', '2.5'); }
-      p.t.textContent = nom;
-      p.t.setAttribute('font-size', nom.length > 1 ? '11' : '13');
-      p.t.setAttribute('y', +p.c.getAttribute('cy') + 4.5);
-      p.t.style.display = '';
+      if (p) peindreBoite(p, noms[DEG[deg]], deg, '1');
     }
   }
 
@@ -3961,6 +3994,75 @@ jeuDeNotes({
 
   document.getElementById('box-new').addEventListener('click', nouvelle);
   nouvelle();
+})();
+
+/* ============================================================
+   5. A mineur : les boîtes 1 et 4 — le cours de guitare du 21 septembre 2026
+   Chaque boîte sur son propre manche, cases 0 à 15, pour voir où elle se
+   pose. [corde, case, degré] — corde 0 = Mi aigu … 5 = Mi grave, comme le
+   manche partagé ; le nom de la note est déduit du degré.
+   ============================================================ */
+(function(){
+  const FRETS = 15;
+  const DEG = { '1':0, '♭3':1, '4':2, '5':3, '♭7':4 };
+  const NOMS = penta('A', 'mineur');
+  const BOITES = [
+    { id:'1', titre:'Boîte 1', sub:'cases 5 à 8 · fondamentale sur la corde de E grave',
+      notes:[
+        [5,5,'1'], [5,8,'♭3'], [4,5,'4'], [4,7,'5'], [3,5,'♭7'], [3,7,'1'],
+        [2,5,'♭3'], [2,7,'4'], [1,5,'5'], [1,8,'♭7'], [0,5,'1'], [0,8,'♭3'],
+      ],
+      legende:'Celle du jeu « Où poser la boîte », posée sur le <b>A</b> de la case 5. Trois fondamentales : cordes de <b>E grave</b>, de <b>D</b> et de <b>E aigu</b>. Sur les cordes E, B et E aigu, les deux notes sont à <b>trois cases</b> d\'écart ; sur A, D et G, à <b>deux</b>.' },
+    { id:'4', titre:'Boîte 4', sub:'cases 12 à 15 · fondamentales sur les cordes de A et de G', defile:true,
+      notes:[
+        [5,12,'5'], [5,15,'♭7'], [4,12,'1'], [4,15,'♭3'], [3,12,'4'], [3,14,'5'],
+        [2,12,'♭7'], [2,14,'1'], [1,13,'♭3'], [1,15,'4'], [0,12,'5'], [0,15,'♭7'],
+      ],
+      legende:'Elle commence sur le <b>E</b> de la case 12, pas sur la fondamentale : le <b>A</b> est à l\'intérieur, corde de A case 12 et corde de G case 14. Douze cases plus bas, c\'est exactement la <b>position ouverte</b> — les cordes à vide E, A, D, G et E, puis C en case 1 sur la corde de B, et G, C, E, A, D, G sur les cases 2 et 3.' },
+  ];
+  const list = document.getElementById('boites-list');
+  if (!list) return;
+  for (const b of BOITES){
+    const block = document.createElement('div');
+    block.className = 'tab-block';
+    block.id = 'boite-' + b.id;
+    block.innerHTML = `<div class="tab-head"><span class="tab-title">${b.titre}</span>
+      <span class="tab-sub">${b.sub}</span></div>
+      <div class="board-panel" style="margin:8px 14px 4px"><div class="board-scroll">
+        <svg id="boite-svg-${b.id}" xmlns="http://www.w3.org/2000/svg" role="img"></svg>
+      </div></div>`;
+    list.appendChild(block);
+    const fb = window.buildFretboard({
+      svg:'boite-svg-' + b.id, frets:FRETS, gut:30,
+      label:`${b.titre} de la pentatonique de A mineur, ${b.sub}`,
+      strings:[
+        { open:'E', thick:1.1 }, { open:'B', thick:1.3 }, { open:'G', thick:1.6 },
+        { open:'D', thick:1.9 }, { open:'A', thick:2.3 }, { open:'E', thick:2.7 },
+      ],
+    });
+    if (!fb) continue;
+    /* la boîte 4 est tout à droite du manche : on ouvre le manche déjà
+       défilé jusqu'au bout (direction rtl sur le conteneur, remise à ltr
+       sur le dessin pour ne pas déplacer les textes) */
+    if (b.defile){
+      const sc = block.querySelector('.board-scroll');
+      sc.style.direction = 'rtl';
+      fb.svg.style.direction = 'ltr';
+    }
+    for (const p of fb.notes) p.g.style.display = 'none';
+    /* de la corde grave à l'aiguë, puis de gauche à droite : l'ordre où on la joue */
+    const ordre = [...b.notes].sort((x, y) => y[0] - x[0] || x[1] - y[1]);
+    for (const [corde, f, deg] of ordre) peindreBoite(fb.notes[corde * (FRETS + 1) + f], NOMS[DEG[deg]], deg, b.id);
+    const seq = document.createElement('div');
+    seq.className = 'tab-note';
+    seq.innerHTML = 'En montant : ' + noteSeq(ordre.map(([,, deg]) => NOMS[DEG[deg]])) +
+      ' &nbsp;·&nbsp; en degrés : <b>' + ordre.map(([,, deg]) => deg).join(' · ') + '</b>';
+    block.appendChild(seq);
+    const lg = document.createElement('div');
+    lg.className = 'tab-note';
+    lg.innerHTML = b.legende;
+    block.appendChild(lg);
+  }
 })();
 
 /* exposé pour les tests : la recette de la pentatonique, hors DOM */

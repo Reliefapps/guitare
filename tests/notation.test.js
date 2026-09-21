@@ -9,9 +9,9 @@ const NOTE_COLORS = { C:'#0E9594', D:'#8E44AD', E:'#2E8B57', F:'#DE4229',
 const CORDES = ['G','D','A','E'];          /* de haut en bas */
 const SOLFEGE = /^(do|ré|re|mi|fa|sol|la|si)$/i;
 
-/* le contenu ajouté à partir des cours des 28 août, 4 et 17 septembre 2026 */
+/* le contenu ajouté à partir des cours des 28 août, 4, 17 et 21 septembre 2026 */
 const NOUVEAU = ['#routine', '#pluck-avance', '#impro', '#notes-manche', '#triades',
-                 '#gammes', '#pentatonique', '#u2', '#penta'];
+                 '#gammes', '#pentatonique', '#u2', '#penta', '#boites'];
 
 /* hauteur d'un nom de note écrit, altérations comprises */
 function hauteur(nom){

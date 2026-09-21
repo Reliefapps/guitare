@@ -8,7 +8,8 @@ const { load, isVisible, openTab } = require('./helpers');
 const CHROMA = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 /* les six cordes de haut en bas, en demi-tons absolus : Mi aigu → Mi grave */
 const CORDES = [64, 59, 55, 50, 45, 40];
-const FRETS = 15;
+const FRETS = 12;          /* les manches des boîtes */
+const FRETS_JEU = 15;      /* celui du jeu « Où poser la boîte » */
 const PENTA = ['A', 'C', 'D', 'E', 'G'];
 /* chaque degré de la pentatonique mineure, en demi-tons depuis la fondamentale */
 const DEMI = { '1':0, '♭3':3, '4':5, '5':7, '♭7':10 };
@@ -61,8 +62,9 @@ const BOITES = [
   { id:'boite-1', svg:'boite-svg-1', titre:'Boîte 1', cases:[5, 8], racines:3,
     /* [corde, case] : +0 / +3 sur E, B, e ; +0 / +2 sur A, D, G, depuis la case 5 */
     attendu:[[5,5],[5,8],[4,5],[4,7],[3,5],[3,7],[2,5],[2,7],[1,5],[1,8],[0,5],[0,8]] },
-  { id:'boite-4', svg:'boite-svg-4', titre:'Boîte 4', cases:[12, 15], racines:2,
-    attendu:[[5,12],[5,15],[4,12],[4,15],[3,12],[3,14],[2,12],[2,14],[1,13],[1,15],[0,12],[0,15]] },
+  /* la même forme que cases 12 à 15, une octave plus bas : les cordes à vide en font partie */
+  { id:'boite-4', svg:'boite-svg-4', titre:'Boîte 4', cases:[0, 3], racines:2,
+    attendu:[[5,0],[5,3],[4,0],[4,3],[3,0],[3,2],[2,0],[2,2],[1,1],[1,3],[0,0],[0,3]] },
 ];
 
 for (const b of BOITES){
@@ -115,7 +117,7 @@ test('l\'exercice se travaille sur la piste, une boîte à la fois, puis les deu
   assert.equal(etapes.length, 5);
   etapes.forEach(li => assert.equal(isVisible(li), true));
   assert.match(etapes[0].textContent, /boîte 1/);
-  assert.match(etapes[1].textContent, /boîte 4/);
+  assert.match(etapes[1].textContent, /boîte 4.*Cases 0 à 3/);
   assert.match(etapes[2].textContent, /Improvise dans la boîte 1/);
   assert.match(etapes[3].textContent, /Improvise dans la boîte 4/);
   assert.match(etapes[4].textContent, /Passe de l'une à l'autre/);
@@ -137,7 +139,7 @@ test('l\'encadré mène au jeu de la section 4 et aux gammes de La', () => {
 test('la section 5 ne touche pas au jeu « Où poser la boîte » de la section 4', () => {
   const { doc } = ouvre();
   const ps = [...doc.querySelectorAll('#box-fretboard .note-g')];
-  assert.equal(ps.length, 6 * (FRETS + 1));
+  assert.equal(ps.length, 6 * (FRETS_JEU + 1));
   assert.equal(doc.querySelectorAll('#box-fretboard [data-box]').length, 0);
   assert.equal(ps.every(g => g.style.display === ''), true);
 });

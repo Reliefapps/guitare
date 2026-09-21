@@ -1368,7 +1368,7 @@
 <section id="boites">
   <div class="wrap">
     <div class="sec-head"><span class="sec-num">5</span><h2>A mineur : les boîtes 1 et 4</h2></div>
-    <p class="hint">Le cours de guitare du <b>21 septembre 2026</b> : la pentatonique de <b>A mineur</b> se joue en <b>boîtes</b>, et on en apprend deux pour commencer, la <b>boîte 1</b> et la <b>boîte 4</b>. Ce sont les cinq notes de la section 4, <b>A · C · D · E · G</b>, rangées en un bloc de quatre cases : deux notes par corde, jamais plus. La pentatonique a cinq boîtes en tout, qui se suivent le long du manche ; celles-ci servent à <b>improviser</b> sur la piste ci-dessous.</p>
+    <p class="hint">Le cours de guitare du <b>21 septembre 2026</b> : la pentatonique de <b>A mineur</b> se joue en <b>boîtes</b>, et on en apprend deux pour commencer, la <b>boîte 1</b> et la <b>boîte 4</b>. Ce sont les cinq notes de la section 4, <b>A · C · D · E · G</b>, rangées en un bloc de quatre cases : deux notes par corde, jamais plus. La boîte 1 est en <b>cases 5 à 8</b> ; la boîte 4 est <b>juste à sa gauche</b>, en <b>cases 0 à 3</b>, avec les cordes à vide. La pentatonique a cinq boîtes en tout, qui se suivent le long du manche ; celles-ci servent à <b>improviser</b> sur la piste ci-dessous.</p>
     <div class="track-card" id="boites-track">
       <div class="track-meta"><b>La piste d'improvisation</b> — en <b>A mineur</b>, tout ce qui sort des deux boîtes est juste. Lance-la, et garde-la ouverte dans une fenêtre à part pendant que tu lis les boîtes.</div>
       <a class="play-link" id="boites-link" href="https://www.youtube.com/watch?v=22mWUkAi0PI" target="_blank" rel="noopener">▶ Piste d'improvisation · A mineur</a>
@@ -1378,15 +1378,15 @@
       <strong>L'exercice — sur la piste, une boîte à la fois :</strong>
       <ol class="exo-steps">
         <li><b>Monte et descends la boîte 1.</b> Du <b>A</b> de la corde de E grave (case 5) jusqu'au <b>C</b> de la chanterelle (case 8), puis retour, en nommant chaque note. Tant que tu hésites sur une case, on ne va pas plus loin.</li>
-        <li><b>La même chose en boîte 4.</b> Cases 12 à 15, en partant du <b>E</b> de la corde de E grave. Les deux fondamentales sont cerclées : le <b>A</b> de la corde de A (case 12) et celui de la corde de G (case 14).</li>
+        <li><b>La même chose en boîte 4.</b> Cases 0 à 3, en partant de la corde de E grave <b>à vide</b>. Les deux fondamentales sont cerclées : la corde de <b>A</b> à vide et le <b>A</b> de la corde de G (case 2).</li>
         <li><b>Improvise dans la boîte 1.</b> Lance la piste, et ne joue que les douze pastilles. Commence tes phrases sur <b>A</b> et finis-les sur <b>A</b> : entre les deux, l'ordre des notes et le rythme sont libres.</li>
-        <li><b>Improvise dans la boîte 4.</b> Même consigne, sept cases plus haut. Le son est plus aigu, les notes sont les mêmes.</li>
+        <li><b>Improvise dans la boîte 4.</b> Même consigne, cinq cases plus bas, cordes à vide comprises. Le son est plus grave, les notes sont les mêmes.</li>
         <li><b>Passe de l'une à l'autre.</b> Une phrase dans la boîte 1, une phrase dans la boîte 4, et on recommence. Le changement se fait <b>pendant un A</b>, la note commune aux deux.</li>
       </ol>
       <div style="margin-top:8px">Ne valide une étape que si tu la tiens <b>deux fois de suite sans chercher les cases</b> — c'est l'hésitation qu'on chasse, pas la vitesse.</div>
     </div>
     <div class="callout">
-      <b>Le lien avec la section 4 :</b> le jeu <a href="#box-zone">« Où poser la boîte »</a> pose la boîte 1 sur n'importe quelle fondamentale — la forme ne change pas, elle glisse. La boîte 4 glisse de la même façon : ses deux fondamentales sont sur les cordes de <b>A</b> et de <b>G</b>. Et sur la fiche guitare, <a href="#/guitare" data-goto="guitare" data-anchor="gammes">Les gammes de La</a> donnent la gamme complète : la boîte 1, c'est la position fermée <b>sans B ni F</b>.
+      <b>Le lien avec la section 4 :</b> le jeu <a href="#box-zone">« Où poser la boîte »</a> pose la boîte 1 sur n'importe quelle fondamentale — la forme ne change pas, elle glisse. La boîte 4 aussi, une fois sortie des cordes à vide : la même forme se retrouve <b>douze cases plus haut</b>, cases 12 à 15, fondamentales sur les cordes de <b>A</b> et de <b>G</b>. Et sur la fiche guitare, <a href="#/guitare" data-goto="guitare" data-anchor="gammes">Les gammes de La</a> donnent la gamme complète : la boîte 1, c'est la position fermée <b>sans B ni F</b>.
     </div>
   </div>
 </section>
@@ -3998,12 +3998,12 @@ function peindreBoite(p, nom, deg, box){
 
 /* ============================================================
    5. A mineur : les boîtes 1 et 4 — le cours de guitare du 21 septembre 2026
-   Chaque boîte sur son propre manche, cases 0 à 15, pour voir où elle se
+   Chaque boîte sur son propre manche, cases 0 à 12, pour voir où elle se
    pose. [corde, case, degré] — corde 0 = Mi aigu … 5 = Mi grave, comme le
    manche partagé ; le nom de la note est déduit du degré.
    ============================================================ */
 (function(){
-  const FRETS = 15;
+  const FRETS = 12;
   const DEG = { '1':0, '♭3':1, '4':2, '5':3, '♭7':4 };
   const NOMS = penta('A', 'mineur');
   const BOITES = [
@@ -4013,12 +4013,12 @@ function peindreBoite(p, nom, deg, box){
         [2,5,'♭3'], [2,7,'4'], [1,5,'5'], [1,8,'♭7'], [0,5,'1'], [0,8,'♭3'],
       ],
       legende:'Celle du jeu « Où poser la boîte », posée sur le <b>A</b> de la case 5. Trois fondamentales : cordes de <b>E grave</b>, de <b>D</b> et de <b>E aigu</b>. Sur les cordes E, B et E aigu, les deux notes sont à <b>trois cases</b> d\'écart ; sur A, D et G, à <b>deux</b>.' },
-    { id:'4', titre:'Boîte 4', sub:'cases 12 à 15 · fondamentales sur les cordes de A et de G', defile:true,
+    { id:'4', titre:'Boîte 4', sub:'cases 0 à 3 · à gauche de la boîte 1, avec les cordes à vide',
       notes:[
-        [5,12,'5'], [5,15,'♭7'], [4,12,'1'], [4,15,'♭3'], [3,12,'4'], [3,14,'5'],
-        [2,12,'♭7'], [2,14,'1'], [1,13,'♭3'], [1,15,'4'], [0,12,'5'], [0,15,'♭7'],
+        [5,0,'5'], [5,3,'♭7'], [4,0,'1'], [4,3,'♭3'], [3,0,'4'], [3,2,'5'],
+        [2,0,'♭7'], [2,2,'1'], [1,1,'♭3'], [1,3,'4'], [0,0,'5'], [0,3,'♭7'],
       ],
-      legende:'Elle commence sur le <b>E</b> de la case 12, pas sur la fondamentale : le <b>A</b> est à l\'intérieur, corde de A case 12 et corde de G case 14. Douze cases plus bas, c\'est exactement la <b>position ouverte</b> — les cordes à vide E, A, D, G et E, puis C en case 1 sur la corde de B, et G, C, E, A, D, G sur les cases 2 et 3.' },
+      legende:'Elle commence sur le <b>E grave à vide</b>, pas sur la fondamentale : le <b>A</b> est à l\'intérieur, corde de A à vide et corde de G case 2. Cinq cordes à vide (E, A, D, G, E aigu), puis <b>C</b> en case 1 sur la corde de B, <b>E</b> et <b>A</b> en case 2, et <b>G · C · D · G</b> en case 3. Douze cases plus haut, c\'est la même forme sans corde à vide, cases 12 à 15.' },
   ];
   const list = document.getElementById('boites-list');
   if (!list) return;
@@ -4041,14 +4041,6 @@ function peindreBoite(p, nom, deg, box){
       ],
     });
     if (!fb) continue;
-    /* la boîte 4 est tout à droite du manche : on ouvre le manche déjà
-       défilé jusqu'au bout (direction rtl sur le conteneur, remise à ltr
-       sur le dessin pour ne pas déplacer les textes) */
-    if (b.defile){
-      const sc = block.querySelector('.board-scroll');
-      sc.style.direction = 'rtl';
-      fb.svg.style.direction = 'ltr';
-    }
     for (const p of fb.notes) p.g.style.display = 'none';
     /* de la corde grave à l'aiguë, puis de gauche à droite : l'ordre où on la joue */
     const ordre = [...b.notes].sort((x, y) => y[0] - x[0] || x[1] - y[1]);

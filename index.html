@@ -674,6 +674,11 @@
   .rel-compare.on{display:block;}
   .rel-line{display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:4px 0;}
   .rel-name{font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:15px; min-width:130px;}
+  /* le jeu complet : les étapes acquises au-dessus, l'énoncé de l'étape en cours */
+  .jeu-acquis{display:grid; gap:2px; margin-top:10px; padding-bottom:8px; border-bottom:1px dashed var(--line);}
+  .jeu-acquis:empty{display:none;}
+  .jeu-etape{margin-top:12px; font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:15px;}
+  .jeu-etape i{font-family:"Instrument Sans",sans-serif; font-weight:400; font-style:normal; color:var(--ink-soft);}
   /* où poser la boîte : seule la corde de E grave répond au clic */
   #box-fretboard .note-g.cible{cursor:pointer;}
   #box-fretboard .note-g:focus{outline:none;}
@@ -785,7 +790,6 @@
     <a href="#exercices">5 · Les exercices</a>
     <a href="#progressions">6 · Les progressions</a>
     <a href="#arpeges">7 · Les arpèges</a>
-    <a href="#gammes">8 · Les gammes de La</a>
   </div>
 </nav>
 
@@ -892,24 +896,6 @@
   </div>
 </section>
 
-<!-- ================= 8. LES GAMMES DE LA ================= -->
-<section id="gammes">
-  <div class="wrap">
-    <div class="sec-head"><span class="sec-num">8</span><h2>Les gammes de La</h2></div>
-    <p class="hint">La même gamme dans ses deux couleurs : <b>mineure</b> (A B C D E F G) et <b>majeure</b> (A B C♯ D E F♯ G♯). Deux octaves complètes à chaque fois — du <b>A</b> grave (corde de La à vide, ou case 5 de la corde de Mi grave) au <b>A</b> aigu de la case 5 de la chanterelle — et deux positions par gamme : <b>ouverte</b>, avec les cordes à vide, et <b>fermée</b>, qui n'en utilise aucune et se déplace donc partout sur le manche. Les mêmes couleurs que partout ailleurs, le <b>A</b> est cerclé : c'est le début de chaque octave. Pourquoi ces notes-là ? La construction des deux gammes est expliquée dans l'onglet <a href="#/theorie" data-goto="theorie">Théorie</a>.</p>
-    <div id="gamme-list"></div>
-    <div class="prog-legend exo-consignes">
-      <strong>Les exercices — chacun à faire dans les deux gammes :</strong>
-      <ol class="exo-steps">
-        <li><b>Deux octaves, aller-retour.</b> Monte la gamme du A grave au A aigu puis redescends, sans t'arrêter en haut — d'abord en <b>position ouverte</b>, puis en <b>position fermée</b>. Lentement, au métronome, en nommant chaque note à voix haute.</li>
-        <li><b>D'une octave à l'autre.</b> Joue les sept notes dans l'octave du haut — <b>A B C D E F G</b> en mineur, <b>A B C♯ D E F♯ G♯</b> en majeur — puis enchaîne les mêmes dans l'octave du bas, sans casser la pulsation. Le but : savoir où habite chaque note dans les deux octaves, dans les deux positions.</li>
-        <li><b>Mineure puis majeure.</b> Reste dans la même position et enchaîne les deux gammes en boucle. Il n'y a que <b>trois notes</b> qui changent — C, F et G deviennent C♯, F♯ et G♯, un demi-ton plus haut — et c'est ce déplacement-là que l'oreille doit apprendre à reconnaître.</li>
-      </ol>
-      <div style="margin-top:8px">Ne valide un exercice que si tu le joues <b>deux fois de suite sans hésiter</b> — c'est l'hésitation qu'on chasse, pas la vitesse.</div>
-    </div>
-  </div>
-</section>
-
 <footer>
   <div class="wrap">Fiche compilée depuis tes notes et captures · bonnes révisions 🎸</div>
 </footer>
@@ -953,7 +939,7 @@
 <section id="notes-manche">
   <div class="wrap">
     <div class="sec-head"><span class="sec-num">1</span><h2>Les notes sur le manche</h2></div>
-    <p class="hint">Notes naturelles jusqu'à la case 12 — après, tout recommence à l'identique. Active <b>les dièses</b> pour voir les notes intermédiaires, ou le <b>mode quiz</b> pour t'interroger. La méthode de Santiago est juste en dessous : <b>5 minutes par jour pendant 15 jours</b>.</p>
+    <p class="hint">Notes naturelles jusqu'à la case 12 — après, tout recommence à l'identique. Active <b>les dièses</b> pour voir les notes intermédiaires, ou le <b>mode quiz</b> pour t'interroger.</p>
     <div class="board-panel">
       <div class="board-controls">
         <button class="toggle" id="btn-sharps-basse" aria-pressed="false">Afficher les dièses ♯</button>
@@ -964,20 +950,6 @@
         <svg id="fretboard-basse" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Notes sur le manche de la basse, cases 0 à 12"></svg>
       </div>
     </div>
-    <ol class="steps">
-      <li>Mémoriser l'ordre des notes naturelles : <b>C D E F G A B</b>. Pas d'altérations.</li>
-      <li><b>Deux cases</b> entre chaque note, <b>sauf E–F et B–C</b> où il n'y en a qu'une.</li>
-      <li>Corde <b>E</b> : parcourir les notes jusqu'à la <b>case 8</b>, <b>à voix haute</b>, 3 à 4 fois.</li>
-      <li>Idem sur la corde <b>A</b>.</li>
-      <li>Réviser les deux cordes <b>E</b> et <b>A</b> ensemble.</li>
-      <li>Corde <b>D</b>, jusqu'à la <b>case 10</b>.</li>
-      <li>Réviser <b>E</b>, <b>A</b>, <b>D</b>.</li>
-      <li>Corde <b>G</b>.</li>
-      <li>Réviser les quatre cordes.</li>
-      <li>Refaire l'exercice complet <b>tous les jours pendant 15 jours</b>, avant de travailler autre chose.</li>
-      <li>Jouer des progressions d'accords connues en prenant à chaque fois <b>la note la plus grave</b>. Exemple : pour un accord de <b>G</b>, la case 3 de la corde de <b>E</b>.</li>
-      <li>Chercher ensuite les mêmes notes <b>dans les autres octaves</b>.</li>
-    </ol>
     <div class="callout">
       <b>Pourquoi c'est le socle :</b> connaître les notes, c'est parler la même langue que les autres musiciens — on annonce une note, tout le monde la trouve. Et ça marche aussi pour la guitare : même alphabet, mêmes repères.
     </div>
@@ -1049,27 +1021,11 @@
 <section id="impro">
   <div class="wrap">
     <div class="sec-head"><span class="sec-num">4</span><h2>Improviser sur Am / G</h2></div>
-    <p class="hint">L'exercice du cours du <b>4 septembre 2026</b>. La piste tourne sur deux accords — <b>A mineur</b> puis <b>G majeur</b>, quatre mesures chacun — et tu joues par-dessus en n'utilisant que les notes de l'accord en cours. Les notes d'un accord jouées l'une après l'autre au lieu d'être plaquées ensemble, c'est un <b>arpège</b> : c'est le vrai métier du bassiste, pas les mélodies.</p>
     <div class="rule">
       <b>Trois règles, et rien d'autre.</b> <b>1 ·</b> On ne joue que les notes de la forme — aucune note en dehors. <b>2 ·</b> On joue la <b>fondamentale au changement d'accord</b>, sur le premier temps : c'est la basse qui annonce à tout le monde où on en est. <b>3 ·</b> Depuis le 17 septembre : la <b>fondamentale sur le premier temps de chaque mesure</b>, pas seulement au changement — l'<b>octave</b> compte aussi, c'est la même note. Le E et le C sont libres partout ailleurs, <b>jamais sur le 1</b>. Entre les temps forts, le rythme est libre et l'ordre des notes aussi.
     </div>
     <div id="impro-track"></div>
     <div class="forme-grid" id="forme-list"></div>
-    <p class="hint" id="impro-mobile">Les deux formes sont <b>mobiles</b> : la même boîte, posée n'importe où sur le manche, donne le même accord à partir de sa nouvelle fondamentale. Et entre les deux, il n'y a qu'<b>une note d'écart</b> — la <b>tierce</b>, une case plus haut en majeur. Tout le reste (fondamentale, quinte, octave) est identique. C'est pour ça qu'on apprend des formes plutôt que des accords : deux formes couvrent déjà les vingt-quatre accords mineurs et majeurs.</p>
-    <ol class="steps">
-      <li>Écoute la piste <b>sans jouer</b>. Compte « 1 · 2 · 3 · 4 » à voix haute et repère l'endroit où ça passe de <b>Am</b> à <b>G</b>.</li>
-      <li>Joue <b>seulement la fondamentale</b>, une note par mesure : A quatre fois, puis G quatre fois. Tant que ce n'est pas en place, on ne va pas plus loin.</li>
-      <li>Ajoute la <b>quinte</b> et l'<b>octave</b> — la fondamentale reste obligatoire au changement d'accord.</li>
-      <li>Ajoute la <b>tierce</b> : c'est la note qui dit si l'accord est mineur ou majeur, donc celle qu'on entend le plus.</li>
-      <li>Change le <b>rythme</b> et l'<b>ordre des notes</b>. À partir de là, tu improvises.</li>
-      <li>Refais le même travail sur d'autres pistes — <b>batterie seule</b>, d'autres styles — en cherchant les changements à l'oreille.</li>
-    </ol>
-    <div class="callout">
-      <b>Entendre le changement d'accord :</b> suis <b>le piano</b>, c'est lui qui pose les accords — la guitare ne joue qu'un motif rythmique, plus proche d'une percussion · le batteur place un <b>fill</b> à la fin du cycle, ici il est très discret · branche une <b>enceinte</b>, le haut-parleur du téléphone ne laisse rien passer · et si tu te perds, <b>ne t'arrête pas</b> : tu récupères au changement suivant, c'est exactement ce qu'on demande à un bassiste.
-    </div>
-    <div class="callout">
-      <b>Pourquoi ces notes-là ?</b> On part de la gamme et on <b>saute une note sur deux</b> : A, on saute B, C, on saute D, E → <b>A C E</b>, l'accord de Am. Une note de plus au même rythme et on obtient <b>A C E G</b>, c'est-à-dire Am7. La construction est détaillée dans l'onglet <a href="#/theorie" data-goto="theorie">Théorie</a>.
-    </div>
     <div class="callout" id="impro-retour">
       <b>Le retour du cours du 17 septembre 2026.</b> Le timing était bon et les notes justes ; ce qui clochait, c'est une mesure qui commençait par <b>E</b> : tenu sur quatre temps, le groupe croit à un changement d'accord, parce que personne n'entend plus où est la fondamentale. D'où la règle 3 — et quelques précisions :
       <ul class="focus">
@@ -1088,7 +1044,6 @@
 <section id="pentatonique">
   <div class="wrap">
     <div class="sec-head"><span class="sec-num">5</span><h2>La pentatonique mineure</h2></div>
-    <p class="hint">La feuille de Santiago du cours du <b>17 septembre 2026</b> : six formes de la gamme <b>pentatonique mineure</b>, trois avec la fondamentale sur la corde de <b>E</b> (ici en <b>Am</b>) et trois avec la fondamentale sur la corde de <b>A</b> (ici en <b>Dm</b>). Chaque forme monte puis redescend, en croches, et se reprend. Sur la feuille, <b>les chiffres en noir sont les doigts</b> et la tablature donne les cases — ici, les doigts sont sous la tablature, là où la feuille les note, et la boîte montre où tombent les notes.</p>
     <div class="rule">
       <b>Un exercice de technique, pas d'improvisation.</b> On le joue <b>en boucle sur une piste de batterie</b>. Devoir : <b>deux formes</b>, pas les six — une forme à la fois, qu'on explore longtemps avant de passer à la suivante. Une gamme sert à faire des <b>mélodies</b>, des riffs ; l'accompagnement, lui, reste sur les <b>arpèges</b>.
     </div>
@@ -1106,19 +1061,6 @@
     <p class="hint">Le premier morceau, choisi au cours du <b>17 septembre 2026</b> — U2. Quatre accords, <b>D · A · Bm · G</b>, une mesure chacun, et la même boucle pendant toute la chanson. On ne lit pas de tablature : on <b>suit la grille</b> et on joue <b>la fondamentale seule, en croches continues</b> — l'exercice des croches continues, appliqué à une vraie chanson.</p>
     <div id="u2-track"></div>
     <div class="tab-block" id="u2-tab"></div>
-    <div class="rule">
-      <b>Ici, personne d'autre ne joue les accords.</b> La guitare fait des sons, les claviers à peine plus : sans la basse, la chanson est vide. C'est donc la basse qui tient <b>toute l'harmonie</b> — si elle se perd, tout le monde se perd. Une seule consigne : <b>régulier</b>, toujours la même chose, pendant toute la durée du morceau. Si tu te perds, tu recommences.
-    </div>
-    <ol class="steps">
-      <li>Lance la piste et attends le <b>décompte</b> : tu pars juste après, vers la <b>5ᵉ seconde</b>. Dans l'original, la basse n'entre que quelques tours plus tard — peu importe, ici on part tout de suite pour sentir le cycle.</li>
-      <li><b>Huit croches par mesure</b> sur la fondamentale, et on change d'accord à chaque mesure : D, A, Bm, G, et on recommence.</li>
-      <li>Compte <b>« 1 2 3 4 »</b> au début, puis arrête de compter : c'est la <b>longueur de la mesure</b> qu'il faut sentir. Compter toute la chanson est fastidieux — et c'est en jouant une mesure trop longue qu'on s'est décalé en cours.</li>
-      <li>Mets le <b>volume de la basse</b> au-dessus de la piste : si tu ne t'entends pas, tu ne peux pas te corriger.</li>
-      <li>Au milieu, il y a un <b>break</b> où l'on ne joue que <b>D</b>. Le reste du temps, la boucle ne change jamais.</li>
-    </ol>
-    <div class="callout">
-      <b>Deux façons de jouer un morceau :</b> lire la tablature, qui impose chaque note, ou <b>suivre la grille d'accords</b> et construire sa propre ligne — c'est celle que Santiago préfère, et celle qu'on utilise ici. Les morceaux ne sont <b>pas la priorité des premiers mois</b> : celui-ci passe après l'exercice #4, l'improvisation et la pentatonique. La suite prévue, sur la même pulsation de croches : <b>Every Breath You Take</b> (The Police), avec plus d'accords.
-    </div>
   </div>
 </section>
 
@@ -1215,10 +1157,11 @@
 <nav class="sticky" aria-label="Sommaire">
   <div class="wrap">
     <a href="#construire">1 · Construire une gamme</a>
-    <a href="#jeu">2 · Le jeu</a>
+    <a href="#gammes">2 · Les gammes de La</a>
     <a href="#triades">3 · Construire un accord</a>
     <a href="#penta">4 · La pentatonique</a>
     <a href="#boites">5 · Les boîtes 1 et 4</a>
+    <a href="#jeu">6 · Le jeu</a>
   </div>
 </nav>
 
@@ -1235,35 +1178,12 @@
   </div>
 </section>
 
-<!-- ============ 2. LE JEU ============ -->
-<section id="jeu">
+<!-- ================= 2. LES GAMMES DE LA ================= -->
+<section id="gammes">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">2</span><h2>Le jeu — trouve la gamme</h2></div>
-    <p class="hint">Une fondamentale et un type de gamme sont donnés. À toi de trouver <b>les six autres notes</b>, dans l'ordre, en cliquant sur la palette — aide-toi de la formule <b>W H W W H W W</b> (mineur) ou <b>W W H W W W H</b> (majeur) de la section précédente. Par défaut la gamme est tirée au sort ; tu peux aussi <b>choisir la fondamentale et le type</b> pour t'entraîner sur E mineur ou A majeur, par exemple.</p>
-    <div class="prog-card" id="quiz-zone">
-      <div class="prog-title" id="quiz-prompt"></div>
-      <div class="quiz-slots" id="quiz-slots"></div>
-      <div class="quiz-palette" id="quiz-palette"></div>
-      <div class="quiz-actions">
-        <button class="quiz-btn" type="button" id="quiz-undo">← Effacer</button>
-        <button class="quiz-btn" type="button" id="quiz-new">Nouvelle gamme →</button>
-        <label class="quiz-choix">Fondamentale
-          <select class="quiz-select" id="quiz-root"><option value="">au hasard</option></select>
-        </label>
-        <label class="quiz-choix">Gamme
-          <select class="quiz-select" id="quiz-type">
-            <option value="">au hasard</option>
-            <option value="mineur">mineur</option>
-            <option value="majeur">majeur</option>
-          </select>
-        </label>
-        <span class="quiz-score" id="quiz-score"></span>
-      </div>
-      <div class="tab-note" id="quiz-feedback"></div>
-    </div>
-    <div class="callout">
-      <b>Le lien avec le manche :</b> W = deux cases, H = une case. Monte une corde en suivant W&nbsp;H&nbsp;W&nbsp;W&nbsp;H&nbsp;W&nbsp;W depuis n'importe quelle case : tu joues une gamme mineure. La gamme de <a href="#/guitare" data-goto="guitare">La mineur de la fiche guitare</a> est exactement ça, réparti sur les six cordes.
-    </div>
+    <div class="sec-head"><span class="sec-num">2</span><h2>Les gammes de La</h2></div>
+    <p class="hint">La même gamme dans ses deux couleurs : <b>mineure</b> (A B C D E F G) et <b>majeure</b> (A B C♯ D E F♯ G♯). Deux octaves complètes à chaque fois — du <b>A</b> grave (corde de La à vide, ou case 5 de la corde de Mi grave) au <b>A</b> aigu de la case 5 de la chanterelle — et deux positions par gamme : <b>ouverte</b>, avec les cordes à vide, et <b>fermée</b>, qui n'en utilise aucune et se déplace donc partout sur le manche. Les mêmes couleurs que partout ailleurs, le <b>A</b> est cerclé : c'est le début de chaque octave. Pourquoi ces notes-là ? Ce sont les deux recettes de la <a href="#construire">section 1</a>, W et H, posées sur le manche.</p>
+    <div id="gamme-list"></div>
   </div>
 </section>
 
@@ -1273,18 +1193,6 @@
     <div class="sec-head"><span class="sec-num">3</span><h2>Construire un accord</h2></div>
     <p class="hint">Une fois la gamme posée, l'accord se lit dedans : on part de la fondamentale et on <b>saute une note sur deux</b>. Trois notes, c'est une <b>triade</b> — l'accord de base, celui qu'on note <b>Am</b> ou <b>C</b>. On continue d'empiler dans le même sens et on obtient les accords de <b>septième</b>. Compter en degrés revient au même : on prend le <b>1</b>, on saute le 2, on prend le <b>3</b>, on saute le 4, on prend le <b>5</b>, on saute le 6, on prend le <b>7</b>.</p>
     <div id="chord-rows"></div>
-    <p class="hint" id="acc-intro"><b>À toi.</b> Une fondamentale et un type d'accord sont donnés. Retrouve les notes qui manquent en sautant une note sur deux dans la gamme : <b>deux notes</b> pour une triade, <b>trois</b> pour un accord de septième.</p>
-    <div class="prog-card" id="acc-zone">
-      <div class="prog-title" id="acc-prompt"></div>
-      <div class="quiz-slots" id="acc-slots"></div>
-      <div class="quiz-palette" id="acc-palette"></div>
-      <div class="quiz-actions">
-        <button class="quiz-btn" type="button" id="acc-undo">← Effacer</button>
-        <button class="quiz-btn" type="button" id="acc-new">Nouvel accord →</button>
-        <span class="quiz-score" id="acc-score"></span>
-      </div>
-      <div class="tab-note" id="acc-feedback"></div>
-    </div>
     <div class="prog-legend">
       <b>Le lien avec la basse :</b> ces trois notes jouées l'une après l'autre au lieu d'être plaquées ensemble, c'est un <b>arpège</b> — exactement ce que tu joues sur <a href="#/basse" data-goto="basse">la piste Am / G de la fiche basse</a>.
       Et remarque que <b>A mineur</b> et <b>C majeur</b> ont les mêmes sept notes : l'une est la gamme relative de l'autre. Les deux accords sortent donc de la même gamme, ce qui explique qu'on les croise sans arrêt dans les mêmes morceaux.
@@ -1304,30 +1212,6 @@
       <div style="margin-top:8px"><b>Le lien avec la section 3 :</b> la pentatonique de A mineur, c'est les quatre notes de <b>Am7</b> (A C E G) <b>plus le D</b>. L'accord est déjà dedans.</div>
       <div style="margin-top:8px">La formule se pose sur <b>n'importe quelle fondamentale</b> — une lettre par degré, avec ♯ ou ♭ quand il faut :</div>
       <div class="chord-out" id="penta-exemples"></div>
-    </div>
-
-    <p class="hint" id="intrus-intro"><b>Barre les deux intruses.</b> Une gamme mineure complète est affichée. Clique sur <b>les deux notes à retirer</b> pour obtenir la pentatonique mineure — le 2ᵉ et le 6ᵉ degré, ceux qui bordent les demi-tons.</p>
-    <div class="prog-card" id="intrus-zone">
-      <div class="prog-title" id="intrus-prompt"></div>
-      <div class="chord-line" id="intrus-line"></div>
-      <div class="quiz-actions">
-        <button class="quiz-btn" type="button" id="intrus-new">Nouvelle gamme →</button>
-        <span class="quiz-score" id="intrus-score"></span>
-      </div>
-      <div class="tab-note" id="intrus-feedback"></div>
-    </div>
-
-    <p class="hint" id="pj-intro"><b>Trouve la penta.</b> Comme au jeu de la section 2 : une fondamentale et un type sont donnés, à toi de trouver <b>les quatre autres notes</b>, dans l'ordre, avec la formule sous les yeux. Les touches noires de la palette portent leurs deux noms : c'est la <b>hauteur</b> qui compte, et la correction écrit la bonne orthographe.</p>
-    <div class="prog-card" id="pj-zone">
-      <div class="prog-title" id="pj-prompt"></div>
-      <div class="quiz-slots" id="pj-slots"></div>
-      <div class="quiz-palette" id="pj-palette"></div>
-      <div class="quiz-actions">
-        <button class="quiz-btn" type="button" id="pj-undo">← Effacer</button>
-        <button class="quiz-btn" type="button" id="pj-new">Nouvelle penta →</button>
-        <span class="quiz-score" id="pj-score"></span>
-      </div>
-      <div class="tab-note" id="pj-feedback"></div>
     </div>
 
     <p class="hint" id="rel-intro"><b>La relative.</b> À la fin de la section 3, on a vu que <b>A mineur</b> et <b>C majeur</b> ont les mêmes sept notes. Pareil pour les pentas : <b>A</b> mineure et <b>C</b> majeure, ce sont <b>les mêmes cinq notes</b>, avec un autre point de départ — la majeure commence un ton et demi au-dessus de la mineure. En pratique : un morceau en <b>G majeur</b>, et tu joues la boîte de <b>E mineur</b>.</p>
@@ -1359,7 +1243,7 @@
     </div>
 
     <div class="callout">
-      <b>Le lien avec le manche et la basse :</b> les <a href="#/basse" data-goto="basse" data-anchor="pentatonique">six formes de la pentatonique de la fiche basse</a> sont cette même gamme, en boîtes. Sur la guitare, reprends <a href="#/guitare" data-goto="guitare" data-anchor="gammes">Les gammes de La</a> : joue la gamme de <b>A</b> mineur complète, puis la même en sautant <b>B</b> et <b>F</b>, et écoute la différence.
+      <b>Le lien avec le manche et la basse :</b> les <a href="#/basse" data-goto="basse" data-anchor="pentatonique">six formes de la pentatonique de la fiche basse</a> sont cette même gamme, en boîtes. Reprends <a href="#gammes">Les gammes de La</a> de la section 2 : joue la gamme de <b>A</b> mineur complète, puis la même en sautant <b>B</b> et <b>F</b>, et écoute la différence.
     </div>
   </div>
 </section>
@@ -1386,7 +1270,28 @@
       <div style="margin-top:8px">Ne valide une étape que si tu la tiens <b>deux fois de suite sans chercher les cases</b> — c'est l'hésitation qu'on chasse, pas la vitesse.</div>
     </div>
     <div class="callout">
-      <b>Le lien avec la section 4 :</b> le jeu <a href="#box-zone">« Où poser la boîte »</a> pose la boîte 1 sur n'importe quelle fondamentale — la forme ne change pas, elle glisse. La boîte 4 aussi, une fois sortie des cordes à vide : la même forme se retrouve <b>douze cases plus haut</b>, cases 12 à 15, fondamentales sur les cordes de <b>A</b> et de <b>G</b>. Et sur la fiche guitare, <a href="#/guitare" data-goto="guitare" data-anchor="gammes">Les gammes de La</a> donnent la gamme complète : la boîte 1, c'est la position fermée <b>sans B ni F</b>.
+      <b>Le lien avec la section 4 :</b> le jeu <a href="#box-zone">« Où poser la boîte »</a> pose la boîte 1 sur n'importe quelle fondamentale — la forme ne change pas, elle glisse. La boîte 4 aussi, une fois sortie des cordes à vide : la même forme se retrouve <b>douze cases plus haut</b>, cases 12 à 15, fondamentales sur les cordes de <b>A</b> et de <b>G</b>. Et <a href="#gammes">Les gammes de La</a> de la section 2 donnent la gamme complète : la boîte 1, c'est la position fermée <b>sans B ni F</b>.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. LE JEU ============ -->
+<section id="jeu">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">6</span><h2>Le jeu — de la gamme à la pentatonique</h2></div>
+    <p class="hint">Un seul jeu pour tout le chemin. Une fondamentale et un type sont tirés au sort, et on refait les sections dans l'ordre : <b>la gamme</b>, note par note, avec la formule W / H sous les yeux · <b>l'accord</b>, en sautant une note sur deux · <b>la septième</b>, une note de plus au même rythme · <b>la pentatonique</b>, la gamme moins deux degrés. Chaque étape réussie reste affichée au-dessus, pour construire la suivante dessus. Les touches noires de la palette portent leurs deux noms : c'est la <b>hauteur</b> qui compte, et la correction écrit la bonne orthographe.</p>
+    <div class="prog-card" id="jeu-zone">
+      <div class="prog-title" id="jeu-prompt"></div>
+      <div class="jeu-acquis" id="jeu-acquis"></div>
+      <div class="jeu-etape" id="jeu-etape"></div>
+      <div class="quiz-slots" id="jeu-slots"></div>
+      <div class="quiz-palette" id="jeu-palette"></div>
+      <div class="quiz-actions">
+        <button class="quiz-btn" type="button" id="jeu-undo">← Effacer</button>
+        <button class="quiz-btn" type="button" id="jeu-new">Nouvelle gamme →</button>
+        <span class="quiz-score" id="jeu-score"></span>
+      </div>
+      <div class="tab-note" id="jeu-feedback"></div>
     </div>
   </div>
 </section>
@@ -2328,167 +2233,6 @@ for (const exo of ARP_EXOS){
 }
 
 /* ============================================================
-   8. Les gammes de La — mineure et majeure, deux octaves,
-   deux positions chacune (ouverte, puis fermée).
-   Cordes de haut en bas comme sur les schémas : Mi aigu → Mi grave.
-   s : indice de corde (0 = Mi aigu … 5 = Mi grave) · f : case (0 = à vide)
-   ============================================================ */
-const GAMME_CORDES = ['E','B','G','D','A','E'];
-const GAMMES = [
-  { id:'mineur', titre:'La mineur', suite:['A','B','C','D','E','F','G'],
-    positions:[
-      { id:'ouverte', titre:'Position ouverte', court:'ouverte',
-        sub:'cases 0 à 5 — tout à gauche du manche, avec les cordes à vide',
-        f0:0, f1:5,
-        notes:[   /* dans l'ordre de la gamme, du A grave au A aigu */
-          {s:4,f:0,n:'A'},{s:4,f:2,n:'B'},{s:4,f:3,n:'C'},
-          {s:3,f:0,n:'D'},{s:3,f:2,n:'E'},{s:3,f:3,n:'F'},
-          {s:2,f:0,n:'G'},{s:2,f:2,n:'A'},
-          {s:1,f:0,n:'B'},{s:1,f:1,n:'C'},{s:1,f:3,n:'D'},
-          {s:0,f:0,n:'E'},{s:0,f:1,n:'F'},{s:0,f:3,n:'G'},{s:0,f:5,n:'A'},
-        ],
-        legende:'Les cordes à vide font partie de la gamme : <b>A</b> (La), <b>D</b> (Ré), <b>G</b> (Sol), <b>B</b> (Si) et <b>E</b> (les deux Mi). L\'octave du bas se joue sur les cordes La et Ré, celle du haut sur Sol, Si et Mi aigu.' },
-      { id:'fermee', titre:'Position fermée (V)', court:'fermée',
-        sub:'cases 4 à 8 — la même gamme, sans aucune corde à vide',
-        f0:3, f1:9,
-        notes:[
-          {s:5,f:5,n:'A'},{s:5,f:7,n:'B'},{s:5,f:8,n:'C'},
-          {s:4,f:5,n:'D'},{s:4,f:7,n:'E'},{s:4,f:8,n:'F'},
-          {s:3,f:5,n:'G'},{s:3,f:7,n:'A'},
-          {s:2,f:4,n:'B'},{s:2,f:5,n:'C'},{s:2,f:7,n:'D'},
-          {s:1,f:5,n:'E'},{s:1,f:6,n:'F'},{s:1,f:8,n:'G'},
-          {s:0,f:5,n:'A'},
-        ],
-        legende:'Un doigt par case : <b>index</b> cases 4–5, <b>majeur</b> case 6, <b>annulaire</b> case 7, <b>auriculaire</b> case 8. Comme rien n\'est à vide, cette forme se déplace : la même position démarrée ailleurs donne une autre gamme mineure.' },
-    ]},
-  { id:'majeur', titre:'La majeur', suite:['A','B','C♯','D','E','F♯','G♯'],
-    positions:[
-      { id:'ouverte', titre:'Position ouverte', court:'ouverte',
-        sub:'cases 0 à 5 — la mineure, avec C, F et G décalés d\'une case',
-        f0:0, f1:5,
-        notes:[
-          {s:4,f:0,n:'A'},{s:4,f:2,n:'B'},{s:4,f:4,n:'C♯'},
-          {s:3,f:0,n:'D'},{s:3,f:2,n:'E'},{s:3,f:4,n:'F♯'},
-          {s:2,f:1,n:'G♯'},{s:2,f:2,n:'A'},
-          {s:1,f:0,n:'B'},{s:1,f:2,n:'C♯'},{s:1,f:3,n:'D'},
-          {s:0,f:0,n:'E'},{s:0,f:2,n:'F♯'},{s:0,f:4,n:'G♯'},{s:0,f:5,n:'A'},
-        ],
-        legende:'Pose la mineure à côté : c\'est exactement la même grille, avec <b>C</b>, <b>F</b> et <b>G</b> poussés d\'une case vers la droite. La corde de <b>Sol à vide</b> sort donc de la gamme (c\'est <b>G♯</b> case 1 qui la remplace) ; les cordes à vide qui restent sont <b>A</b>, <b>D</b>, <b>B</b> et <b>E</b>.' },
-      { id:'fermee', titre:'Position fermée', court:'fermée',
-        sub:'cases 4 à 7 — un doigt par case, aucune corde à vide',
-        f0:3, f1:8,
-        notes:[
-          {s:5,f:5,n:'A'},{s:5,f:7,n:'B'},
-          {s:4,f:4,n:'C♯'},{s:4,f:5,n:'D'},{s:4,f:7,n:'E'},
-          {s:3,f:4,n:'F♯'},{s:3,f:6,n:'G♯'},{s:3,f:7,n:'A'},
-          {s:2,f:4,n:'B'},{s:2,f:6,n:'C♯'},{s:2,f:7,n:'D'},
-          {s:1,f:5,n:'E'},{s:1,f:7,n:'F♯'},
-          {s:0,f:4,n:'G♯'},{s:0,f:5,n:'A'},
-        ],
-        legende:'Un doigt par case, sans stretch : <b>index</b> case 4, <b>majeur</b> case 5, <b>annulaire</b> case 6, <b>auriculaire</b> case 7. Rien n\'est à vide, donc la forme se déplace telle quelle : deux cases plus haut elle donne <b>B</b> majeur, cinq cases plus haut <b>D</b> majeur.' },
-    ]},
-];
-
-function gammeSVG(gamme, pos){
-  const COL = 62, ROW = 34, TOPY = 24, GUT = 30;
-  const nF = pos.f1 - pos.f0;
-  const NUTX = GUT + (pos.f0 === 0 ? 40 : 14);   /* de la place pour les cordes à vide */
-  const W = NUTX + nF*COL + 18;
-  const H = TOPY + 5*ROW + 40;
-  const svg = document.createElementNS(SVGNS,'svg');
-  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-  svg.setAttribute('width', W);
-  svg.setAttribute('role','img');
-  svg.setAttribute('aria-label','Gamme de ' + gamme.titre + ' — ' + pos.titre);
-  /* repères de cases */
-  for (const f of [3,5,7,9]){
-    if (f <= pos.f0 || f > pos.f1) continue;
-    el('circle',{cx:NUTX+(f-pos.f0-0.5)*COL, cy:TOPY+2.5*ROW, r:7, fill:'#3E3226'}, svg);
-  }
-  /* sillet (position ouverte) ou frette de départ */
-  if (pos.f0 === 0){
-    el('rect',{x:NUTX-5, y:TOPY-8, width:6, height:5*ROW+16, fill:'#E8DCC9', rx:2}, svg);
-  }
-  for (let f = pos.f0 + 1; f <= pos.f1; f++){
-    el('line',{x1:NUTX+(f-pos.f0)*COL, y1:TOPY-6, x2:NUTX+(f-pos.f0)*COL, y2:TOPY+5*ROW+6,
-      stroke:'var(--board-line)','stroke-width':2}, svg);
-  }
-  if (pos.f0 !== 0){
-    el('line',{x1:NUTX, y1:TOPY-6, x2:NUTX, y2:TOPY+5*ROW+6,
-      stroke:'var(--board-line)','stroke-width':2}, svg);
-  }
-  /* numéros de cases */
-  for (const f of [1,3,5,7,9]){
-    if (f <= pos.f0 || f > pos.f1) continue;
-    const t = el('text',{x:NUTX+(f-pos.f0-0.5)*COL, y:H-8, 'text-anchor':'middle', fill:'#A08D77',
-      'font-family':'Spline Sans Mono,monospace','font-size':'13','font-weight':'700'}, svg);
-    t.textContent = f;
-  }
-  /* cordes + noms */
-  GAMME_CORDES.forEach((c,i)=>{
-    const y = TOPY + i*ROW;
-    el('line',{x1:GUT-8, y1:y, x2:W-12, y2:y, stroke:'#C8B79F','stroke-width':1.1+i*0.32}, svg);
-    const lb = el('text',{x:12, y:y+4, fill:'#D8CCBE',
-      'font-family':'Spline Sans Mono,monospace','font-size':'13','font-weight':'700'}, svg);
-    lb.textContent = c;
-  });
-  /* les notes de la gamme, dans l'ordre — le A (fondamentale) est cerclé */
-  for (const note of pos.notes){
-    const y = TOPY + note.s*ROW;
-    const cx = note.f === 0 ? GUT + 16 : NUTX + (note.f - pos.f0 - 0.5)*COL;
-    const g = el('g',{class:'gamme-note','data-note':note.n}, svg);
-    el('circle',{cx, cy:y, r:14, fill:NOTE_COLORS[note.n[0]],
-      stroke: note.n === 'A' ? '#F3EADD' : 'none', 'stroke-width': note.n === 'A' ? 2.5 : 0}, g);
-    /* les dièses prennent deux caractères : on rétrécit un peu pour rester dans la pastille */
-    const t = el('text',{x:cx, y:y+4.5, 'text-anchor':'middle', fill:'#fff',
-      'font-family':'Spline Sans Mono,monospace',
-      'font-size': note.n.length > 1 ? '11' : '13','font-weight':'700'}, g);
-    t.textContent = note.n;
-  }
-  return svg;
-}
-
-function gammeSeq(names){
-  return names.map(n => `<b style="color:${NOTE_COLORS[n[0]]}">${n}</b>`).join(' · ');
-}
-
-const gammeList = document.getElementById('gamme-list');
-for (const gamme of GAMMES){
-  const fam = document.createElement('div');
-  fam.className = 'family';
-  fam.id = 'gamme-' + gamme.id;
-  fam.innerHTML = `<h3><span class="swatch" style="background:${NOTE_COLORS.A}"></span>${gamme.titre}
-    <span class="tab-sub">${gammeSeq(gamme.suite)}</span></h3>`;
-  for (const pos of gamme.positions){
-    const block = document.createElement('div');
-    block.className = 'tab-block';
-    block.id = 'gamme-' + gamme.id + '-' + pos.id;
-    block.innerHTML = `<div class="tab-head"><span class="tab-title">${pos.titre}</span>
-      <span class="tab-sub">${pos.sub}</span></div>`;
-    const panel = document.createElement('div');
-    panel.className = 'board-panel';
-    panel.style.margin = '8px 14px 4px';
-    const scroll = document.createElement('div');
-    scroll.className = 'board-scroll';
-    scroll.appendChild(gammeSVG(gamme, pos));
-    panel.appendChild(scroll);
-    block.appendChild(panel);
-    const noms = pos.notes.map(n => n.n);
-    const seq = document.createElement('div');
-    seq.className = 'tab-note';
-    seq.innerHTML = 'Octave du bas : ' + gammeSeq(noms.slice(0,7)) +
-      ' &nbsp;·&nbsp; octave du haut : ' + gammeSeq(noms.slice(7));
-    block.appendChild(seq);
-    const lg = document.createElement('div');
-    lg.className = 'tab-note';
-    lg.innerHTML = pos.legende;
-    block.appendChild(lg);
-    fam.appendChild(block);
-  }
-  gammeList.appendChild(fam);
-}
-
-/* ============================================================
    Menu latéral — généré depuis les données
    ============================================================ */
 const sideNav = document.getElementById('sidenav-links');
@@ -2526,13 +2270,6 @@ ARP_EXOS.forEach(exo=>{
     exo.accords.map(a=>`<span class="mono-b" style="color:${NOTE_COLORS[CHORDS[a.id].root[0]]}">${CHORDS[a.id].name || a.id}</span>`).join(' · '),
     'lvl2');
 });
-lvl1Links['gammes'] = navLink('#gammes','8 · Les gammes de La','lvl1');
-for (const gamme of GAMMES){
-  for (const pos of gamme.positions){
-    navLink('#gamme-'+gamme.id+'-'+pos.id,
-      `<span class="sw" style="background:${NOTE_COLORS.A}"></span>${gamme.titre} · ${pos.court}`,'lvl2');
-  }
-}
 
 /* section active pendant le défilement */
 const spy = makeSpy((entries)=>{
@@ -2543,7 +2280,7 @@ const spy = makeSpy((entries)=>{
     }
   }
 }, { rootMargin:'-15% 0px -70% 0px' });
-for (const id of ['manche','accords','barres','rythmiques','exercices','progressions','arpeges','gammes']){
+for (const id of ['manche','accords','barres','rythmiques','exercices','progressions','arpeges']){
   spy.observe(document.getElementById(id));
 }
 
@@ -3313,6 +3050,13 @@ for (const id of ['notes-manche','routine','pluck-avance','impro','pentatonique'
 
 const NOTE_COLORS = { C:'#0E9594', D:'#8E44AD', E:'#2E8B57', F:'#DE4229', G:'#E67E22', A:'#2C7FB8', B:'#8D6E4B' };
 const CHROMA = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const SVGNS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, parent){
+  const n = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(n);
+  return n;
+}
 /* les recettes, en demi-tons : 2 = W (un ton), 1 = H (un demi-ton) */
 const FORMULES = { mineur:[2,1,2,2,1,2,2], majeur:[2,2,1,2,2,2,1] };
 
@@ -3357,11 +3101,14 @@ function epeler(root, degres){
 }
 const DEGRES = {
   gammeMineure:[[0,0],[1,2],[2,3],[3,5],[4,7],[5,8],[6,10]],   /* 1 2 ♭3 4 5 ♭6 ♭7 */
+  gammeMajeure:[[0,0],[1,2],[2,4],[3,5],[4,7],[5,9],[6,11]],   /* 1 2 3 4 5 6 7 */
   mineur:[[0,0],[2,3],[3,5],[4,7],[6,10]],                     /* 1 ♭3 4 5 ♭7 */
   majeur:[[0,0],[1,2],[2,4],[4,7],[5,9]],                      /* 1 2 3 5 6 */
 };
 function penta(root, type){ return epeler(root, DEGRES[type]); }
 function gammeMineure(root){ return epeler(root, DEGRES.gammeMineure); }
+function gammeMajeure(root){ return epeler(root, DEGRES.gammeMajeure); }
+function gammeDe(root, type){ return type === 'mineur' ? gammeMineure(root) : gammeMajeure(root); }
 /* les douze fondamentales de chaque type, avec l'orthographe d'usage —
    les deux listes se répondent : la relative d'une majeure est dans
    l'autre liste, écrite avec les mêmes altérations */
@@ -3415,13 +3162,171 @@ for (const r of ROWS){
   rows.appendChild(card);
 }
 
-/* ------------------------------------------------------------
-   2. Construire un accord — on saute une note sur deux
-   ------------------------------------------------------------ */
 /* suite de noms de notes, colorée comme partout ailleurs */
 function noteSeq(names){
   return names.map(n => `<b style="color:${NOTE_COLORS[n[0]]}">${n}</b>`).join(' · ');
 }
+
+/* ============================================================
+   2. Les gammes de La — mineure et majeure, deux octaves,
+   deux positions chacune (ouverte, puis fermée).
+   Cordes de haut en bas comme sur les schémas : Mi aigu → Mi grave.
+   s : indice de corde (0 = Mi aigu … 5 = Mi grave) · f : case (0 = à vide)
+   ============================================================ */
+const GAMME_CORDES = ['E','B','G','D','A','E'];
+const GAMMES = [
+  { id:'mineur', titre:'La mineur', suite:['A','B','C','D','E','F','G'],
+    positions:[
+      { id:'ouverte', titre:'Position ouverte', court:'ouverte',
+        sub:'cases 0 à 5 — tout à gauche du manche, avec les cordes à vide',
+        f0:0, f1:5,
+        notes:[   /* dans l'ordre de la gamme, du A grave au A aigu */
+          {s:4,f:0,n:'A'},{s:4,f:2,n:'B'},{s:4,f:3,n:'C'},
+          {s:3,f:0,n:'D'},{s:3,f:2,n:'E'},{s:3,f:3,n:'F'},
+          {s:2,f:0,n:'G'},{s:2,f:2,n:'A'},
+          {s:1,f:0,n:'B'},{s:1,f:1,n:'C'},{s:1,f:3,n:'D'},
+          {s:0,f:0,n:'E'},{s:0,f:1,n:'F'},{s:0,f:3,n:'G'},{s:0,f:5,n:'A'},
+        ],
+        legende:'Les cordes à vide font partie de la gamme : <b>A</b> (La), <b>D</b> (Ré), <b>G</b> (Sol), <b>B</b> (Si) et <b>E</b> (les deux Mi). L\'octave du bas se joue sur les cordes La et Ré, celle du haut sur Sol, Si et Mi aigu.' },
+      { id:'fermee', titre:'Position fermée (V)', court:'fermée',
+        sub:'cases 4 à 8 — la même gamme, sans aucune corde à vide',
+        f0:3, f1:9,
+        notes:[
+          {s:5,f:5,n:'A'},{s:5,f:7,n:'B'},{s:5,f:8,n:'C'},
+          {s:4,f:5,n:'D'},{s:4,f:7,n:'E'},{s:4,f:8,n:'F'},
+          {s:3,f:5,n:'G'},{s:3,f:7,n:'A'},
+          {s:2,f:4,n:'B'},{s:2,f:5,n:'C'},{s:2,f:7,n:'D'},
+          {s:1,f:5,n:'E'},{s:1,f:6,n:'F'},{s:1,f:8,n:'G'},
+          {s:0,f:5,n:'A'},
+        ],
+        legende:'Un doigt par case : <b>index</b> cases 4–5, <b>majeur</b> case 6, <b>annulaire</b> case 7, <b>auriculaire</b> case 8. Comme rien n\'est à vide, cette forme se déplace : la même position démarrée ailleurs donne une autre gamme mineure.' },
+    ]},
+  { id:'majeur', titre:'La majeur', suite:['A','B','C♯','D','E','F♯','G♯'],
+    positions:[
+      { id:'ouverte', titre:'Position ouverte', court:'ouverte',
+        sub:'cases 0 à 5 — la mineure, avec C, F et G décalés d\'une case',
+        f0:0, f1:5,
+        notes:[
+          {s:4,f:0,n:'A'},{s:4,f:2,n:'B'},{s:4,f:4,n:'C♯'},
+          {s:3,f:0,n:'D'},{s:3,f:2,n:'E'},{s:3,f:4,n:'F♯'},
+          {s:2,f:1,n:'G♯'},{s:2,f:2,n:'A'},
+          {s:1,f:0,n:'B'},{s:1,f:2,n:'C♯'},{s:1,f:3,n:'D'},
+          {s:0,f:0,n:'E'},{s:0,f:2,n:'F♯'},{s:0,f:4,n:'G♯'},{s:0,f:5,n:'A'},
+        ],
+        legende:'Pose la mineure à côté : c\'est exactement la même grille, avec <b>C</b>, <b>F</b> et <b>G</b> poussés d\'une case vers la droite. La corde de <b>Sol à vide</b> sort donc de la gamme (c\'est <b>G♯</b> case 1 qui la remplace) ; les cordes à vide qui restent sont <b>A</b>, <b>D</b>, <b>B</b> et <b>E</b>.' },
+      { id:'fermee', titre:'Position fermée', court:'fermée',
+        sub:'cases 4 à 7 — un doigt par case, aucune corde à vide',
+        f0:3, f1:8,
+        notes:[
+          {s:5,f:5,n:'A'},{s:5,f:7,n:'B'},
+          {s:4,f:4,n:'C♯'},{s:4,f:5,n:'D'},{s:4,f:7,n:'E'},
+          {s:3,f:4,n:'F♯'},{s:3,f:6,n:'G♯'},{s:3,f:7,n:'A'},
+          {s:2,f:4,n:'B'},{s:2,f:6,n:'C♯'},{s:2,f:7,n:'D'},
+          {s:1,f:5,n:'E'},{s:1,f:7,n:'F♯'},
+          {s:0,f:4,n:'G♯'},{s:0,f:5,n:'A'},
+        ],
+        legende:'Un doigt par case, sans stretch : <b>index</b> case 4, <b>majeur</b> case 5, <b>annulaire</b> case 6, <b>auriculaire</b> case 7. Rien n\'est à vide, donc la forme se déplace telle quelle : deux cases plus haut elle donne <b>B</b> majeur, cinq cases plus haut <b>D</b> majeur.' },
+    ]},
+];
+
+function gammeSVG(gamme, pos){
+  const COL = 62, ROW = 34, TOPY = 24, GUT = 30;
+  const nF = pos.f1 - pos.f0;
+  const NUTX = GUT + (pos.f0 === 0 ? 40 : 14);   /* de la place pour les cordes à vide */
+  const W = NUTX + nF*COL + 18;
+  const H = TOPY + 5*ROW + 40;
+  const svg = document.createElementNS(SVGNS,'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('width', W);
+  svg.setAttribute('role','img');
+  svg.setAttribute('aria-label','Gamme de ' + gamme.titre + ' — ' + pos.titre);
+  /* repères de cases */
+  for (const f of [3,5,7,9]){
+    if (f <= pos.f0 || f > pos.f1) continue;
+    el('circle',{cx:NUTX+(f-pos.f0-0.5)*COL, cy:TOPY+2.5*ROW, r:7, fill:'#3E3226'}, svg);
+  }
+  /* sillet (position ouverte) ou frette de départ */
+  if (pos.f0 === 0){
+    el('rect',{x:NUTX-5, y:TOPY-8, width:6, height:5*ROW+16, fill:'#E8DCC9', rx:2}, svg);
+  }
+  for (let f = pos.f0 + 1; f <= pos.f1; f++){
+    el('line',{x1:NUTX+(f-pos.f0)*COL, y1:TOPY-6, x2:NUTX+(f-pos.f0)*COL, y2:TOPY+5*ROW+6,
+      stroke:'var(--board-line)','stroke-width':2}, svg);
+  }
+  if (pos.f0 !== 0){
+    el('line',{x1:NUTX, y1:TOPY-6, x2:NUTX, y2:TOPY+5*ROW+6,
+      stroke:'var(--board-line)','stroke-width':2}, svg);
+  }
+  /* numéros de cases */
+  for (const f of [1,3,5,7,9]){
+    if (f <= pos.f0 || f > pos.f1) continue;
+    const t = el('text',{x:NUTX+(f-pos.f0-0.5)*COL, y:H-8, 'text-anchor':'middle', fill:'#A08D77',
+      'font-family':'Spline Sans Mono,monospace','font-size':'13','font-weight':'700'}, svg);
+    t.textContent = f;
+  }
+  /* cordes + noms */
+  GAMME_CORDES.forEach((c,i)=>{
+    const y = TOPY + i*ROW;
+    el('line',{x1:GUT-8, y1:y, x2:W-12, y2:y, stroke:'#C8B79F','stroke-width':1.1+i*0.32}, svg);
+    const lb = el('text',{x:12, y:y+4, fill:'#D8CCBE',
+      'font-family':'Spline Sans Mono,monospace','font-size':'13','font-weight':'700'}, svg);
+    lb.textContent = c;
+  });
+  /* les notes de la gamme, dans l'ordre — le A (fondamentale) est cerclé */
+  for (const note of pos.notes){
+    const y = TOPY + note.s*ROW;
+    const cx = note.f === 0 ? GUT + 16 : NUTX + (note.f - pos.f0 - 0.5)*COL;
+    const g = el('g',{class:'gamme-note','data-note':note.n}, svg);
+    el('circle',{cx, cy:y, r:14, fill:NOTE_COLORS[note.n[0]],
+      stroke: note.n === 'A' ? '#F3EADD' : 'none', 'stroke-width': note.n === 'A' ? 2.5 : 0}, g);
+    /* les dièses prennent deux caractères : on rétrécit un peu pour rester dans la pastille */
+    const t = el('text',{x:cx, y:y+4.5, 'text-anchor':'middle', fill:'#fff',
+      'font-family':'Spline Sans Mono,monospace',
+      'font-size': note.n.length > 1 ? '11' : '13','font-weight':'700'}, g);
+    t.textContent = note.n;
+  }
+  return svg;
+}
+
+const gammeList = document.getElementById('gamme-list');
+for (const gamme of GAMMES){
+  const fam = document.createElement('div');
+  fam.className = 'family';
+  fam.id = 'gamme-' + gamme.id;
+  fam.innerHTML = `<h3><span class="swatch" style="background:${NOTE_COLORS.A}"></span>${gamme.titre}
+    <span class="tab-sub">${noteSeq(gamme.suite)}</span></h3>`;
+  for (const pos of gamme.positions){
+    const block = document.createElement('div');
+    block.className = 'tab-block';
+    block.id = 'gamme-' + gamme.id + '-' + pos.id;
+    block.innerHTML = `<div class="tab-head"><span class="tab-title">${pos.titre}</span>
+      <span class="tab-sub">${pos.sub}</span></div>`;
+    const panel = document.createElement('div');
+    panel.className = 'board-panel';
+    panel.style.margin = '8px 14px 4px';
+    const scroll = document.createElement('div');
+    scroll.className = 'board-scroll';
+    scroll.appendChild(gammeSVG(gamme, pos));
+    panel.appendChild(scroll);
+    block.appendChild(panel);
+    const noms = pos.notes.map(n => n.n);
+    const seq = document.createElement('div');
+    seq.className = 'tab-note';
+    seq.innerHTML = 'Octave du bas : ' + noteSeq(noms.slice(0,7)) +
+      ' &nbsp;·&nbsp; octave du haut : ' + noteSeq(noms.slice(7));
+    block.appendChild(seq);
+    const lg = document.createElement('div');
+    lg.className = 'tab-note';
+    lg.innerHTML = pos.legende;
+    block.appendChild(lg);
+    fam.appendChild(block);
+  }
+  gammeList.appendChild(fam);
+}
+
+/* ------------------------------------------------------------
+   3. Construire un accord — on saute une note sur deux
+   ------------------------------------------------------------ */
 function accordSeq(chord, names){
   return `<span class="seq"><span class="seq-chord">${chord}</span>${noteSeq(names)}</span>`;
 }
@@ -3467,216 +3372,8 @@ for (const a of ACCORDS){
   chordRows.appendChild(card);
 }
 
-/* ------------------------------------------------------------
-   3. Les jeux « cases + palette » — une seule fabrique
-   Trois jeux partagent la même mécanique : une fondamentale donnée,
-   des cases à remplir dans l'ordre depuis une palette, « ← Effacer »,
-   la vérification quand tout est rempli, un score. Seuls changent le
-   tirage, l'énoncé et le bilan : c'est ce que fournit cfg.
-     cfg = { prefixe, palette:[{note, label, duo}],
-             tirer() → { attendu, enonce, dataset, bilan(ok, justes) },
-             egal(a, b), libelle(note, i, ok, attendu) }
-   Les ids du DOM sont préfixés : <prefixe>-zone, -prompt, -slots,
-   -palette, -undo, -new, -score, -feedback.
-   ------------------------------------------------------------ */
-function jeuDeNotes(cfg){
-  const $ = s => document.getElementById(cfg.prefixe + '-' + s);
-  const zone = $('zone'), promptEl = $('prompt'), slotsEl = $('slots'),
-        paletteEl = $('palette'), feedback = $('feedback'), scoreEl = $('score'),
-        undoBtn = $('undo');
-  const egal = cfg.egal || ((a, b) => a === b);
-  const libelle = cfg.libelle || (note => note);
-  let etat, filled, done, bons = 0, total = 0;
-
-  /* la palette est statique : une fois pour toutes */
-  for (const p of cfg.palette){
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'quiz-note-btn' + (p.duo ? ' duo' : '');
-    b.style.background = NOTE_COLORS[p.note[0]];
-    b.textContent = p.label || p.note;
-    b.dataset.note = p.note;
-    b.addEventListener('click', () => jouer(p.note));
-    paletteEl.appendChild(b);
-  }
-
-  function slotBouton(note, idx){
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'quiz-slot filled';
-    b.style.background = NOTE_COLORS[note[0]];
-    const ok = done && egal(note, etat.attendu[idx + 1]);
-    b.textContent = libelle(note, idx + 1, ok, etat.attendu);
-    if (b.textContent.length > 3) b.classList.add('duo');
-    b.title = 'Effacer à partir d\'ici';
-    b.addEventListener('click', () => {
-      if (done) return;
-      for (let i = idx; i < filled.length; i++) filled[i] = null;
-      render();
-    });
-    return b;
-  }
-
-  function render(){
-    promptEl.innerHTML = etat.enonce;
-
-    const donne = document.createElement('span');
-    donne.className = 'quiz-slot given';
-    donne.style.background = NOTE_COLORS[etat.attendu[0][0]];
-    donne.textContent = etat.attendu[0];
-    const slots = [donne];
-    filled.forEach((note, i) => {
-      let el;
-      if (note == null){
-        el = document.createElement('span');
-        el.className = 'quiz-slot';
-      } else {
-        el = slotBouton(note, i);
-        if (done) el.classList.add(egal(note, etat.attendu[i + 1]) ? 'correct' : 'wrong');
-      }
-      slots.push(el);
-    });
-    slotsEl.replaceChildren(...slots);
-
-    const complet = filled.every(n => n != null);
-    [...paletteEl.children].forEach(b => b.disabled = done || complet);
-    undoBtn.disabled = done || filled.every(n => n == null);
-  }
-
-  function jouer(note){
-    if (done) return;
-    const i = filled.findIndex(n => n == null);
-    if (i === -1) return;
-    filled[i] = note;
-    render();
-    if (filled.every(n => n != null)) verifier();
-  }
-
-  function verifier(){
-    done = true;
-    total++;
-    const justes = filled.filter((n, i) => egal(n, etat.attendu[i + 1])).length;
-    const ok = justes === filled.length;
-    if (ok) bons++;
-    feedback.innerHTML = etat.bilan(ok, justes);
-    feedback.className = 'tab-note ' + (ok ? 'juste' : 'faux');
-    scoreEl.textContent = bons + ' / ' + total;
-    render();
-  }
-
-  function nouvelle(){
-    etat = cfg.tirer();
-    filled = new Array(etat.attendu.length - 1).fill(null);
-    done = false;
-    for (const k in etat.dataset) zone.dataset[k] = etat.dataset[k];
-    feedback.textContent = '';
-    feedback.className = 'tab-note';
-    render();
-  }
-
-  undoBtn.addEventListener('click', () => {
-    if (done) return;
-    for (let i = filled.length - 1; i >= 0; i--){
-      if (filled[i] != null){ filled[i] = null; break; }
-    }
-    render();
-  });
-  $('new').addEventListener('click', nouvelle);
-  nouvelle();
-}
-
 const tirage = liste => liste[Math.floor(Math.random() * liste.length)];
 const nomColore = n => `<b style="color:${NOTE_COLORS[n[0]]}">${n}</b>`;
-/* la palette des sections 2 et 3 : les 12 notes, écrites avec des dièses */
-const PALETTE_DIESES = CHROMA.map(note => ({ note }));
-
-/* ------------------------------------------------------------
-   Le jeu — trouve la gamme (section 2)
-   Les fondamentales choisies ne demandent que des dièses, jamais
-   de bémols : ce qu'on affiche reste juste.
-   ------------------------------------------------------------ */
-const RACINES = { majeur:['C','G','D','A','E','B'], mineur:['A','E','B','F#','C#'] };
-
-/* Au hasard, ou au choix : les deux sélecteurs (fondamentale, type) restent
-   vides pour un tirage au sort, sinon ils fixent la gamme. La liste des
-   fondamentales proposées suit le type choisi, pour ne jamais demander
-   une gamme qui s'écrirait avec des bémols. */
-const quizRoot = document.getElementById('quiz-root');
-const quizType = document.getElementById('quiz-type');
-function racinesPossibles(type){
-  return type ? RACINES[type] : CHROMA.filter(n => RACINES.majeur.includes(n) || RACINES.mineur.includes(n));
-}
-function remplirRacines(){
-  const avant = quizRoot.value;
-  const liste = racinesPossibles(quizType.value);
-  quizRoot.replaceChildren(...['', ...liste].map(n => {
-    const o = document.createElement('option');
-    o.value = n; o.textContent = n || 'au hasard';
-    return o;
-  }));
-  /* la fondamentale choisie reste si elle existe encore dans ce type */
-  quizRoot.value = liste.includes(avant) ? avant : '';
-}
-function choixGamme(){
-  let type = quizType.value, root = quizRoot.value;
-  if (!type){
-    /* fondamentale imposée : on tire parmi les types qui la contiennent */
-    const types = ['mineur', 'majeur'].filter(t => !root || RACINES[t].includes(root));
-    type = tirage(types);
-  }
-  if (!root) root = tirage(RACINES[type]);
-  return { type, root };
-}
-remplirRacines();
-
-jeuDeNotes({
-  prefixe:'quiz',
-  palette: PALETTE_DIESES,
-  tirer(){
-    const { type, root } = choixGamme();
-    const attendu = computeScale(root, type).slice(0, 7);
-    const complete = attendu.join(' · ');
-    return {
-      attendu, dataset:{ type, root },
-      enonce:`Gamme de ${nomColore(root)} ${type}`,
-      bilan:(ok, justes) => ok
-        ? `✓ Bravo — la gamme de ${root} ${type}, c'est ${complete}.`
-        : `✗ ${justes} / 6 notes justes — la gamme complète est ${complete}.`,
-    };
-  },
-});
-/* changer un choix lance tout de suite la gamme correspondante */
-quizType.addEventListener('change', () => { remplirRacines(); document.getElementById('quiz-new').click(); });
-quizRoot.addEventListener('change', () => document.getElementById('quiz-new').click());
-
-/* ------------------------------------------------------------
-   Le jeu d'entraînement de la section « Construire un accord »
-   Même mécanique, mais on ne demande que les notes de l'accord :
-   deux pour une triade, trois avec la septième.
-   ------------------------------------------------------------ */
-jeuDeNotes({
-  prefixe:'acc',
-  palette: PALETTE_DIESES,
-  tirer(){
-    const type = Math.random() < 0.5 ? 'mineur' : 'majeur';
-    const root = tirage(RACINES[type]);
-    const sept = Math.random() < 0.5;
-    /* une note sur deux dans la gamme : degrés 1, 3, 5, et 7 pour la septième */
-    const g = computeScale(root, type);
-    const attendu = sept ? [g[0], g[2], g[4], g[6]] : [g[0], g[2], g[4]];
-    /* Am, Am7, C, Cmaj7 — le majeur ne porte pas de suffixe pour la triade */
-    const nom = type === 'mineur' ? root + (sept ? 'm7' : 'm') : root + (sept ? 'maj7' : '');
-    const complet = attendu.join(' · ');
-    return {
-      attendu, dataset:{ type, root, sept: sept ? '1' : '0' },
-      enonce:`Accord de ${nomColore(root)} ${type} — ` + (sept ? 'l\'accord de septième' : 'la triade'),
-      bilan:(ok, justes) => ok
-        ? `✓ Bravo — ${nom}, c'est ${complet}.`
-        : `✗ ${justes} / ${attendu.length - 1} notes justes — ${nom}, c'est ${complet}.`,
-    };
-  },
-});
-
 /* ============================================================
    4. La pentatonique
    ============================================================ */
@@ -3701,102 +3398,6 @@ jeuDeNotes({
   /* la même formule sur d'autres fondamentales, épelée avec une lettre par degré */
   document.getElementById('penta-exemples').innerHTML =
     ['E', 'D', 'G'].map(r => accordSeq(r + 'm', penta(r, 'mineur'))).join('');
-})();
-
-/* 4.2 — barre les deux intruses */
-(function(){
-  const zone = document.getElementById('intrus-zone');
-  const promptEl = document.getElementById('intrus-prompt');
-  const lineEl = document.getElementById('intrus-line');
-  const feedback = document.getElementById('intrus-feedback');
-  const scoreEl = document.getElementById('intrus-score');
-  let root, gamme, picks, done, bons = 0, total = 0;
-  const INTRUS = [1, 5];   /* le 2ᵉ et le 6ᵉ degré, en indices */
-
-  function render(){
-    promptEl.innerHTML = `Gamme de ${nomColore(root)} mineur — clique les deux notes à retirer`;
-    lineEl.replaceChildren(...gamme.map((note, i) => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'scale-note';
-      b.style.background = NOTE_COLORS[note[0]];
-      b.textContent = note;
-      b.dataset.note = note;
-      if (picks.includes(i)) b.classList.add(done ? (INTRUS.includes(i) ? 'correct' : 'wrong') : 'pick');
-      if (done && INTRUS.includes(i)) b.classList.add('off');
-      b.disabled = done;
-      b.addEventListener('click', () => choisir(i));
-      return b;
-    }));
-  }
-
-  function choisir(i){
-    if (done) return;
-    /* re-cliquer une note choisie la déselectionne */
-    if (picks.includes(i)){ picks = picks.filter(p => p !== i); render(); return; }
-    picks.push(i);
-    render();
-    if (picks.length === 2) verifier();
-  }
-
-  function verifier(){
-    done = true;
-    total++;
-    const ok = INTRUS.every(i => picks.includes(i));
-    if (ok) bons++;
-    const p = penta(root, 'mineur').join(' · ');
-    feedback.innerHTML = ok
-      ? `✓ Bravo — sans ${gamme[1]} ni ${gamme[5]}, il reste ${p} : la pentatonique de ${root} mineur.`
-      : `✗ Il fallait retirer ${gamme[1]} et ${gamme[5]}, le 2ᵉ et le 6ᵉ degré — la pentatonique de ${root} mineur, c'est ${p}.`;
-    feedback.className = 'tab-note ' + (ok ? 'juste' : 'faux');
-    scoreEl.textContent = bons + ' / ' + total;
-    render();
-  }
-
-  function nouvelle(){
-    root = tirage(RACINES_PENTA.mineur);
-    gamme = gammeMineure(root);
-    picks = [];
-    done = false;
-    zone.dataset.root = root;
-    feedback.textContent = '';
-    feedback.className = 'tab-note';
-    render();
-  }
-
-  document.getElementById('intrus-new').addEventListener('click', nouvelle);
-  nouvelle();
-})();
-
-/* 4.3 — trouve la penta : la fabrique, avec une palette qui connaît les
-   bémols. Les touches noires portent leurs deux noms ; on valide à la
-   hauteur, et la correction réécrit la note avec la bonne orthographe. */
-(function(){
-  const PALETTE_DUO = CHROMA.map(note => note.includes('#')
-    ? { note, duo:true, label: note[0] + '♯/' + LETTRES[(LETTRES.indexOf(note[0]) + 1) % 7] + '♭' }
-    : { note });
-  const labelDe = Object.fromEntries(PALETTE_DUO.map(p => [p.note, p.label || p.note]));
-  const FORMULE = { mineur:'1 · ♭3 · 4 · 5 · ♭7', majeur:'1 · 2 · 3 · 5 · 6' };
-  const ADJ = { mineur:'mineure', majeur:'majeure' };
-  jeuDeNotes({
-    prefixe:'pj',
-    palette: PALETTE_DUO,
-    egal:(a, b) => hauteur(a) === hauteur(b),
-    libelle:(note, i, ok, attendu) => ok ? attendu[i] : labelDe[note],
-    tirer(){
-      const type = Math.random() < 0.5 ? 'mineur' : 'majeur';
-      const root = tirage(RACINES_PENTA[type]);
-      const attendu = penta(root, type);
-      const complete = attendu.join(' · ');
-      return {
-        attendu, dataset:{ type, root },
-        enonce:`Pentatonique ${ADJ[type]} de ${nomColore(root)} <span class="formule">${FORMULE[type]}</span>`,
-        bilan:(ok, justes) => ok
-          ? `✓ Bravo — la pentatonique ${ADJ[type]} de ${root}, c'est ${complete}.`
-          : `✗ ${justes} / 4 notes justes — la pentatonique ${ADJ[type]} de ${root}, c'est ${complete}.`,
-      };
-    },
-  });
 })();
 
 /* 4.4 — la relative : mêmes cinq notes, deux noms */
@@ -4057,8 +3658,184 @@ function peindreBoite(p, nom, deg, box){
   }
 })();
 
-/* exposé pour les tests : la recette de la pentatonique, hors DOM */
-window.theorie = { penta, epeler, gammeMineure, hauteur };
+/* ============================================================
+   6. Le jeu — de la gamme à la pentatonique : quatre étapes enchaînées
+   sur la même fondamentale. Une fois une étape réussie (ou corrigée),
+   ses notes restent affichées au-dessus, et la suivante se construit
+   dessus. La palette porte les deux noms des touches noires ; on valide
+   à la hauteur, et la correction réécrit la note avec la bonne
+   orthographe.
+   ============================================================ */
+(function(){
+  const zone = document.getElementById('jeu-zone');
+  if (!zone) return;
+  const $ = s => document.getElementById('jeu-' + s);
+  const promptEl = $('prompt'), acquisEl = $('acquis'), etapeEl = $('etape'),
+        slotsEl = $('slots'), paletteEl = $('palette'), feedback = $('feedback'),
+        scoreEl = $('score'), undoBtn = $('undo'), newBtn = $('new');
+  const ADJ = { mineur:'mineure', majeur:'majeure' };
+  /* les fondamentales dont la gamme complète s'écrit sans C♭ ni F♭ */
+  const RACINES_JEU = {
+    majeur: RACINES_PENTA.majeur.filter(r => r !== 'G♭'),
+    mineur: RACINES_PENTA.mineur.filter(r => r !== 'E♭'),
+  };
+  const PALETTE = CHROMA.map(note => note.includes('#')
+    ? { note, duo:true, label: note[0] + '♯/' + LETTRES[(LETTRES.indexOf(note[0]) + 1) % 7] + '♭' }
+    : { note });
+  const labelDe = Object.fromEntries(PALETTE.map(p => [p.note, p.label || p.note]));
+  const egal = (a, b) => hauteur(a) === hauteur(b);
+
+  /* les quatre étapes d'une fondamentale : les notes attendues (les
+     `donnees` premières sont affichées), la formule, le nom de ce qu'on
+     obtient, et la consigne */
+  function etapes(root, type){
+    const g = gammeDe(root, type);
+    const triade = [g[0], g[2], g[4]];
+    return [
+      { titre:'La gamme', attendu:g, donnees:1,
+        formule: type === 'mineur' ? 'W H W W H W W' : 'W W H W W W H',
+        nom:`Gamme de ${root} ${type}`, consigne:'les six autres notes, dans l\'ordre' },
+      { titre:'L\'accord', attendu:triade, donnees:1, formule:'1 · 3 · 5',
+        nom: type === 'mineur' ? root + 'm' : root,
+        consigne:'une note sur deux dans la gamme : la tierce, puis la quinte' },
+      { titre:'La septième', attendu:triade.concat([g[6]]), donnees:3, formule:'1 · 3 · 5 · 7',
+        nom: type === 'mineur' ? root + 'm7' : root + 'maj7',
+        consigne:'une note de plus, en sautant encore une note' },
+      { titre:'La pentatonique', attendu:penta(root, type), donnees:1,
+        formule: type === 'mineur' ? '1 · ♭3 · 4 · 5 · ♭7' : '1 · 2 · 3 · 5 · 6',
+        nom:`Penta ${ADJ[type]} de ${root}`, consigne:'les quatre autres notes, dans l\'ordre' },
+    ];
+  }
+
+  let root, type, liste, i, filled, done, bons = 0, total = 0;
+  const etape = () => liste[i];
+
+  for (const p of PALETTE){
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'quiz-note-btn' + (p.duo ? ' duo' : '');
+    b.style.background = NOTE_COLORS[p.note[0]];
+    b.textContent = p.label || p.note;
+    b.dataset.note = p.note;
+    b.addEventListener('click', () => jouer(p.note));
+    paletteEl.appendChild(b);
+  }
+
+  function chip(note, cls){
+    const s = document.createElement('span');
+    s.className = cls;
+    s.style.background = NOTE_COLORS[note[0]];
+    s.textContent = note;
+    return s;
+  }
+  /* une étape passée : son nom, puis ses notes, épelées juste */
+  function ligneAcquise(e){
+    const div = document.createElement('div');
+    div.className = 'rel-line';
+    const nom = document.createElement('span');
+    nom.className = 'rel-name';
+    nom.textContent = e.nom;
+    div.append(nom, ...e.attendu.map(n => chip(n, 'scale-note')));
+    return div;
+  }
+
+  function slotBouton(note, idx){
+    const e = etape();
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'quiz-slot filled';
+    b.style.background = NOTE_COLORS[note[0]];
+    const ok = done && egal(note, e.attendu[e.donnees + idx]);
+    b.textContent = ok ? e.attendu[e.donnees + idx] : labelDe[note];
+    if (b.textContent.length > 3) b.classList.add('duo');
+    if (done) b.classList.add(ok ? 'correct' : 'wrong');
+    b.title = 'Effacer à partir d\'ici';
+    b.addEventListener('click', () => {
+      if (done) return;
+      for (let k = idx; k < filled.length; k++) filled[k] = null;
+      render();
+    });
+    return b;
+  }
+
+  function render(){
+    const e = etape();
+    promptEl.innerHTML = `${nomColore(root)} ${type} — étape ${i + 1} / 4`;
+    acquisEl.replaceChildren(...liste.slice(0, i).map(ligneAcquise));
+    etapeEl.innerHTML = `${e.titre} <span class="formule">${e.formule}</span><br><i>${e.consigne}</i>`;
+    const slots = e.attendu.slice(0, e.donnees).map(n => chip(n, 'quiz-slot given'));
+    filled.forEach((note, k) => {
+      if (note == null){
+        const s = document.createElement('span');
+        s.className = 'quiz-slot';
+        slots.push(s);
+      } else slots.push(slotBouton(note, k));
+    });
+    slotsEl.replaceChildren(...slots);
+    const complet = filled.every(n => n != null);
+    [...paletteEl.children].forEach(b => b.disabled = done || complet);
+    undoBtn.disabled = done || filled.every(n => n == null);
+    newBtn.textContent = done && i < 3 ? 'Étape suivante →' : 'Nouvelle gamme →';
+    zone.dataset.etape = i + 1;
+  }
+
+  function jouer(note){
+    if (done) return;
+    const k = filled.findIndex(n => n == null);
+    if (k === -1) return;
+    filled[k] = note;
+    render();
+    if (filled.every(n => n != null)) verifier();
+  }
+
+  function verifier(){
+    const e = etape();
+    done = true;
+    total++;
+    const justes = filled.filter((n, k) => egal(n, e.attendu[e.donnees + k])).length;
+    const ok = justes === filled.length;
+    if (ok) bons++;
+    const complete = e.attendu.join(' · ');
+    feedback.innerHTML = ok
+      ? `✓ Bravo — ${e.nom}, c'est ${complete}.` + (i < 3 ? ' Étape suivante ?' : ' Le chemin est fait.')
+      : `✗ ${justes} / ${filled.length} notes justes — ${e.nom}, c'est ${complete}.` + (i < 3 ? ' On continue avec les bonnes notes.' : '');
+    feedback.className = 'tab-note ' + (ok ? 'juste' : 'faux');
+    scoreEl.textContent = bons + ' / ' + total;
+    render();
+  }
+
+  function commencer(k){
+    i = k;
+    filled = new Array(etape().attendu.length - etape().donnees).fill(null);
+    done = false;
+    feedback.textContent = '';
+    feedback.className = 'tab-note';
+    render();
+  }
+
+  function nouvelle(){
+    type = Math.random() < 0.5 ? 'mineur' : 'majeur';
+    root = tirage(RACINES_JEU[type]);
+    liste = etapes(root, type);
+    zone.dataset.root = root;
+    zone.dataset.type = type;
+    commencer(0);
+  }
+
+  undoBtn.addEventListener('click', () => {
+    if (done) return;
+    for (let k = filled.length - 1; k >= 0; k--){
+      if (filled[k] != null){ filled[k] = null; break; }
+    }
+    render();
+  });
+  /* après une étape : la suivante ; sinon (ou après la quatrième) : une autre fondamentale */
+  newBtn.addEventListener('click', () => (done && i < 3) ? commencer(i + 1) : nouvelle());
+  nouvelle();
+})();
+
+/* exposé pour les tests : les recettes, hors DOM */
+window.theorie = { penta, epeler, gammeMineure, gammeMajeure, gammeDe, hauteur };
 
 
 })();

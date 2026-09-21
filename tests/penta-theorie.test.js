@@ -47,9 +47,12 @@ test('la section 4 et son entrée de sommaire sont visibles dans Théorie, et nu
   assert.equal(isVisible(lien), true);
   assert.equal(sec.querySelector('.sec-num').textContent, '4');
   assert.equal(sec.querySelector('h2').textContent, 'La pentatonique');
-  /* les quatre jeux et l'encadré de liens, dans l'ordre */
+  /* les deux jeux qui restent (la relative, la boîte) et l'encadré de liens, dans l'ordre —
+     « barre les intruses » et « trouve la penta » sont passés dans le jeu complet de la section 6 */
   const ordre = [...sec.querySelectorAll('.prog-card, .callout')].map(n => n.id || n.className);
-  assert.deepEqual(ordre, ['intrus-zone', 'pj-zone', 'rel-zone', 'box-zone', 'callout']);
+  assert.deepEqual(ordre, ['rel-zone', 'box-zone', 'callout']);
+  assert.equal(doc.getElementById('intrus-zone'), null);
+  assert.equal(doc.getElementById('pj-zone'), null);
 });
 
 test('la recette de la pentatonique épelle une lettre par degré', () => {
@@ -94,141 +97,6 @@ test('4.1 — A mineur, puis la même gamme avec B et F barrés', () => {
   const txt = doc.getElementById('penta').textContent;
   assert.match(txt, /1 · ♭3 · 4 · 5 · ♭7/);
   assert.match(txt, /1 · 2 · 3 · 5 · 6/);
-});
-
-/* ------------ 4.2 barre les deux intruses ------------ */
-const chips = doc => [...doc.querySelectorAll('#intrus-line .scale-note')];
-
-test('4.2 — une gamme mineure complète est tirée, retirer le 2ᵉ et le 6ᵉ degré la valide', () => {
-  const { doc, win } = ouvre();
-  const zone = doc.getElementById('intrus-zone');
-  assert.equal(isVisible(zone), true);
-  const root = zone.dataset.root;
-  assert.ok(root, 'aucune fondamentale tirée');
-  assert.match(doc.getElementById('intrus-prompt').textContent, new RegExp(root + ' mineur'));
-  assert.deepEqual(chips(doc).map(c => c.textContent), th(win).gammeMineure(root));
-  assert.equal(chips(doc).every(c => !c.disabled), true);
-
-  chips(doc)[1].click();
-  assert.equal(chips(doc)[1].classList.contains('pick'), true);
-  chips(doc)[5].click();
-  const feedback = doc.getElementById('intrus-feedback');
-  assert.match(feedback.textContent, /✓/);
-  assert.match(feedback.textContent, new RegExp(th(win).penta(root, 'mineur').join(' · ')));
-  assert.equal(doc.getElementById('intrus-score').textContent, '1 / 1');
-  assert.equal(chips(doc).every(c => c.disabled), true);
-  assert.deepEqual(chips(doc).map(c => c.classList.contains('off')),
-    [false, true, false, false, false, true, false]);
-});
-
-test('4.2 — une mauvaise note est signalée, et une nouvelle gamme repart de zéro', () => {
-  const { doc, win } = ouvre();
-  const zone = doc.getElementById('intrus-zone');
-  const g = th(win).gammeMineure(zone.dataset.root);
-  /* une sélection se défait en re-cliquant */
-  chips(doc)[0].click();
-  chips(doc)[0].click();
-  assert.equal(chips(doc).some(c => c.classList.contains('pick')), false);
-
-  chips(doc)[0].click();
-  chips(doc)[5].click();
-  const feedback = doc.getElementById('intrus-feedback');
-  assert.match(feedback.textContent, /✗/);
-  assert.match(feedback.textContent, new RegExp('retirer ' + g[1] + ' et ' + g[5]));
-  assert.equal(chips(doc)[0].classList.contains('wrong'), true);
-  assert.equal(chips(doc)[5].classList.contains('correct'), true);
-  assert.equal(doc.getElementById('intrus-score').textContent, '0 / 1');
-
-  doc.getElementById('intrus-new').click();
-  assert.equal(feedback.textContent, '');
-  assert.equal(chips(doc).length, 7);
-  assert.equal(chips(doc).every(c => !c.disabled && c.classList.length === 1), true);
-  assert.equal(doc.getElementById('intrus-score').textContent, '0 / 1');
-});
-
-/* ------------ 4.3 trouve la penta ------------ */
-
-test('4.3 — fondamentale et type donnés, quatre notes à trouver, la formule sous les yeux', () => {
-  const { doc } = ouvre();
-  const zone = doc.getElementById('pj-zone');
-  assert.equal(isVisible(zone), true);
-  assert.ok(['mineur', 'majeur'].includes(zone.dataset.type));
-  assert.ok(zone.dataset.root);
-  const enonce = doc.getElementById('pj-prompt').textContent;
-  assert.match(enonce, new RegExp(zone.dataset.root));
-  assert.match(enonce, zone.dataset.type === 'mineur' ? /1 · ♭3 · 4 · 5 · ♭7/ : /1 · 2 · 3 · 5 · 6/);
-  const slots = [...doc.querySelectorAll('#pj-slots .quiz-slot')];
-  assert.equal(slots.length, 5);
-  assert.equal(slots[0].textContent, zone.dataset.root);
-  assert.ok(slots[0].classList.contains('given'));
-  /* douze touches, les noires avec leurs deux noms */
-  const palette = [...doc.querySelectorAll('#pj-palette button')];
-  assert.deepEqual(palette.map(b => b.dataset.note), CHROMA);
-  assert.equal(palette.find(b => b.dataset.note === 'A#').textContent, 'A♯/B♭');
-  assert.equal(palette.find(b => b.dataset.note === 'A').textContent, 'A');
-  assert.equal(doc.getElementById('pj-undo').textContent, '← Effacer');
-  assert.equal(doc.getElementById('pj-new').textContent, 'Nouvelle penta →');
-});
-
-test('4.3 — les quatre notes justes valident, et se réécrivent avec la bonne orthographe', () => {
-  const { doc, win } = ouvre();
-  const zone = doc.getElementById('pj-zone');
-  const attendu = th(win).penta(zone.dataset.root, zone.dataset.type);
-  for (const note of attendu.slice(1)){
-    doc.querySelector(`#pj-palette [data-note="${surPalette(note)}"]`).click();
-  }
-  const feedback = doc.getElementById('pj-feedback');
-  assert.match(feedback.textContent, /✓/);
-  assert.match(feedback.textContent, new RegExp("c'est " + attendu.join(' · ')));
-  assert.equal(doc.getElementById('pj-score').textContent, '1 / 1');
-  const remplies = [...doc.querySelectorAll('#pj-slots .quiz-slot.filled')];
-  assert.deepEqual(remplies.map(s => s.textContent), attendu.slice(1));
-  remplies.forEach(s => assert.ok(s.classList.contains('correct')));
-  assert.equal(doc.querySelector('#pj-palette button').disabled, true);
-  assert.equal(doc.getElementById('pj-undo').disabled, true);
-});
-
-test('4.3 — une note fausse est signalée, effacer corrige, une nouvelle penta réinitialise', () => {
-  const { doc, win } = ouvre();
-  const zone = doc.getElementById('pj-zone');
-  const attendu = th(win).penta(zone.dataset.root, zone.dataset.type);
-  const fausse = CHROMA.find(n => hauteur(n) !== hauteur(attendu[1]));
-
-  doc.querySelector(`#pj-palette [data-note="${fausse}"]`).click();
-  doc.getElementById('pj-undo').click();
-  assert.equal(doc.querySelectorAll('#pj-slots .quiz-slot.filled').length, 0);
-
-  doc.querySelector(`#pj-palette [data-note="${fausse}"]`).click();
-  for (const note of attendu.slice(2)){
-    doc.querySelector(`#pj-palette [data-note="${surPalette(note)}"]`).click();
-  }
-  const feedback = doc.getElementById('pj-feedback');
-  assert.match(feedback.textContent, /✗ 3 \/ 4/);
-  const remplies = [...doc.querySelectorAll('#pj-slots .quiz-slot.filled')];
-  assert.equal(remplies[0].classList.contains('wrong'), true);
-  assert.equal(remplies.slice(1).every(s => s.classList.contains('correct')), true);
-
-  doc.getElementById('pj-new').click();
-  assert.equal(feedback.textContent, '');
-  assert.equal(doc.querySelectorAll('#pj-slots .quiz-slot.filled').length, 0);
-  assert.equal(doc.querySelector('#pj-palette button').disabled, false);
-  assert.equal(doc.getElementById('pj-score').textContent, '0 / 1');
-});
-
-test('4.3 — sur toutes les fondamentales, la penta s\'écrit sans doublon de lettre', () => {
-  const { doc, win } = ouvre();
-  const vues = new Set();
-  /* on retire jusqu'à voir toutes les fondamentales des deux types */
-  for (let i = 0; i < 400 && vues.size < 24; i++){
-    doc.getElementById('pj-new').click();
-    const zone = doc.getElementById('pj-zone');
-    vues.add(zone.dataset.type + zone.dataset.root);
-    const p = th(win).penta(zone.dataset.root, zone.dataset.type);
-    assert.equal(new Set(p.map(n => n[0])).size, 5, p.join(' ') + ' répète une lettre');
-    assert.equal(p[0], zone.dataset.root);
-    assert.match(doc.querySelector('#pj-slots .given').textContent, /^[A-G][♯♭]?$/);
-  }
-  assert.equal(vues.size, 24, 'toutes les fondamentales ne sortent pas : ' + [...vues].join(' '));
 });
 
 /* ------------ 4.4 la relative ------------ */
@@ -399,21 +267,20 @@ test('4.6 — l\'encadré mène aux formes de la basse et aux gammes de La, sans
   assert.equal(isVisible(doc.getElementById('pentatonique')), true);
 
   openTab(doc, 'theorie');
-  const versGuitare = callout.querySelector('a[data-goto="guitare"][data-anchor="gammes"]');
-  assert.ok(versGuitare, 'lien vers les gammes de La absent');
-  versGuitare.click();
-  assert.equal(doc.getElementById('page-guitare').hidden, false);
+  /* les gammes de La sont dans la même page désormais : un simple lien d'ancre */
+  const versGammes = callout.querySelector('a[href="#gammes"]');
+  assert.ok(versGammes, 'lien vers les gammes de La absent');
   assert.equal(isVisible(doc.getElementById('gammes')), true);
 });
 
-test('les jeux de la section 4 n\'interfèrent ni entre eux ni avec ceux des sections 2 et 3', () => {
+test('les jeux de la section 4 n\'interfèrent ni entre eux ni avec le jeu complet', () => {
   const { doc } = ouvre();
-  chips(doc)[1].click();
-  chips(doc)[5].click();
-  assert.equal(doc.getElementById('intrus-score').textContent, '1 / 1');
-  for (const id of ['quiz-score', 'acc-score', 'pj-score', 'rel-score', 'box-score']){
+  const zone = doc.getElementById('rel-zone');
+  doc.querySelector(`#rel-palette [data-note="${zone.dataset.cible}"]`).click();
+  assert.equal(doc.getElementById('rel-score').textContent, '1 / 1');
+  for (const id of ['box-score', 'jeu-score']){
     assert.equal(doc.getElementById(id).textContent, '', id + ' a bougé');
   }
-  assert.equal(doc.querySelectorAll('#pj-slots .quiz-slot.filled').length, 0);
-  assert.equal(doc.querySelector('#quiz-palette button').disabled, false);
+  assert.equal(doc.querySelectorAll('#jeu-slots .quiz-slot.filled').length, 0);
+  assert.equal(doc.querySelector('#jeu-palette button').disabled, false);
 });

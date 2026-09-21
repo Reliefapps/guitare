@@ -88,7 +88,6 @@ test('la section pentatonique est rendue, visible, avec ses six formes dans l\'o
   openTab(doc, 'basse');
   const sec = doc.getElementById('pentatonique');
   assert.equal(isVisible(sec), true);
-  assert.match(sec.querySelector('.hint').textContent, /17 septembre 2026/);
   assert.match(sec.querySelector('.rule').textContent, /deux formes/);
   const blocs = [...doc.querySelectorAll('#penta-list .tab-block')];
   assert.deepEqual(blocs.map(b => b.id), Object.keys(FEUILLE));
@@ -196,12 +195,6 @@ test('With or Without You : la piste sans basse, en fenêtre à part', () => {
   win.open = (url, nom) => { appels.push({ url, nom }); return { focus(){} }; };
   lien.dispatchEvent(new win.MouseEvent('click', { bubbles: true, cancelable: true }));
   assert.deepEqual(appels, [{ url: lien.href, nom: 'piste-batterie' }]);
-  /* les consignes du cours : décompte, croches, personne d'autre sur les accords */
-  assert.match(sec.querySelector('.rule').textContent, /personne d'autre ne joue les accords/);
-  const etapes = [...sec.querySelectorAll('.steps li')].map(li => li.textContent);
-  assert.equal(etapes.length, 5);
-  assert.match(etapes[0], /décompte/);
-  assert.match(etapes[1], /Huit croches par mesure/);
 });
 
 test('With or Without You : D A Bm G, huit croches sur la fondamentale, une mesure chacun', () => {

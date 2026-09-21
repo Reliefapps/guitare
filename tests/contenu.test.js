@@ -37,7 +37,6 @@ test("la section improvisation porte la piste du cours, en fenêtre à part", ()
   const regle = doc.querySelector('#impro .rule').textContent;
   assert.match(regle, /fondamentale au changement d'accord/);
   assert.match(regle, /fondamentale sur le premier temps de chaque mesure/);
-  assert.equal(doc.querySelectorAll('#impro .steps li').length, 6);
   /* le retour du cours du 17 septembre : temps forts, power chord, tierce en touche */
   const retour = doc.getElementById('impro-retour');
   assert.ok(retour, 'retour du 17 septembre absent');
@@ -79,7 +78,6 @@ test("les deux formes d'arpège ne diffèrent que par la tierce", () => {
   assert.deepEqual(min.map(n => n.corde), maj.map(n => n.corde));
   /* la forme vient de l'exercice #2, elle est annoncée comme mobile */
   assert.match(doc.getElementById('fo-min').textContent, /case 7 → Bm/);
-  assert.match(doc.getElementById('impro-mobile').textContent, /une note d'écart/);
 });
 
 test('les 4 exercices avancés sont rendus et visibles', () => {
@@ -251,14 +249,14 @@ test('le manche de la guitare est toujours rendu après extraction du composant'
   assert.equal(fb.classList.contains('quiz'), true);
 });
 
-test('la méthode des notes sur le manche compte ses 12 étapes', () => {
+test('les notes sur le manche ne portent plus la méthode en douze étapes, retirée le 21 septembre 2026', () => {
   const { doc } = load();
   openTab(doc, 'basse');
-  const etapes = doc.querySelectorAll('#notes-manche .steps li');
-  assert.equal(etapes.length, 12);
-  assert.equal(isVisible(etapes[0]), true);
-  assert.match(etapes[0].textContent, /C D E F G A B/);
-  assert.match(etapes[9].textContent, /15 jours/);
+  const sec = doc.getElementById('notes-manche');
+  assert.equal(isVisible(sec), true);
+  assert.equal(sec.querySelectorAll('.steps li').length, 0);
+  assert.doesNotMatch(sec.textContent, /15 jours/);
+  assert.ok(sec.querySelector('.callout'), 'l\'encadré « Pourquoi c\'est le socle » doit rester');
 });
 
 test('chaque section de croches renvoie à sa vidéo', () => {

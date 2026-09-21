@@ -129,10 +129,10 @@ test('l\'encadré mène au jeu de la section 4 et aux gammes de La', () => {
   const versJeu = callout.querySelector('a[href="#box-zone"]');
   assert.ok(versJeu, 'lien vers « Où poser la boîte » absent');
   assert.ok(doc.getElementById('box-zone'));
-  const versGuitare = callout.querySelector('a[data-goto="guitare"][data-anchor="gammes"]');
-  assert.ok(versGuitare, 'lien vers les gammes de La absent');
-  versGuitare.click();
-  assert.equal(doc.getElementById('page-guitare').hidden, false);
+  /* les gammes de La sont désormais dans la même page, section 2 */
+  const versGammes = callout.querySelector('a[href="#gammes"]');
+  assert.ok(versGammes, 'lien vers les gammes de La absent');
+  assert.equal(doc.getElementById('gammes').closest('.page').id, 'page-theorie');
   assert.equal(isVisible(doc.getElementById('gammes')), true);
 });
 

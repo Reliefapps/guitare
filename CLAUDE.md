@@ -52,6 +52,11 @@ directement**, sans demander. Raphaël l'a autorisé une fois pour toutes. Chaqu
 push publie le site via [`.github/workflows`](.github/workflows/), donc on ne
 pousse que si `npm test` passe.
 
+**On ne travaille que sur `main`** : pas de branche de fonctionnalité, pas de
+pull request. Si une session impose une branche de travail, on y pousse quand
+même, puis on fusionne dans `main` et on pousse `main` — c'est `main` qui
+publie le site. (Décision de Raphaël, 21 septembre 2026.)
+
 Messages de commit conventionnels, en français, avec un corps qui explique le
 pourquoi :
 

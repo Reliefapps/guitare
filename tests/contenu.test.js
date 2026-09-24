@@ -9,10 +9,14 @@ test('la routine affiche ses quatre cartes et leurs liens internes', () => {
   const cartes = [...doc.querySelectorAll('#routine .routine-card')];
   assert.equal(cartes.length, 4);
   cartes.forEach(c => assert.equal(isVisible(c), true));
-  /* l'ordre des cartes est l'ordre de la séance, celle du 17 septembre 2026 */
+  /* l'ordre des cartes est l'ordre de la séance, celle du 24 septembre 2026 :
+     les formes en Am, les patterns, le morceau, les formes en Dm si le temps */
   const liens = [...doc.querySelectorAll('#routine .routine-link')].map(a => a.getAttribute('href'));
-  assert.deepEqual(liens, ['#px-p4', '#impro', '#pentatonique', '#u2']);
-  assert.match(doc.querySelector('#routine .hint').textContent, /17 septembre 2026/);
+  assert.deepEqual(liens, ['#pentatonique', '#patterns', '#stooges', '#pt-a1']);
+  assert.match(doc.querySelector('#routine .hint').textContent, /24 septembre 2026/);
+  /* la carte prioritaire porte l'objectif de tempo du cours */
+  assert.match(cartes[0].textContent, /100, puis 120/);
+  assert.match(cartes[0].textContent, /Sans répéter/);
   liens.forEach(h => assert.ok(doc.getElementById(h.slice(1)), h + ' ne mène nulle part'));
 });
 
@@ -87,17 +91,17 @@ test('les 4 exercices avancés sont rendus et visibles', () => {
   assert.equal(blocs.length, 4);
   assert.deepEqual(blocs.map(b => b.id), ['px-p1','px-p2','px-p3','px-p4']);
   blocs.forEach(b => assert.equal(isVisible(b), true, b.id + ' rendu mais pas visible'));
-  /* depuis le 17 septembre 2026, l'exercice #4 est la priorité de la semaine */
-  const prio = doc.querySelector('#pluck-list .tab-block.prio');
-  assert.equal(prio.id, 'px-p4');
+  /* depuis le 24 septembre 2026, la priorité de la semaine n'est plus ici :
+     aucun exercice ne porte le badge, mais le #4 garde la consigne du 17 */
+  assert.equal(doc.querySelector('#pluck-list .tab-block.prio'), null);
   assert.match(doc.getElementById('px-p4').textContent, /17 septembre 2026/);
+  assert.match(doc.querySelector('#pluck-avance .hint').textContent, /24 septembre/);
   /* seul le #3 reste optionnel */
   const optionnels = [...doc.querySelectorAll('#pluck-list .tab-block')]
     .filter(b => /si tu as le temps/.test(b.querySelector('.tab-head').textContent))
     .map(b => b.id);
   assert.deepEqual(optionnels, ['px-p3']);
-  assert.equal(prio.querySelectorAll('.prio-badge').length, 1);
-  assert.equal(doc.querySelectorAll('#pluck-list .prio-badge').length, 1);
+  assert.equal(doc.querySelectorAll('#pluck-list .prio-badge').length, 0);
   /* la règle commune est bien mise en avant */
   assert.match(doc.querySelector('#pluck-avance .rule').textContent,
     /Ne jamais répéter le même doigt/);

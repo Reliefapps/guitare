@@ -88,7 +88,8 @@ test('la section pentatonique est rendue, visible, avec ses six formes dans l\'o
   openTab(doc, 'basse');
   const sec = doc.getElementById('pentatonique');
   assert.equal(isVisible(sec), true);
-  assert.match(sec.querySelector('.rule').textContent, /deux formes/);
+  assert.match(sec.querySelector('.rule').textContent, /trois formes en Am/);
+  assert.match(doc.getElementById('penta-retour').textContent, /24 septembre 2026/);
   const blocs = [...doc.querySelectorAll('#penta-list .tab-block')];
   assert.deepEqual(blocs.map(b => b.id), Object.keys(FEUILLE));
   blocs.forEach(b => {

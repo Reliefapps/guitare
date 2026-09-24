@@ -3,7 +3,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { load, isVisible, openTab } = require('./helpers');
 
-/* les 8 sections de l'onglet basse, dans l'ordre attendu */
+/* les 9 sections de l'onglet basse, dans l'ordre attendu */
 const SECTIONS = [
   ['notes-manche', '1', 'Les notes sur le manche'],
   ['routine',      '2', 'La routine quotidienne'],
@@ -11,8 +11,9 @@ const SECTIONS = [
   ['impro',        '4', 'Improviser sur Am / G'],
   ['pentatonique', '5', 'La pentatonique mineure'],
   ['u2',           '6', 'With or Without You'],
-  ['croches',      '7', 'Croches continues'],
-  ['araignee',     '8', "L'araignée"],
+  ['patterns',     '7', 'Les patterns en croches'],
+  ['stooges',      '8', 'I Wanna Be Your Dog'],
+  ['croches',      '9', 'Croches continues'],
 ];
 
 test('la page se charge sans erreur de script', () => {
@@ -29,7 +30,7 @@ test("les sections de la basse sont masquées tant qu'on est sur l'onglet guitar
   }
 });
 
-test("les 8 sections sont rendues ET visibles après passage sur l'onglet basse", () => {
+test("les 9 sections sont rendues ET visibles après passage sur l'onglet basse", () => {
   const { doc } = load();
   openTab(doc, 'basse');
   for (const [id, num, titre] of SECTIONS){
@@ -47,11 +48,11 @@ test('les sections sont dans le bon ordre dans la page', () => {
   assert.deepEqual(ids, SECTIONS.map(s => s[0]));
 });
 
-test('les 8 ancres du sommaire pointent vers une section existante et visible', () => {
+test('les 9 ancres du sommaire pointent vers une section existante et visible', () => {
   const { doc } = load();
   openTab(doc, 'basse');
   const liens = [...doc.querySelectorAll('#page-basse nav.sticky a')];
-  assert.equal(liens.length, 8);
+  assert.equal(liens.length, 9);
   liens.forEach((a, i) => {
     const [id, num, titre] = SECTIONS[i];
     assert.equal(a.getAttribute('href'), '#' + id);
@@ -63,18 +64,21 @@ test('les 8 ancres du sommaire pointent vers une section existante et visible', 
   });
 });
 
-test('le sommaire latéral liste les 8 sections et les sous-parties', () => {
+test('le sommaire latéral liste les 9 sections et les sous-parties', () => {
   const { doc } = load();
   const lvl1 = [...doc.querySelectorAll('#sidenav-links-basse a.lvl1')];
   assert.deepEqual(lvl1.map(a => a.getAttribute('href')),
     SECTIONS.map(s => '#' + s[0]));
-  /* les 4 exercices de main d'attaque, les 2 formes d'arpège et les 6 formes
-     de pentatonique en second niveau */
+  /* les 4 exercices de main d'attaque, les 2 formes d'arpège, les 6 formes
+     de pentatonique et les 4 patterns en second niveau */
   const lvl2 = [...doc.querySelectorAll('#sidenav-links-basse a.lvl2')]
     .map(a => a.getAttribute('href'));
   for (const id of ['#px-p1','#px-p2','#px-p3','#px-p4','#fo-min','#fo-maj',
-                    '#pt-e1','#pt-e2','#pt-e3','#pt-a1','#pt-a2','#pt-a3'])
+                    '#pt-e1','#pt-e2','#pt-e3','#pt-a1','#pt-a2','#pt-a3',
+                    '#pa-1','#pa-2','#pa-3','#pa-4'])
     assert.ok(lvl2.includes(id), id + ' absent du sommaire');
+  /* l'araignée n'y est plus */
+  assert.ok(!lvl2.some(h => /^#sp-/.test(h)), "l'araignée est encore dans le sommaire");
 });
 
 test('le scrollspy marque la bonne section', () => {
@@ -82,7 +86,7 @@ test('le scrollspy marque la bonne section', () => {
   openTab(doc, 'basse');
   /* le dernier observateur créé est celui de la page basse */
   const spy = observers[observers.length - 1];
-  assert.equal(spy.targets.length, 8, 'les 8 sections doivent être observées');
+  assert.equal(spy.targets.length, 9, 'les 9 sections doivent être observées');
   for (const [id] of SECTIONS){
     spy.enter(doc.getElementById(id));
     const actifs = [...doc.querySelectorAll('#sidenav-links-basse a.active')];
@@ -93,13 +97,13 @@ test('le scrollspy marque la bonne section', () => {
 
 test("les sections retirées ne sont plus dans la page", () => {
   const { doc } = load();
-  for (const id of ['main-attaque', 'tempo', 'vid-list']){
+  for (const id of ['main-attaque', 'tempo', 'vid-list', 'araignee', 'spider-list']){
     assert.equal(doc.getElementById(id), null, '#' + id + ' devrait avoir disparu');
   }
   /* plus aucune section ne porte ces titres (la main d'attaque reste citée
      dans les exercices, c'est bien leur sujet) */
   const titres = [...doc.querySelectorAll('#page-basse h2')].map(h => h.textContent.trim());
-  for (const t of ["La main d'attaque", 'Tempo & rythme']){
+  for (const t of ["La main d'attaque", 'Tempo & rythme', "L'araignée"]){
     assert.ok(!titres.includes(t), 'section encore présente : ' + t);
   }
   const basse = doc.getElementById('page-basse').textContent;
@@ -135,9 +139,10 @@ test("les 18 pistes de batterie sont en tête de page, une par tempo", () => {
   /* les deux valeurs vérifiées à la main */
   assert.equal(ids[0], '6DcCeDKc8Wc');
   assert.equal(ids[2], '4D_PIdck4WI');
-  /* les tempos cités par la routine sont mis en avant */
+  /* les tempos cités par la routine sont mis en avant : 60 et 70 pour les
+     patterns, 100 et 120 pour la pentatonique */
   assert.deepEqual(btns.filter(a => a.classList.contains('key'))
-    .map(a => a.textContent.replace('bpm','')), ['60', '120']);
+    .map(a => a.textContent.replace('bpm','')), ['60', '70', '100', '120']);
   /* la playlist entière reste accessible */
   const pl = doc.querySelector('#page-basse .tempo-note a');
   assert.equal(pl.getAttribute('href'),

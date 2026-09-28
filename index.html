@@ -1178,6 +1178,11 @@
 
 <div class="page" id="page-theorie" role="tabpanel" aria-label="Théorie musicale" hidden>
 
+<aside class="sidenav" aria-label="Sommaire">
+  <div class="sidenav-title">Sommaire</div>
+  <nav id="sidenav-links-theorie"></nav>
+</aside>
+
 <header class="hero">
   <div class="wrap">
     <div class="eyebrow">Théorie musicale</div>
@@ -3952,6 +3957,50 @@ function peindreBoite(p, nom, deg, box){
   selExo.addEventListener('change', nouvelle);
   nouvelle();
 })();
+
+/* ------------------------------------------------------------
+   Menu latéral + scrollspy — la même mécanique que les fiches guitare et
+   basse : un lien de premier niveau par section (numéroté comme le sommaire
+   collant), et en second niveau les positions des gammes, les deux jeux de la
+   pentatonique et les boîtes. Construit après les sections, donc les boîtes
+   se lisent dans le DOM.
+   ------------------------------------------------------------ */
+const sideNav = document.getElementById('sidenav-links-theorie');
+function navLink(href, html, lvl){
+  const a = document.createElement('a');
+  a.href = href; a.className = lvl; a.innerHTML = html;
+  sideNav.appendChild(a);
+  return a;
+}
+const lvl1 = {};
+lvl1['construire'] = navLink('#construire','1 · Construire une gamme','lvl1');
+lvl1['gammes'] = navLink('#gammes','2 · Les gammes de La','lvl1');
+for (const gamme of GAMMES){
+  for (const pos of gamme.positions){
+    navLink('#gamme-' + gamme.id + '-' + pos.id,
+      `<span class="sw" style="background:${NOTE_COLORS.A}"></span>${gamme.titre} · ${pos.court}`, 'lvl2');
+  }
+}
+lvl1['triades'] = navLink('#triades','3 · Construire un accord','lvl1');
+lvl1['penta'] = navLink('#penta','4 · La pentatonique','lvl1');
+navLink('#rel-zone', 'La relative', 'lvl2');
+navLink('#box-zone', 'Où poser la boîte', 'lvl2');
+lvl1['boites'] = navLink('#boites','5 · Les boîtes 1, 4 et 5','lvl1');
+for (const b of document.querySelectorAll('#boites-list .tab-block')){
+  navLink('#' + b.id, b.querySelector('.tab-title').textContent + ' · ' + b.querySelector('.tab-sub').textContent.split(' · ')[0], 'lvl2');
+}
+navLink('#boites-technique', 'Comment les travailler', 'lvl2');
+lvl1['jeu'] = navLink('#jeu','6 · Le jeu','lvl1');
+
+const spy = makeSpy((entries)=>{
+  for (const e of entries){
+    if (e.isIntersecting){
+      Object.values(lvl1).forEach(a=>a.classList.remove('active'));
+      lvl1[e.target.id]?.classList.add('active');
+    }
+  }
+}, { rootMargin:'-15% 0px -70% 0px' });
+for (const id of ['construire','gammes','triades','penta','boites','jeu']) spy.observe(document.getElementById(id));
 
 /* exposé pour les tests : les recettes, hors DOM */
 window.theorie = { penta, epeler, gammeMineure, gammeMajeure, gammeDe, hauteur };

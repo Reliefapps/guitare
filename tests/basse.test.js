@@ -84,8 +84,10 @@ test('le sommaire latéral liste les 9 sections et les sous-parties', () => {
 test('le scrollspy marque la bonne section', () => {
   const { doc, observers } = load();
   openTab(doc, 'basse');
-  /* le dernier observateur créé est celui de la page basse */
-  const spy = observers[observers.length - 1];
+  /* l'observateur de la page basse est celui qui surveille sa première section
+     (la théorie en crée un aussi, après) */
+  const spy = observers.find(o => o.targets.some(t => t.id === 'notes-manche'));
+  assert.ok(spy, 'aucun observateur ne surveille la page basse');
   assert.equal(spy.targets.length, 9, 'les 9 sections doivent être observées');
   for (const [id] of SECTIONS){
     spy.enter(doc.getElementById(id));

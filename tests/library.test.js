@@ -291,10 +291,10 @@ test('les deux visionneuses sont indépendantes', () => {
   assert.equal(doc.querySelectorAll('#sj-bar .pgbtn[data-p]')[1].getAttribute('aria-pressed'), 'true');
 });
 
-test('les 5 onglets gardent un nom accessible même sans libellé visible', () => {
+test('les 6 onglets gardent un nom accessible même sans libellé visible', () => {
   const { doc } = load();
   const tabs = [...doc.querySelectorAll('.pagetab')];
-  assert.equal(tabs.length, 5);
+  assert.equal(tabs.length, 6);
   tabs.forEach(t => {
     /* sous 430px le libellé est masqué en CSS : le nom doit survivre */
     assert.ok(t.getAttribute('aria-label'), t.dataset.page + ' sans aria-label');

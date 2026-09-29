@@ -26,22 +26,42 @@ test("la page chant répond à #/chant et s'ouvre par l'onglet", () => {
 test("les trois sections sont rendues et visibles, numérotées comme les sommaires", () => {
   const { doc } = load();
   openTab(doc, 'chant');
-  const ids = ['reglages', 'placer', 'intervalles'];
+  const ids = ['placer', 'intervalles', 'reglages'];
   ids.forEach((id, i) => {
     const sec = doc.getElementById(id);
     assert.ok(sec, id + ' absent');
     assert.equal(isVisible(sec), true, id + ' rendu mais pas visible');
-    assert.equal(sec.querySelector('.sec-num').textContent, String(i));
+    assert.equal(sec.querySelector('.sec-num').textContent, String(i + 1));
   });
   /* sommaire collant et menu latéral d'accord avec les sections */
-  const sticky = [...doc.querySelectorAll('#page-chant nav.sticky a')].map(a => a.getAttribute('href'));
-  const side = [...doc.querySelectorAll('#sidenav-links-chant a')].map(a => a.getAttribute('href'));
-  assert.deepEqual(sticky, ids.map(i => '#' + i));
-  assert.deepEqual(side, ids.map(i => '#' + i));
-  /* les deux studios et leurs jauges */
-  assert.equal(isVisible(doc.getElementById('placer-gauge')), true);
-  assert.equal(isVisible(doc.getElementById('int-ladder')), true);
-  assert.ok(doc.querySelectorAll('#placer-gauge text').length >= 8, 'jauge sans graduations');
+  const sticky = [...doc.querySelectorAll('#page-chant nav.sticky a')];
+  const side = [...doc.querySelectorAll('#sidenav-links-chant a')];
+  ids.forEach((id, i) => {
+    assert.equal(sticky[i].getAttribute('href'), '#' + id);
+    assert.equal(side[i].getAttribute('href'), '#' + id);
+    assert.ok(sticky[i].textContent.startsWith((i + 1) + ' · '));
+    assert.ok(side[i].textContent.startsWith((i + 1) + ' · '));
+  });
+  assert.equal(sticky.length, 3);
+  assert.equal(side.length, 3);
+  /* les deux scènes, leur jauge et leur bouton */
+  for (const id of ['placer-jeu', 'placer-gauge', 'placer-go', 'int-jeu', 'int-ladder', 'int-go']){
+    assert.equal(isVisible(doc.getElementById(id)), true, id + ' pas visible');
+  }
+  assert.ok(doc.querySelector('#placer-gauge .zone'), 'jauge sans zone verte');
+  assert.ok(doc.querySelector('#placer-gauge .bille'), 'jauge sans bille');
+});
+
+test("l'entête reste court : un titre, pas de paragraphe d'explication", () => {
+  const { doc } = load();
+  openTab(doc, 'chant');
+  const hero = doc.querySelector('#page-chant header.hero');
+  assert.ok(hero.querySelector('h1'));
+  assert.equal(hero.querySelector('.lead'), null);
+  assert.equal(hero.querySelector('.tuning'), null);
+  for (const h of doc.querySelectorAll('#page-chant .hint')){
+    assert.ok(h.textContent.length < 120, 'consigne trop longue : ' + h.textContent);
+  }
 });
 
 test("les noms de notes : lettre anglaise, et le nom français une octave en dessous", () => {
@@ -100,23 +120,23 @@ test("le silence et le bruit ne donnent pas de note", () => {
   assert.equal(detecterHauteur(bruit, 48000), null);
 });
 
-test("une note tenue : stable après la durée, remise à zéro si la voix bouge", () => {
+test("une note tenue : le temps dans le vert s'accumule, et fond sans repartir de zéro", () => {
   const { win } = load();
-  const t = new win.chant.Tenue();
+  const m = new win.chant.Maintien();
   let e;
-  for (let ms = 0; ms <= 900; ms += 50) e = t.pousser({ midi: 64 + (ms % 100 ? .1 : -.1), t: ms }, ms, 1000);
-  assert.equal(e.stable, false);
-  assert.ok(e.progress > 0.8 && e.progress < 1);
-  e = t.pousser({ midi: 64.05, t: 1050 }, 1050, 1000);
-  assert.equal(e.stable, true);
-  assert.ok(Math.abs(e.midi - 64) < 0.15);
-  /* la voix saute d'un ton : on repart */
-  e = t.pousser({ midi: 66, t: 1100 }, 1100, 1000);
-  assert.equal(e.stable, false);
-  assert.equal(t.pts.length, 1);
-  /* le silence prolongé aussi */
-  e = t.pousser(null, 1300, 1000);
-  assert.equal(e.progress, 0);
+  for (let ms = 0; ms <= 600; ms += 50) e = m.pousser(true, ms, 1000);
+  assert.equal(e.atteint, false);
+  assert.ok(Math.abs(e.progress - 0.6) < 0.01);
+  /* la voix sort 100 ms : on perd 150 ms, pas tout */
+  for (let ms = 650; ms <= 700; ms += 50) e = m.pousser(false, ms, 1000);
+  assert.ok(Math.abs(e.progress - 0.45) < 0.01, 'progress ' + e.progress);
+  for (let ms = 750; ms <= 1250; ms += 50) e = m.pousser(true, ms, 1000);
+  assert.equal(e.atteint, true);
+  /* un onglet qui cale ne compte que pour 100 ms */
+  m.reset();
+  m.pousser(true, 0, 1000);
+  e = m.pousser(true, 5000, 1000);
+  assert.ok(Math.abs(e.progress - 0.1) < 0.01);
 });
 
 test("les intervalles : douze au choix, les cinq du début cochés, noms corrects", () => {
@@ -131,27 +151,147 @@ test("les intervalles : douze au choix, les cinq du début cochés, noms correct
   assert.equal(win.chant.nomIntervalle(0), 'unisson');
 });
 
-test("les réglages : piano par défaut, tessiture C3 → G4, tolérance ± 20 cents", () => {
-  const { doc } = load();
+test("les réglages : piano, ténor, note de 3 s, tolérance indulgente", () => {
+  const { doc, win } = load();
   openTab(doc, 'chant');
   assert.equal(doc.getElementById('chant-piano').checked, true);
-  const low = doc.getElementById('chant-low'), high = doc.getElementById('chant-high');
-  assert.equal(low.value, '48');
-  assert.equal(high.value, '67');
-  assert.equal(low.selectedOptions[0].textContent, 'C3 · do2');
-  assert.equal(high.selectedOptions[0].textContent, 'G4 · sol3');
-  assert.equal(doc.getElementById('chant-tol').value, '20');
-  /* la tessiture ne peut pas se retourner */
-  low.value = '70'; low.dispatchEvent(new doc.defaultView.Event('change'));
-  assert.ok(+high.value > +low.value);
+  const voix = doc.getElementById('chant-voix');
+  assert.equal(voix.value, 'tenor');
+  assert.equal(voix.selectedOptions[0].textContent, 'ténor · C3 → G4');
+  assert.equal([...voix.options].map(o => o.value).join(' '), 'basse baryton tenor alto mezzo soprano');
+  assert.equal(doc.getElementById('chant-duree').value, '3');
+  assert.equal(doc.getElementById('chant-tol').value, '35');
+  assert.equal(doc.getElementById('chant-hold').value, '1000');
+  /* chaque voix couvre une douzième, de plus en plus haut */
+  let avant = 0;
+  for (const v of win.chant.VOIX){
+    assert.equal(v.hi - v.lo, 19, v.nom);
+    assert.ok(v.lo > avant, v.nom);
+    avant = v.lo;
+  }
+  assert.equal(doc.getElementById('chant-low'), null);
 });
 
-test("sans micro, « Chanter » explique le problème au lieu de planter", async () => {
+test("sans micro, « Jouer » explique le problème au lieu de planter", async () => {
   const { doc, win, jsErrors } = load();
   openTab(doc, 'chant');
-  doc.getElementById('placer-listen').click();
+  doc.getElementById('placer-go').click();
   await new Promise(r => win.setTimeout(r, 20));
-  assert.match(doc.getElementById('placer-feedback').textContent, /micro/i);
-  assert.equal(doc.getElementById('placer-listen').getAttribute('aria-pressed'), 'false');
+  assert.match(doc.getElementById('placer-msg').textContent, /micro/i);
+  assert.equal(win.chant.placer.phase, 'repos');
+  assert.equal(doc.getElementById('placer-jeu').dataset.phase, 'repos');
   assert.deepEqual(jsErrors, []);
+});
+
+/* chante une hauteur fixe pendant `ms` millisecondes, une trame toutes les 50 */
+function chanter(jeu, midi, debut, ms){
+  for (let t = debut; t <= debut + ms; t += 50) jeu.trame({ midi, t }, t);
+  return debut + ms + 50;
+}
+
+test("placer la note : la note joue, puis le micro, puis la note tenue est validée", () => {
+  const { doc, win, jsErrors } = load();
+  openTab(doc, 'chant');
+  const { placer } = win.chant;
+  const scene = doc.getElementById('placer-jeu');
+  placer.lancer();
+  assert.equal(scene.dataset.phase, 'ecoute');
+  const cible = placer.question;
+  assert.ok(cible.midi >= 48 && cible.midi <= 67, 'hors de la tessiture du ténor');
+  assert.equal(doc.getElementById('placer-note').textContent, cible.en);
+  assert.equal(doc.getElementById('placer-fr').textContent, cible.fr);
+  /* pendant que la note joue, la voix n'est pas jugée */
+  chanter(placer, cible.midi, 0, 1500);
+  assert.equal(placer.phase, 'ecoute');
+
+  placer.aToi();
+  assert.equal(scene.dataset.phase, 'chante');
+  assert.equal(scene.querySelector('.jeu-phase .txt').textContent, 'À toi, chante');
+  /* un ton trop bas : la bille est à gauche, le message dit de monter */
+  let t = chanter(placer, cible.midi - 2, 0, 1500);
+  assert.equal(placer.phase, 'chante');
+  assert.match(doc.getElementById('placer-msg').textContent, /Trop bas.*monte de 2 demi-tons/);
+  assert.equal(doc.querySelector('#placer-gauge .bille').getAttribute('opacity'), '1');
+  /* juste, à 20 cents près : dans le vert, puis validé après une seconde */
+  t = chanter(placer, cible.midi + 0.2, t, 500);
+  assert.equal(placer.phase, 'chante');
+  assert.equal(scene.classList.contains('dedans'), true);
+  assert.match(doc.getElementById('placer-msg').textContent, /Juste/);
+  chanter(placer, cible.midi + 0.2, t, 700);
+  assert.equal(placer.phase, 'bravo');
+  assert.equal(placer.stats.serie, 1);
+  assert.equal(scene.querySelector('.jeu-stat.serie b').textContent, '1');
+  placer.arreter();
+  assert.equal(scene.dataset.phase, 'repos');
+  assert.deepEqual(jsErrors, []);
+  win.close();
+});
+
+test("placer la note : la même note une octave plus bas est juste", () => {
+  const { doc, win } = load();
+  openTab(doc, 'chant');
+  const { placer } = win.chant;
+  placer.lancer(); placer.aToi();
+  chanter(placer, placer.question.midi - 12, 0, 1200);
+  assert.equal(placer.phase, 'bravo');
+  win.close();
+});
+
+test("« Passer » tire une autre note et remet la série à zéro", () => {
+  const { doc, win } = load();
+  openTab(doc, 'chant');
+  const { placer } = win.chant;
+  placer.lancer(); placer.aToi();
+  chanter(placer, placer.question.midi, 0, 1200);
+  assert.equal(placer.stats.serie, 1);
+  const avant = placer.question.midi;
+  doc.getElementById('placer-next').click();
+  assert.equal(placer.stats.serie, 0);
+  assert.equal(placer.stats.total, 1);
+  assert.notEqual(placer.question.midi, avant);
+  assert.equal(placer.phase, 'ecoute');
+  win.close();
+});
+
+test("les intervalles : l'arrivée reste cachée jusqu'à ce qu'elle soit chantée", () => {
+  const { doc, win, jsErrors } = load();
+  openTab(doc, 'chant');
+  const { inter, nomIntervalle } = win.chant;
+  inter.lancer();
+  const q = inter.question;
+  assert.ok([3, 4, 5, 7, 12].includes(q.st), 'intervalle hors du choix par défaut : ' + q.st);
+  assert.equal(q.target.midi, q.root.midi + q.st);
+  assert.ok(q.target.midi <= 67, "l'arrivée sort de la tessiture");
+  assert.equal(doc.getElementById('int-root').textContent, q.root.en);
+  assert.equal(doc.getElementById('int-name').textContent, nomIntervalle(q.st));
+  assert.equal(doc.getElementById('int-target').textContent, '?');
+  /* une marche par demi-ton, une de marge de chaque côté */
+  assert.equal(doc.querySelectorAll('#int-ladder .step').length, q.st + 3);
+
+  inter.aToi();
+  /* sur le départ : on le dit, et rien n'est validé */
+  let t = chanter(inter, q.root.midi, 0, 1500);
+  assert.equal(inter.phase, 'chante');
+  assert.match(doc.getElementById('int-msg').textContent, /départ/);
+  chanter(inter, q.target.midi - 0.1, t, 1200);
+  assert.equal(inter.phase, 'bravo');
+  assert.equal(doc.getElementById('int-target').textContent, q.target.en);
+  assert.equal(doc.getElementById('int-disque-cible').classList.contains('mystere'), false);
+  assert.match(doc.getElementById('int-msg').textContent, new RegExp(nomIntervalle(q.st)));
+  assert.equal(inter.stats.serie, 1);
+  inter.arreter();
+  assert.deepEqual(jsErrors, []);
+  win.close();
+});
+
+test("un seul jeu écoute à la fois", () => {
+  const { doc, win } = load();
+  openTab(doc, 'chant');
+  const { placer, inter } = win.chant;
+  placer.lancer();
+  inter.lancer();
+  assert.equal(placer.phase, 'repos');
+  assert.equal(inter.phase, 'ecoute');
+  inter.arreter();
+  win.close();
 });

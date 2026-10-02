@@ -69,7 +69,7 @@ test('la section 6 et son entrée de sommaire sont visibles dans Théorie, et nu
   assert.equal(sec.querySelector('.sec-num').textContent, '6');
   assert.equal(sec.querySelector('h2').textContent, 'Le jeu — de la gamme à la pentatonique');
   const ids = [...doc.querySelectorAll('#page-theorie section')].map(x => x.id);
-  assert.deepEqual(ids, ['construire', 'gammes', 'triades', 'penta', 'boites', 'jeu']);
+  assert.deepEqual(ids, ['construire', 'gammes', 'triades', 'penta', 'boites', 'jeu', 'transposer']);
 });
 
 test('une question est tirée au chargement : fondamentale donnée, formule sous les yeux, tout au hasard', () => {

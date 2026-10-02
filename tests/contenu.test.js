@@ -13,14 +13,22 @@ test('la routine affiche ses quatre cartes et leurs liens internes', () => {
      en Dm, la transposition, les riffs en Am sur une piste, les arpèges si
      le temps */
   const liens = [...doc.querySelectorAll('#routine .routine-link')].map(a => a.getAttribute('href'));
-  assert.deepEqual(liens, ['#pt-a1', '#penta-transposer', '#impro-am', '#renversements']);
+  assert.deepEqual(liens, ['#pt-a1', '#/theorie', '#impro-am', '#renversements']);
   assert.match(doc.querySelector('#routine .hint').textContent, /2 octobre 2026/);
   /* la première carte porte les consignes du cours sur les formes en Dm */
   assert.match(cartes[0].textContent, /Lis la tablature/);
   assert.match(cartes[0].textContent, /Repère la fondamentale/);
   /* les arpèges restent facultatifs, comme Santiago l'a dit */
   assert.match(cartes[3].querySelector('.routine-time').textContent, /si tu as le temps/);
-  liens.forEach(h => assert.ok(doc.getElementById(h.slice(1)), h + ' ne mène nulle part'));
+  liens.filter(h => !h.startsWith('#/'))
+    .forEach(h => assert.ok(doc.getElementById(h.slice(1)), h + ' ne mène nulle part'));
+  /* la transposition vit dans la fiche théorie : la carte y emmène, section ouverte */
+  const versTheorie = cartes[1].querySelector('.routine-link');
+  assert.equal(versTheorie.dataset.goto, 'theorie');
+  assert.equal(versTheorie.dataset.anchor, 'transposer');
+  versTheorie.click();
+  assert.equal(isVisible(doc.getElementById('transposer')), true, "le lien n'ouvre pas la section Transposer");
+  assert.equal(isVisible(doc.getElementById('routine')), false);
 });
 
 test("la section improvisation porte la piste du cours, en fenêtre à part", () => {

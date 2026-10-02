@@ -680,6 +680,18 @@
   /* où poser la boîte : seule la corde de E grave répond au clic */
   #box-fretboard .note-g.cible{cursor:pointer;}
   #box-fretboard .note-g:focus{outline:none;}
+  /* ================= section 7 : transposer une forme ================= */
+  #transposer .note-g.cible{cursor:pointer;}
+  #transposer .note-g:focus{outline:none;}
+  #transposer .board-panel{margin-top:14px;}
+  #transposer .prog-card + .hint{margin-top:26px;}
+  /* sur téléphone, le sélecteur de forme ne doit pas élargir la page */
+  #transposer .quiz-choix{max-width:100%;}
+  #transposer .quiz-select{min-width:0; max-width:100%; text-overflow:ellipsis;}
+  .quiz-btn[aria-pressed="true"]{background:var(--ink); color:var(--paper); border-color:var(--ink);}
+  .quiz-note-btn.ton{min-width:46px;}
+  .quiz-note-btn.ton.on{box-shadow:0 0 0 3px var(--ink);}
+  .tr-info b{color:var(--ink);}
 
   /* ================= navigation principale ================= */
   .mainnav{
@@ -1166,7 +1178,7 @@
           <li>La même forme, posée sur une autre fondamentale, donne une autre tonalité : la forme n° 1 de Am, partie de <b>G</b>, c'est <b>Gm</b>.</li>
           <li>À essayer : <b>Gm</b>, <b>Bm</b>, <b>Cm</b>, <b>Em</b>, <b>F♯m</b> — avec toutes les formes.</li>
         </ul>
-        <a class="routine-link" href="#penta-transposer">Aller à la transposition →</a>
+        <a class="routine-link" href="#/theorie" data-goto="theorie" data-anchor="transposer">Aller à l'atelier de transposition →</a>
       </div>
       <div class="routine-card">
         <div class="routine-time">l'improvisation</div>
@@ -1259,12 +1271,8 @@
       </ul>
     </div>
     <div class="callout" id="penta-transposer">
-      <b>Transposer — cours du 2 octobre 2026.</b> Une forme ne dépend que de sa <b>fondamentale</b> : déplace la fondamentale, tout le reste suit. La forme n° 1 de Am, jouée en partant de <b>G</b>, donne la pentatonique de <b>Gm</b>. Et depuis le <b>D</b> de la corde de A, descends de <b>deux cases</b> : c'est <b>Cm</b>. « On n'a pas à apprendre toutes les tonalités, comme au piano » — ni au piano, ni à la trompette, ni au saxophone on ne peut faire ça. Santiago a cité <b>Gm</b>, <b>Bm</b>, <b>Cm</b>, <b>Em</b> et <b>F♯m</b> ; voici où tombe leur fondamentale, sur la corde de E (formes de Am) et sur la corde de A (formes de Dm) :
-      <div class="tab-note" id="transpo-list"></div>
-      <ul class="focus">
-        <li><b>La consigne :</b> revoir toutes les formes, et les transposer toutes. Jouer dans plusieurs tonalités est un bon exercice.</li>
-        <li><b>La suite :</b> encore quelques semaines, peut-être un mois, pour maîtriser ça — « et tu peux tout jouer ». Viendront ensuite les <b>pentatoniques majeures</b>. C'est « la moitié du chemin » ; l'autre, c'est la technique.</li>
-      </ul>
+      <b>Transposer — cours du 2 octobre 2026.</b> Une forme ne dépend que de sa <b>fondamentale</b> : déplace la fondamentale, tout le reste suit. La forme n° 1 de Am, jouée en partant de <b>G</b>, donne la pentatonique de <b>Gm</b> ; depuis le <b>D</b> de la corde de A, deux cases plus bas, c'est <b>Cm</b>. La consigne : <b>revoir toutes les formes, et les transposer toutes</b> — Santiago a cité <b>Gm</b>, <b>Bm</b>, <b>Cm</b>, <b>Em</b> et <b>F♯m</b>.
+      <div style="margin-top:8px">Pour s'y entraîner, forme par forme et tonalité par tonalité : <a href="#/theorie" data-goto="theorie" data-anchor="transposer"><b>l'atelier « Transposer une forme »</b> de la fiche théorie</a> — basse et guitare.</div>
     </div>
   </div>
 </section>
@@ -1447,6 +1455,7 @@
     <a href="#penta">4 · La pentatonique</a>
     <a href="#boites">5 · Les boîtes 1, 4 et 5</a>
     <a href="#jeu">6 · Le jeu</a>
+    <a href="#transposer">7 · Transposer</a>
   </div>
 </nav>
 
@@ -1606,6 +1615,91 @@
         <span class="quiz-score" id="jeu-score"></span>
       </div>
       <div class="tab-note" id="jeu-feedback"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. TRANSPOSER ============ -->
+<section id="transposer">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">7</span><h2>Transposer une forme</h2></div>
+    <p class="hint">Le cours de basse du <b>2 octobre 2026</b>. Une forme ne dépend que de sa <b>fondamentale</b> : déplace la fondamentale, <b>tout le reste suit</b>. La forme n° 1 de Am, jouée en partant de <b>G</b>, donne la pentatonique de <b>Gm</b> ; et depuis le <b>D</b> de la corde de A, deux cases plus bas, c'est <b>Cm</b>. « On n'a pas à apprendre toutes les tonalités, comme au piano » — ni au piano, ni à la trompette, ni au saxophone on ne peut faire ça. À la guitare, c'est la même mécanique : les <a href="#boites">boîtes de la section 5</a> glissent le long du manche, comme les <a href="#/guitare" data-goto="guitare" data-anchor="barres">barrés de la fiche guitare</a>.</p>
+    <div class="rule">
+      <b>La consigne de Santiago :</b> revoir <b>toutes les formes</b>, et les transposer <b>toutes</b> — il a cité <b>Gm</b>, <b>Bm</b>, <b>Cm</b>, <b>Em</b> et <b>F♯m</b>. Le geste est toujours le même : <b>1 ·</b> repère la fondamentale dans la forme ; <b>2 ·</b> trouve la nouvelle fondamentale sur la <b>même corde</b> ; <b>3 ·</b> pose la forme dessus, sans rien changer d'autre.
+    </div>
+
+    <p class="hint" id="tr-intro"><b>L'atelier.</b> Choisis l'instrument et la forme, puis une tonalité : la forme glisse, la fondamentale est <b>cerclée</b>, les notes changent de nom mais <b>pas de dessin</b>. Les formes sont celles des cours, rien d'autre : à la basse, les six formes de la feuille de pentatonique et les deux formes d'arpège ; à la guitare, les boîtes 1, 4 et 5.</p>
+    <div class="prog-card" id="tr-zone">
+      <div class="prog-title" id="tr-titre"></div>
+      <div class="quiz-actions">
+        <button class="quiz-btn" type="button" data-instr="basse" aria-pressed="true">Basse</button>
+        <button class="quiz-btn" type="button" data-instr="guitare" aria-pressed="false">Guitare</button>
+        <label class="quiz-choix">Forme
+          <select class="quiz-select" id="tr-forme"></select>
+        </label>
+        <button class="quiz-btn" type="button" id="tr-moins">← une case plus bas</button>
+        <button class="quiz-btn" type="button" id="tr-plus">une case plus haut →</button>
+      </div>
+      <div class="quiz-palette" id="tr-palette" role="group" aria-label="Tonalité"></div>
+      <div class="board-panel" id="tr-manche-basse">
+        <div class="board-scroll">
+          <svg id="tr-fb-basse" xmlns="http://www.w3.org/2000/svg" role="img"></svg>
+        </div>
+      </div>
+      <div class="board-panel" id="tr-manche-guitare" hidden>
+        <div class="board-scroll">
+          <svg id="tr-fb-guitare" xmlns="http://www.w3.org/2000/svg" role="img"></svg>
+        </div>
+      </div>
+      <div class="tab-note tr-info" id="tr-info"></div>
+    </div>
+
+    <p class="hint" id="trq-intro"><b>L'entraînement.</b> Deux questions, tirées au sort. <b>Poser la forme</b> : une forme et une tonalité sont annoncées, tu cliques la fondamentale sur la bonne corde — la forme apparaît là où elle se joue. <b>Nommer la tonalité</b> : une forme est posée quelque part, sans le nom des notes ; à toi de lire la fondamentale cerclée et de dire dans quelle tonalité on est.</p>
+    <div class="prog-card" id="trq-zone">
+      <div class="prog-title" id="trq-prompt"></div>
+      <div class="quiz-palette" id="trq-palette" role="group" aria-label="Réponses"></div>
+      <div class="board-panel" id="trq-manche-basse">
+        <div class="board-scroll">
+          <svg id="trq-fb-basse" xmlns="http://www.w3.org/2000/svg" role="img"></svg>
+        </div>
+      </div>
+      <div class="board-panel" id="trq-manche-guitare" hidden>
+        <div class="board-scroll">
+          <svg id="trq-fb-guitare" xmlns="http://www.w3.org/2000/svg" role="img"></svg>
+        </div>
+      </div>
+      <div class="quiz-actions">
+        <button class="quiz-btn" type="button" id="trq-new">Nouvelle question →</button>
+        <label class="quiz-choix">Forme
+          <select class="quiz-select" id="trq-forme"></select>
+        </label>
+        <label class="quiz-choix">Exercice
+          <select class="quiz-select" id="trq-exo">
+            <option value="">au hasard</option>
+            <option value="poser">poser la forme</option>
+            <option value="nommer">nommer la tonalité</option>
+          </select>
+        </label>
+        <span class="quiz-score" id="trq-score"></span>
+      </div>
+      <div class="tab-note" id="trq-feedback"></div>
+    </div>
+
+    <div class="prog-legend exo-consignes" id="tr-methode">
+      <strong>Comment s'en servir, l'instrument dans les mains :</strong>
+      <ol class="exo-steps">
+        <li><b>Pars de la feuille.</b> Dans l'atelier, choisis une forme et joue-la dans sa tonalité d'origine — <b>Am</b> ou <b>Dm</b> — en regardant où est la fondamentale cerclée.</li>
+        <li><b>Change de tonalité, une à la fois.</b> Clique <b>Gm</b> : la fondamentale descend de deux cases, la forme avec. Joue-la, nomme les notes. Puis <b>Bm</b>, <b>Cm</b>, <b>Em</b>, <b>F♯m</b>.</li>
+        <li><b>Toutes les formes.</b> La même tournée de tonalités avec la forme suivante — à la basse les six formes, à la guitare les trois boîtes.</li>
+        <li><b>Sans le dessin.</b> Passe à l'entraînement : pose la forme toi-même, puis vérifie sur l'instrument. Quand tu ne te trompes plus de case, c'est acquis.</li>
+        <li><b>Sur une piste.</b> La playlist de Santiago a des pistes en <b>Gm</b>, <b>Bm</b> et <b>Em</b> : c'est là que la transposition sert — voir <a href="#/basse" data-goto="basse" data-anchor="impro-am">Improviser sur un seul accord</a>.</li>
+      </ol>
+    </div>
+    <div class="callout">
+      <b>Quand la forme ne tient pas :</b> certaines formes descendent sous leur fondamentale — jusqu'à cinq cases pour les formes n° 2 et 3 de la basse, qui vont chercher la corde de E à vide en Am. Si la nouvelle fondamentale est trop près du sillet, la forme entière se rejoue <b>douze cases plus haut</b> : mêmes notes, une octave au-dessus. L'atelier la pose toujours à l'endroit le plus grave où elle tient en entier.
+    </div>
+    <div class="callout">
+      <b>La suite annoncée :</b> encore quelques semaines, peut-être un mois, pour maîtriser ça — « et tu peux tout jouer ». Viendront ensuite les <b>pentatoniques majeures</b>. C'est « la moitié du chemin » ; l'autre, c'est la technique.
     </div>
   </div>
 </section>
@@ -1988,7 +2082,7 @@ window.buildFretboard = function(opts){
   if (opts.label) fb.setAttribute('aria-label', opts.label);
 
   /* repères de cases (inlays) */
-  for (const f of [3,5,7,9]){
+  for (const f of [3,5,7,9,15,17,19,21]){
     if (f > FRETS) continue;
     el('circle',{cx:NUTX+(f-0.5)*COL, cy:TOPY+MID*ROW, r:7, fill:'#3E3226'}, fb);
   }
@@ -2004,7 +2098,7 @@ window.buildFretboard = function(opts){
       stroke:'var(--board-line)','stroke-width':2}, fb);
   }
   /* numéros de cases */
-  for (const f of [3,5,7,9,12]){
+  for (const f of [3,5,7,9,12,15,17,19,21]){
     if (f > FRETS) continue;
     const t = el('text',{x:NUTX+(f-0.5)*COL, y:H-10, 'text-anchor':'middle', fill:'#A08D77',
       'font-family':'Spline Sans Mono,monospace','font-size':'13','font-weight':'700'}, fb);
@@ -3327,23 +3421,6 @@ for (const f of PENTA){
   pentaList.appendChild(block);
 }
 
-/* transposer — cours du 2 octobre 2026 : les tonalités citées par Santiago,
-   avec la case de leur fondamentale sur la corde de E (formes de Am) et sur
-   la corde de A (formes de Dm). Am et Dm sont celles de la feuille. */
-const TRANSPO = ['F♯','G','A','B','C','D','E'];
-const CHROMA_DIESE = ['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
-/* la case d'une note sur une corde, entre 1 et 12 */
-function caseDe(note, corde){
-  const demi = (CHROMA_DIESE.indexOf(note) - 4 - CORDE_DEMI[corde] + 48) % 12;
-  return demi === 0 ? 12 : demi;
-}
-document.getElementById('transpo-list').innerHTML = TRANSPO.map(n => {
-  const feuille = n === 'A' || n === 'D';
-  return `<span class="seq" data-ton="${n}m"><b style="color:${NOTE_COLORS[n[0]]}">${n}m</b>` +
-    `<span class="mono">E·${caseDe(n,'E')}</span><span class="mono">A·${caseDe(n,'A')}</span>` +
-    (feuille ? '<i>la feuille</i>' : '') + '</span>';
-}).join('');
-
 /* ------------------------------------------------------------
    With or Without You — le morceau choisi au cours du 17 septembre 2026
    ------------------------------------------------------------ */
@@ -4503,6 +4580,316 @@ function peindreBoite(p, nom, deg, box){
   nouvelle();
 })();
 
+/* ============================================================
+   7. Transposer une forme — cours de basse du 2 octobre 2026
+   Une forme, c'est une suite de cases relatives à sa fondamentale :
+   [corde, écart en cases, degré] — corde 0 = la plus aiguë, comme le
+   manche partagé. corde = celle qui porte la fondamentale de repère ;
+   ref = la tonalité et la case où le cours l'a donnée. Rien n'est ajouté :
+   à la basse, les six formes de la feuille de pentatonique et les deux
+   formes d'arpège ; à la guitare, les boîtes 1, 4 et 5 de la section 5.
+   ============================================================ */
+const TR_INSTR = {
+  basse:{ nom:'Basse', frets:18, nomsCordes:['G','D','A','E'], cordes:[
+    { open:'G', thick:1.4 }, { open:'D', thick:1.9 }, { open:'A', thick:2.5 }, { open:'E', thick:3.1 } ] },
+  guitare:{ nom:'Guitare', frets:15, nomsCordes:['E aigu','B','G','D','A','E grave'], cordes:[
+    { open:'E', thick:1.1 }, { open:'B', thick:1.3 }, { open:'G', thick:1.6 },
+    { open:'D', thick:1.9 }, { open:'A', thick:2.3 }, { open:'E', thick:2.7 } ] },
+};
+const TR_GENRE = { penta:'pentatonique mineure', arpMin:'arpège mineur', arpMaj:'arpège majeur' };
+const TR_FORMES = [
+  /* basse — la feuille « Minor Pentatonic Scales », fondamentale sur la corde de E (Am) */
+  { id:'b-e1', instr:'basse', titre:'Forme n° 1 · corde de E', genre:'penta', type:'mineur', corde:3, ref:['A',5],
+    notes:[[3,0,'1'],[3,3,'♭3'],[2,0,'4'],[2,2,'5'],[1,0,'♭7'],[1,2,'1'],[0,0,'♭3'],[0,2,'4'],[0,4,'5']] },
+  { id:'b-e2', instr:'basse', titre:'Forme n° 2 · corde de E', genre:'penta', type:'mineur', corde:3, ref:['A',5],
+    notes:[[3,-5,'5'],[3,-2,'♭7'],[3,0,'1'],[2,-2,'♭3'],[2,0,'4'],[2,2,'5'],[1,0,'♭7'],[1,2,'1']] },
+  { id:'b-e3', instr:'basse', titre:'Forme n° 3 · corde de E', genre:'penta', type:'mineur', corde:3, ref:['A',5],
+    notes:[[3,-5,'5'],[3,-2,'♭7'],[3,0,'1'],[2,-2,'♭3'],[2,0,'4'],[1,-3,'5'],[1,0,'♭7'],[0,-3,'1'],[0,0,'♭3']] },
+  /* … puis sur la corde de A (Dm) */
+  { id:'b-a1', instr:'basse', titre:'Forme n° 1 · corde de A', genre:'penta', type:'mineur', corde:2, ref:['D',5],
+    notes:[[3,0,'5'],[3,3,'♭7'],[2,0,'1'],[2,3,'♭3'],[1,0,'4'],[1,2,'5'],[0,0,'♭7'],[0,2,'1']] },
+  { id:'b-a2', instr:'basse', titre:'Forme n° 2 · corde de A', genre:'penta', type:'mineur', corde:2, ref:['D',5],
+    notes:[[3,0,'5'],[2,-2,'♭7'],[2,0,'1'],[1,-2,'♭3'],[1,0,'4'],[1,2,'5'],[0,0,'♭7'],[0,2,'1']] },
+  { id:'b-a3', instr:'basse', titre:'Forme n° 3 · corde de A', genre:'penta', type:'mineur', corde:2, ref:['D',5],
+    notes:[[3,0,'5'],[2,-2,'♭7'],[2,0,'1'],[1,-2,'♭3'],[1,0,'4'],[0,-3,'5'],[0,0,'♭7'],[0,2,'1']] },
+  /* basse — les deux formes d'arpège de la fiche (exercice #2) */
+  { id:'b-min', instr:'basse', titre:'Arpège · forme mineure', genre:'arpMin', type:'mineur', corde:3, ref:['A',5],
+    notes:[[3,0,'1'],[2,2,'5'],[1,2,'1'],[0,0,'♭3']] },
+  { id:'b-maj', instr:'basse', titre:'Arpège · forme majeure', genre:'arpMaj', type:'majeur', corde:3, ref:['G',3],
+    notes:[[3,0,'1'],[2,2,'5'],[1,2,'1'],[0,1,'3']] },
+  /* guitare — les boîtes des cours des 21 et 28 septembre 2026 (Am) */
+  { id:'g-1', instr:'guitare', titre:'Boîte 1 · corde de E grave', genre:'penta', type:'mineur', corde:5, ref:['A',5],
+    notes:[[5,0,'1'],[5,3,'♭3'],[4,0,'4'],[4,2,'5'],[3,0,'♭7'],[3,2,'1'],
+           [2,0,'♭3'],[2,2,'4'],[1,0,'5'],[1,3,'♭7'],[0,0,'1'],[0,3,'♭3']] },
+  { id:'g-4', instr:'guitare', titre:'Boîte 4 · corde de A', genre:'penta', type:'mineur', corde:4, ref:['A',0],
+    notes:[[5,0,'5'],[5,3,'♭7'],[4,0,'1'],[4,3,'♭3'],[3,0,'4'],[3,2,'5'],
+           [2,0,'♭7'],[2,2,'1'],[1,1,'♭3'],[1,3,'4'],[0,0,'5'],[0,3,'♭7']] },
+  { id:'g-5', instr:'guitare', titre:'Boîte 5 · corde de E grave', genre:'penta', type:'mineur', corde:5, ref:['A',5],
+    notes:[[5,-2,'♭7'],[5,0,'1'],[4,-2,'♭3'],[4,0,'4'],[3,-3,'5'],[3,0,'♭7'],
+           [2,-3,'1'],[2,0,'♭3'],[1,-2,'4'],[1,0,'5'],[0,-2,'♭7'],[0,0,'1']] },
+];
+/* un degré → [pas de lettre, demi-tons], pour l'épeler depuis la fondamentale */
+const TR_EPEL = { '1':[0,0], '♭3':[2,3], '3':[2,4], '4':[3,5], '5':[4,7], '♭7':[6,10] };
+function trNom(root, deg){ return epeler(root, [TR_EPEL[deg]])[0]; }
+/* les douze tonalités d'une forme, de C à B, avec l'orthographe d'usage */
+function trTons(forme){ return [...RACINES_PENTA[forme.type]].sort((a, b) => hauteur(a) - hauteur(b)); }
+function trTon(forme, root){ return root + (forme.type === 'mineur' ? 'm' : ''); }
+function trCorde(forme){ return TR_INSTR[forme.instr].nomsCordes[forme.corde]; }
+/* la case de la fondamentale de repère : la plus grave où la forme tient
+   en entier — sinon douze cases plus haut */
+function trCase(forme, root){
+  const vide = TR_INSTR[forme.instr].cordes[forme.corde].open;
+  let f = (hauteur(root) - hauteur(vide) + 12) % 12;
+  if (f + Math.min(...forme.notes.map(n => n[1])) < 0) f += 12;
+  return f;
+}
+/* les notes de la forme, sans doublon, dans l'ordre des degrés */
+function trNotes(forme, root){
+  const ordre = ['1', '♭3', '3', '4', '5', '♭7'];
+  return ordre.filter(d => forme.notes.some(n => n[2] === d)).map(d => trNom(root, d));
+}
+
+/* un manche par instrument et par jeu : toutes les pastilles, repérées
+   par corde et par case */
+function trManche(svgId, instr){
+  const I = TR_INSTR[instr];
+  const fb = window.buildFretboard({ svg:svgId, frets:I.frets, gut:30, strings:I.cordes,
+    label:`Le manche de la ${I.nom.toLowerCase()}, cases 0 à ${I.frets} : transposer une forme` });
+  if (!fb) return null;
+  const L = I.frets + 1;
+  const pastilles = fb.notes.map((n, k) => ({ ...n, corde: Math.floor(k / L), fret: k % L }));
+  return {
+    svg: fb.svg, pastilles,
+    at(corde, fret){ return fret < 0 || fret >= L ? null : pastilles[corde * L + fret]; },
+    vider(){
+      for (const p of pastilles){
+        p.g.style.display = 'none';
+        p.g.classList.remove('cible');
+        delete p.g.dataset.box;
+        delete p.g.dataset.deg;
+      }
+    },
+  };
+}
+/* pose la forme sur le manche, dans la tonalité demandée ; muet = sans nom
+   ni couleur, seule la fondamentale reste cerclée. Renvoie la case de la
+   fondamentale de repère. */
+function trPoser(m, forme, root, muet){
+  const f0 = trCase(forme, root);
+  m.vider();
+  for (const [corde, d, deg] of forme.notes){
+    const p = m.at(corde, f0 + d);
+    if (!p) continue;
+    peindreBoite(p, trNom(root, deg), deg, forme.id);
+    if (muet){
+      p.g.dataset.note = '';
+      p.c.setAttribute('fill', '#6B5B4B');
+      p.t.style.display = 'none';
+    }
+  }
+  /* amène la fondamentale à l'écran quand le manche déborde */
+  const sc = m.svg.closest('.board-scroll'), rep = m.at(forme.corde, f0);
+  if (sc && rep && sc.clientWidth) sc.scrollLeft = Math.max(0, +rep.c.getAttribute('cx') - sc.clientWidth / 2);
+  return f0;
+}
+
+/* 7.1 — l'atelier : une forme, une tonalité, et on regarde la forme glisser */
+(function(){
+  const zone = document.getElementById('tr-zone');
+  if (!zone) return;
+  const titreEl = document.getElementById('tr-titre');
+  const selForme = document.getElementById('tr-forme');
+  const paletteEl = document.getElementById('tr-palette');
+  const infoEl = document.getElementById('tr-info');
+  const boutons = [...zone.querySelectorAll('[data-instr]')];
+  const manches = {};
+  for (const k of Object.keys(TR_INSTR)) manches[k] = trManche('tr-fb-' + k, k);
+  let forme = TR_FORMES[0], root = forme.ref[0];
+
+  function rendre(){
+    const I = TR_INSTR[forme.instr], ton = trTon(forme, root);
+    boutons.forEach(b => b.setAttribute('aria-pressed', b.dataset.instr === forme.instr));
+    for (const k of Object.keys(TR_INSTR)) document.getElementById('tr-manche-' + k).hidden = k !== forme.instr;
+    paletteEl.replaceChildren(...trTons(forme).map(r => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'quiz-note-btn ton' + (r === root ? ' on' : '');
+      b.style.background = NOTE_COLORS[r[0]];
+      b.textContent = trTon(forme, r);
+      b.dataset.ton = r;
+      b.setAttribute('aria-pressed', r === root);
+      b.addEventListener('click', () => { root = r; rendre(); });
+      return b;
+    }));
+    const f0 = trPoser(manches[forme.instr], forme, root);
+    const [refRoot, refCase] = forme.ref;
+    const d = f0 - refCase, n = Math.abs(d);
+    const ecart = d === 0 ? 'la position du cours'
+      : `${n} case${n > 1 ? 's' : ''} plus ${d > 0 ? 'haut' : 'bas'} que ${trTon(forme, refRoot)}, la position du cours (case ${refCase})`;
+    const octave = f0 >= 12 && f0 - 12 + Math.min(...forme.notes.map(x => x[1])) < 0
+      ? ' La forme entière ne tient pas plus bas : elle se joue ici, une octave au-dessus.' : '';
+    zone.dataset.instr = forme.instr;
+    zone.dataset.forme = forme.id;
+    zone.dataset.root = root;
+    zone.dataset.case = f0;
+    titreEl.innerHTML = `${I.nom} · ${forme.titre} — ${TR_GENRE[forme.genre]} de ${nomColore(ton)}`;
+    infoEl.innerHTML = `Fondamentale : <b>corde de ${trCorde(forme)}, case ${f0}</b> — ${ecart}.${octave}` +
+      `<br>Les notes : ${noteSeq(trNotes(forme, root))} &nbsp;·&nbsp; en degrés : <b>` +
+      ['1', '♭3', '3', '4', '5', '♭7'].filter(x => forme.notes.some(q => q[2] === x)).join(' · ') + '</b>';
+  }
+  /* la liste des formes de l'instrument en cours */
+  function remplirFormes(){
+    selForme.replaceChildren(...TR_FORMES.filter(f => f.instr === forme.instr).map(f => {
+      const o = document.createElement('option');
+      o.value = f.id; o.textContent = f.titre; o.selected = f === forme;
+      return o;
+    }));
+  }
+  /* on change de forme en gardant la tonalité, quand la forme la connaît */
+  function choisir(f){
+    const h = hauteur(root), garde = forme.type === f.type && trTons(f).find(r => hauteur(r) === h);
+    forme = f;
+    root = garde || f.ref[0];
+    remplirFormes();
+    rendre();
+  }
+  boutons.forEach(b => b.addEventListener('click', () => {
+    if (b.dataset.instr !== forme.instr) choisir(TR_FORMES.find(f => f.instr === b.dataset.instr));
+  }));
+  selForme.addEventListener('change', () => choisir(TR_FORMES.find(f => f.id === selForme.value)));
+  /* une case plus bas, une case plus haut : la tonalité voisine */
+  function glisser(pas){
+    const h = (hauteur(root) + pas + 12) % 12;
+    root = trTons(forme).find(r => hauteur(r) === h);
+    rendre();
+  }
+  document.getElementById('tr-moins').addEventListener('click', () => glisser(-1));
+  document.getElementById('tr-plus').addEventListener('click', () => glisser(1));
+  remplirFormes();
+  rendre();
+})();
+
+/* 7.2 — l'entraînement : poser la forme, ou nommer la tonalité */
+(function(){
+  const zone = document.getElementById('trq-zone');
+  if (!zone) return;
+  const promptEl = document.getElementById('trq-prompt');
+  const paletteEl = document.getElementById('trq-palette');
+  const feedback = document.getElementById('trq-feedback');
+  const scoreEl = document.getElementById('trq-score');
+  const selForme = document.getElementById('trq-forme');
+  const selExo = document.getElementById('trq-exo');
+  const manches = {};
+  for (const k of Object.keys(TR_INSTR)) manches[k] = trManche('trq-fb-' + k, k);
+  let q = null, done = false, essais = 0, bons = 0, total = 0;
+
+  /* le sélecteur : tout au hasard, un instrument au hasard, ou une forme précise */
+  const choix = [['', 'au hasard'], ['basse', 'basse — au hasard'], ['guitare', 'guitare — au hasard'],
+    ...TR_FORMES.map(f => [f.id, TR_INSTR[f.instr].nom.toLowerCase() + ' · ' + f.titre])];
+  selForme.replaceChildren(...choix.map(([v, t]) => {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = t;
+    return o;
+  }));
+
+  function fini(ok, html){
+    done = true;
+    total++;
+    if (ok) bons++;
+    feedback.innerHTML = html;
+    feedback.className = 'tab-note ' + (ok ? 'juste' : 'faux');
+    scoreEl.textContent = bons + ' / ' + total;
+  }
+  const ouEstElle = () => `fondamentale sur la corde de ${trCorde(q.forme)}, case ${q.f0} — ${noteSeq(trNotes(q.forme, q.root))}`;
+
+  /* poser la forme : la corde de la fondamentale répond au clic */
+  for (const k of Object.keys(manches)){
+    for (const p of manches[k].pastilles){
+      p.g.addEventListener('click', () => {
+        if (done || !q || q.exo !== 'poser' || q.forme.instr !== k || p.corde !== q.forme.corde) return;
+        essais++;
+        if (p.fret % 12 === q.f0 % 12){
+          trPoser(manches[k], q.forme, q.root);
+          const ailleurs = p.fret === q.f0 ? '' : ` La note est la bonne ; la forme entière, elle, tient en case ${q.f0}.`;
+          fini(essais === 1, `✓ ${trTon(q.forme, q.root)} : ${ouEstElle()}.${ailleurs}`);
+        } else {
+          p.c.setAttribute('fill', NOTE_COLORS.F);
+          feedback.innerHTML = `✗ Case ${p.fret}, c'est ${p.note.replace('#', '♯')} — cherche encore.`;
+          feedback.className = 'tab-note faux';
+        }
+      });
+    }
+  }
+  function preparerPoser(){
+    const m = manches[q.forme.instr];
+    m.vider();
+    for (const p of m.pastilles){
+      const cliquable = p.corde === q.forme.corde;
+      p.g.style.display = '';
+      p.g.classList.toggle('cible', cliquable);
+      p.g.dataset.note = p.note;
+      p.c.setAttribute('fill', cliquable ? '#6B5B4B' : '#453A2F');
+      p.c.setAttribute('r', cliquable ? 12 : 8);
+      p.c.setAttribute('stroke', 'none');
+      p.t.style.display = 'none';
+    }
+    /* on repart du sillet : la question précédente a pu faire défiler le manche */
+    const sc = m.svg.closest('.board-scroll');
+    if (sc) sc.scrollLeft = 0;
+    paletteEl.replaceChildren();
+    promptEl.innerHTML = `${TR_INSTR[q.forme.instr].nom} · ${q.forme.titre} — pose-la en ${nomColore(trTon(q.forme, q.root))} : clique la fondamentale sur la corde de ${trCorde(q.forme)}`;
+  }
+
+  /* nommer la tonalité : la forme est posée, muette */
+  function preparerNommer(){
+    trPoser(manches[q.forme.instr], q.forme, q.root, true);
+    promptEl.innerHTML = `${TR_INSTR[q.forme.instr].nom} · ${q.forme.titre} — la voilà posée, fondamentale cerclée : dans quelle tonalité ?`;
+    paletteEl.replaceChildren(...trTons(q.forme).map(r => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'quiz-note-btn ton';
+      b.style.background = NOTE_COLORS[r[0]];
+      b.textContent = trTon(q.forme, r);
+      b.dataset.ton = r;
+      b.addEventListener('click', () => {
+        if (done) return;
+        const ok = r === q.root;
+        [...paletteEl.children].forEach(x => {
+          x.disabled = true;
+          if (x.dataset.ton === q.root) x.classList.add('correct');
+        });
+        if (!ok) b.classList.add('wrong');
+        trPoser(manches[q.forme.instr], q.forme, q.root);
+        fini(ok, ok ? `✓ ${trTon(q.forme, q.root)} : ${ouEstElle()}.`
+                    : `✗ C'était ${trTon(q.forme, q.root)} : ${ouEstElle()}.`);
+      });
+      return b;
+    }));
+  }
+
+  function nouvelle(){
+    const v = selForme.value;
+    const forme = TR_FORMES.find(f => f.id === v) || tirage(TR_FORMES.filter(f => !v || f.instr === v));
+    const root = tirage(RACINES_PENTA[forme.type]);
+    q = { forme, root, f0: trCase(forme, root), exo: selExo.value || tirage(['poser', 'nommer']) };
+    done = false;
+    essais = 0;
+    zone.dataset.instr = forme.instr;
+    zone.dataset.forme = forme.id;
+    zone.dataset.root = root;
+    zone.dataset.case = q.f0;
+    zone.dataset.exo = q.exo;
+    for (const k of Object.keys(TR_INSTR)) document.getElementById('trq-manche-' + k).hidden = k !== forme.instr;
+    feedback.textContent = '';
+    feedback.className = 'tab-note';
+    if (q.exo === 'poser') preparerPoser(); else preparerNommer();
+  }
+  document.getElementById('trq-new').addEventListener('click', nouvelle);
+  selForme.addEventListener('change', nouvelle);
+  selExo.addEventListener('change', nouvelle);
+  nouvelle();
+})();
+
 /* ------------------------------------------------------------
    Menu latéral + scrollspy — la même mécanique que les fiches guitare et
    basse : un lien de premier niveau par section (numéroté comme le sommaire
@@ -4536,6 +4923,10 @@ for (const b of document.querySelectorAll('#boites-list .tab-block')){
 }
 navLink('#boites-technique', 'Comment les travailler', 'lvl2');
 lvl1['jeu'] = navLink('#jeu','6 · Le jeu','lvl1');
+lvl1['transposer'] = navLink('#transposer','7 · Transposer','lvl1');
+navLink('#tr-zone', 'L\'atelier', 'lvl2');
+navLink('#trq-zone', 'L\'entraînement', 'lvl2');
+navLink('#tr-methode', 'Comment s\'en servir', 'lvl2');
 
 const spy = makeSpy((entries)=>{
   for (const e of entries){
@@ -4545,10 +4936,11 @@ const spy = makeSpy((entries)=>{
     }
   }
 }, { rootMargin:'-15% 0px -70% 0px' });
-for (const id of ['construire','gammes','triades','penta','boites','jeu']) spy.observe(document.getElementById(id));
+for (const id of ['construire','gammes','triades','penta','boites','jeu','transposer']) spy.observe(document.getElementById(id));
 
 /* exposé pour les tests : les recettes, hors DOM */
-window.theorie = { penta, epeler, gammeMineure, gammeMajeure, gammeDe, hauteur };
+window.theorie = { penta, epeler, gammeMineure, gammeMajeure, gammeDe, hauteur,
+  transposer:{ FORMES:TR_FORMES, INSTR:TR_INSTR, caseDe:trCase, nom:trNom, tons:trTons } };
 
 
 })();

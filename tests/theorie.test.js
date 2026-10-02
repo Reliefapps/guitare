@@ -138,19 +138,19 @@ const CHROMA = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 
 /* ============ la construction des accords ============ */
 
-test("l'onglet Théorie navigue désormais en six sections", () => {
+test("l'onglet Théorie navigue désormais en sept sections", () => {
   const { doc } = load();
   openTab(doc, 'theorie');
   const liens = [...doc.querySelectorAll('#page-theorie nav.sticky a')];
   assert.deepEqual(liens.map(a => a.getAttribute('href')),
-    ['#construire', '#gammes', '#triades', '#penta', '#boites', '#jeu']);
+    ['#construire', '#gammes', '#triades', '#penta', '#boites', '#jeu', '#transposer']);
   liens.forEach(a => {
     const cible = doc.getElementById(a.getAttribute('href').slice(1));
     assert.ok(cible, a.getAttribute('href') + ' ne mène nulle part');
     assert.equal(isVisible(cible), true, a.getAttribute('href') + ' mène à une section masquée');
   });
   assert.deepEqual([...doc.querySelectorAll('#page-theorie .sec-num')].map(n => n.textContent),
-    ['1', '2', '3', '4', '5', '6']);
+    ['1', '2', '3', '4', '5', '6', '7']);
 });
 
 test("un accord se construit en sautant une note sur deux dans la gamme", () => {

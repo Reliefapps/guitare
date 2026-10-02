@@ -233,34 +233,21 @@ test("improviser sur un seul accord : la piste du cours, la règle et la méthod
   assert.equal(sec.querySelectorAll('svg').length, 0);
 });
 
-test('transposer : chaque tonalité annonce la case de sa fondamentale sur les cordes de E et de A', () => {
+test('transposer : la fiche basse garde la consigne du cours et renvoie à l\'atelier de la théorie', () => {
   const { doc } = load();
   openTab(doc, 'basse');
   const bloc = doc.getElementById('penta-transposer');
   assert.equal(isVisible(bloc), true);
   assert.match(bloc.textContent, /2 octobre 2026/);
-  assert.match(bloc.textContent, /pentatoniques majeures/);
-  const tons = [...doc.querySelectorAll('#transpo-list .seq')];
-  /* les cinq tonalités citées par Santiago, plus Am et Dm, celles de la feuille */
-  assert.deepEqual(tons.map(t => t.dataset.ton), ['F♯m','Gm','Am','Bm','Cm','Dm','Em']);
-  for (const t of tons){
-    const fond = hauteur(t.dataset.ton.replace(/m$/, ''));
-    const cases = [...t.querySelectorAll('.mono')].map(m => m.textContent.split('·'));
-    assert.deepEqual(cases.map(c => c[0]), ['E', 'A']);
-    for (const [corde, fret] of cases){
-      assert.ok(+fret >= 1 && +fret <= 12, t.dataset.ton + ' : case hors du manche');
-      assert.equal((CHROMA.indexOf(corde) + +fret) % 12, fond,
-        `${t.dataset.ton} : corde ${corde} case ${fret} n'est pas la fondamentale`);
-    }
-  }
-  /* les deux repères de la feuille : Am en case 5 de la corde de E, Dm en
-     case 5 de la corde de A — et l'exemple du cours, Cm deux cases sous Dm */
-  const caseDe = (ton, i) => +doc.querySelector(`#transpo-list .seq[data-ton="${ton}"]`)
-    .querySelectorAll('.mono')[i].textContent.split('·')[1];
-  assert.equal(caseDe('Am', 0), 5);
-  assert.equal(caseDe('Dm', 1), 5);
-  assert.equal(caseDe('Cm', 1), caseDe('Dm', 1) - 2);
-  assert.equal(caseDe('Gm', 0), caseDe('Am', 0) - 2);
+  assert.match(bloc.textContent, /revoir toutes les formes, et les transposer toutes/);
+  for (const ton of ['Gm', 'Bm', 'Cm', 'Em', 'F♯m']) assert.ok(bloc.textContent.includes(ton), ton);
+  /* la liste des cases a déménagé : elle est devenue l'atelier */
+  assert.equal(doc.getElementById('transpo-list'), null);
+  const lien = bloc.querySelector('a[data-goto="theorie"][data-anchor="transposer"]');
+  assert.ok(lien, 'lien vers la théorie absent');
+  lien.click();
+  assert.equal(isVisible(doc.getElementById('transposer')), true);
+  assert.equal(doc.getElementById('transposer').closest('.page').id, 'page-theorie');
 });
 
 test('les formes en Dm portent le retour du cours du 2 octobre 2026', () => {

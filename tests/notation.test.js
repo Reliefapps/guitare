@@ -13,7 +13,7 @@ const SOLFEGE = /^(do|ré|re|mi|fa|sol|la|si)$/i;
    et du 2 octobre 2026 */
 const NOUVEAU = ['#routine', '#pluck-avance', '#impro', '#notes-manche', '#triades',
                  '#gammes', '#pentatonique', '#u2', '#penta', '#boites', '#jeu',
-                 '#patterns', '#stooges', '#impro-am', '#renversements'];
+                 '#patterns', '#stooges', '#impro-am', '#renversements', '#transposer'];
 
 /* hauteur d'un nom de note écrit, altérations comprises */
 function hauteur(nom){

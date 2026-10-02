@@ -9,14 +9,17 @@ test('la routine affiche ses quatre cartes et leurs liens internes', () => {
   const cartes = [...doc.querySelectorAll('#routine .routine-card')];
   assert.equal(cartes.length, 4);
   cartes.forEach(c => assert.equal(isVisible(c), true));
-  /* l'ordre des cartes est l'ordre de la séance, celle du 24 septembre 2026 :
-     les formes en Am, les patterns, le morceau, les formes en Dm si le temps */
+  /* l'ordre des cartes est celui du devoir du 2 octobre 2026 : les formes
+     en Dm, la transposition, les riffs en Am sur une piste, les arpèges si
+     le temps */
   const liens = [...doc.querySelectorAll('#routine .routine-link')].map(a => a.getAttribute('href'));
-  assert.deepEqual(liens, ['#pentatonique', '#patterns', '#stooges', '#pt-a1']);
-  assert.match(doc.querySelector('#routine .hint').textContent, /24 septembre 2026/);
-  /* la carte prioritaire porte l'objectif de tempo du cours */
-  assert.match(cartes[0].textContent, /100, puis 120/);
-  assert.match(cartes[0].textContent, /Sans répéter/);
+  assert.deepEqual(liens, ['#pt-a1', '#penta-transposer', '#impro-am', '#renversements']);
+  assert.match(doc.querySelector('#routine .hint').textContent, /2 octobre 2026/);
+  /* la première carte porte les consignes du cours sur les formes en Dm */
+  assert.match(cartes[0].textContent, /Lis la tablature/);
+  assert.match(cartes[0].textContent, /Repère la fondamentale/);
+  /* les arpèges restent facultatifs, comme Santiago l'a dit */
+  assert.match(cartes[3].querySelector('.routine-time').textContent, /si tu as le temps/);
   liens.forEach(h => assert.ok(doc.getElementById(h.slice(1)), h + ' ne mène nulle part'));
 });
 

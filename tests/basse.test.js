@@ -3,7 +3,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { load, isVisible, openTab } = require('./helpers');
 
-/* les 9 sections de l'onglet basse, dans l'ordre attendu */
+/* les 11 sections de l'onglet basse, dans l'ordre attendu */
 const SECTIONS = [
   ['notes-manche', '1', 'Les notes sur le manche'],
   ['routine',      '2', 'La routine quotidienne'],
@@ -14,6 +14,8 @@ const SECTIONS = [
   ['patterns',     '7', 'Les patterns en croches'],
   ['stooges',      '8', 'I Wanna Be Your Dog'],
   ['croches',      '9', 'Croches continues'],
+  ['impro-am',     '10', 'Improviser sur un seul accord'],
+  ['renversements','11', 'Les arpèges renversés'],
 ];
 
 test('la page se charge sans erreur de script', () => {
@@ -30,7 +32,7 @@ test("les sections de la basse sont masquées tant qu'on est sur l'onglet guitar
   }
 });
 
-test("les 9 sections sont rendues ET visibles après passage sur l'onglet basse", () => {
+test("les 11 sections sont rendues ET visibles après passage sur l'onglet basse", () => {
   const { doc } = load();
   openTab(doc, 'basse');
   for (const [id, num, titre] of SECTIONS){
@@ -48,11 +50,11 @@ test('les sections sont dans le bon ordre dans la page', () => {
   assert.deepEqual(ids, SECTIONS.map(s => s[0]));
 });
 
-test('les 9 ancres du sommaire pointent vers une section existante et visible', () => {
+test('les 11 ancres du sommaire pointent vers une section existante et visible', () => {
   const { doc } = load();
   openTab(doc, 'basse');
   const liens = [...doc.querySelectorAll('#page-basse nav.sticky a')];
-  assert.equal(liens.length, 9);
+  assert.equal(liens.length, 11);
   liens.forEach((a, i) => {
     const [id, num, titre] = SECTIONS[i];
     assert.equal(a.getAttribute('href'), '#' + id);
@@ -64,18 +66,19 @@ test('les 9 ancres du sommaire pointent vers une section existante et visible', 
   });
 });
 
-test('le sommaire latéral liste les 9 sections et les sous-parties', () => {
+test('le sommaire latéral liste les 11 sections et les sous-parties', () => {
   const { doc } = load();
   const lvl1 = [...doc.querySelectorAll('#sidenav-links-basse a.lvl1')];
   assert.deepEqual(lvl1.map(a => a.getAttribute('href')),
     SECTIONS.map(s => '#' + s[0]));
   /* les 4 exercices de main d'attaque, les 2 formes d'arpège, les 6 formes
-     de pentatonique et les 4 patterns en second niveau */
+     de pentatonique, les 4 patterns et les 3 exercices d'arpèges en second
+     niveau */
   const lvl2 = [...doc.querySelectorAll('#sidenav-links-basse a.lvl2')]
     .map(a => a.getAttribute('href'));
   for (const id of ['#px-p1','#px-p2','#px-p3','#px-p4','#fo-min','#fo-maj',
                     '#pt-e1','#pt-e2','#pt-e3','#pt-a1','#pt-a2','#pt-a3',
-                    '#pa-1','#pa-2','#pa-3','#pa-4'])
+                    '#pa-1','#pa-2','#pa-3','#pa-4','#ar-1','#ar-2','#ar-3'])
     assert.ok(lvl2.includes(id), id + ' absent du sommaire');
   /* l'araignée n'y est plus */
   assert.ok(!lvl2.some(h => /^#sp-/.test(h)), "l'araignée est encore dans le sommaire");
@@ -88,7 +91,7 @@ test('le scrollspy marque la bonne section', () => {
      (la théorie en crée un aussi, après) */
   const spy = observers.find(o => o.targets.some(t => t.id === 'notes-manche'));
   assert.ok(spy, 'aucun observateur ne surveille la page basse');
-  assert.equal(spy.targets.length, 9, 'les 9 sections doivent être observées');
+  assert.equal(spy.targets.length, 11, 'les 11 sections doivent être observées');
   for (const [id] of SECTIONS){
     spy.enter(doc.getElementById(id));
     const actifs = [...doc.querySelectorAll('#sidenav-links-basse a.active')];
@@ -141,10 +144,10 @@ test("les 18 pistes de batterie sont en tête de page, une par tempo", () => {
   /* les deux valeurs vérifiées à la main */
   assert.equal(ids[0], '6DcCeDKc8Wc');
   assert.equal(ids[2], '4D_PIdck4WI');
-  /* les tempos cités par la routine sont mis en avant : 60 et 70 pour les
-     patterns, 100 et 120 pour la pentatonique */
+  /* les tempos cités depuis le 2 octobre 2026 sont mis en avant : 90, où les
+     formes de pentatonique passent, et 100, où elles ne passent pas encore */
   assert.deepEqual(btns.filter(a => a.classList.contains('key'))
-    .map(a => a.textContent.replace('bpm','')), ['60', '70', '100', '120']);
+    .map(a => a.textContent.replace('bpm','')), ['90', '100']);
   /* la playlist entière reste accessible */
   const pl = doc.querySelector('#page-basse .tempo-note a');
   assert.equal(pl.getAttribute('href'),

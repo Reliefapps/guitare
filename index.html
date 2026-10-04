@@ -6087,7 +6087,8 @@ function creerJeu(o){
     maintien.reset(); o.suivre(null);
     anneau(o.disqueBut, 0);
     dire(o.consigneEcoute(), '');
-    const d = notes.length > 1 ? Math.min(2, dureeNote()) : dureeNote();
+    const base = o.duree ? o.duree() : dureeNote();
+    const d = notes.length > 1 ? Math.min(2, base) : base;
     notes.forEach((m, i) => {
       if (i === 0) jouerNote(m, d);
       else plusTard(() => jouerNote(m, d), i * (d * 1000 + 120));
@@ -6265,6 +6266,9 @@ const placer = (function(){
       rendreJauge();
     },
     notes: () => [cible.midi],
+    /* deux fois plus courte que le réglage : une seule note à retenir, pas
+       besoin de l'entendre longtemps (demande de Raphaël, 4 octobre 2026) */
+    duree: () => dureeNote() / 2,
     cible: () => cible.midi,
     question: () => cible,
     /* l'écart à la cible, à l'octave près : un C chanté une octave plus bas

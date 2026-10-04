@@ -235,6 +235,8 @@ test("placer la note : la note joue, puis le micro, puis la note tenue est valid
   assert.ok(cible.midi >= 48 && cible.midi <= 67, 'hors de la tessiture du ténor');
   assert.equal(doc.getElementById('placer-note').textContent, cible.en);
   assert.equal(doc.getElementById('placer-fr').textContent, cible.fr);
+  /* la note dure moitié moins que le réglage (3 s → 1,5 s) */
+  assert.match(doc.querySelector('#placer-disque .prog').style.transition, /\b1\.5s\b/);
   /* pendant que la note joue, la voix n'est pas jugée */
   chanter(placer, cible.midi, 0, 1500);
   assert.equal(placer.phase, 'ecoute');

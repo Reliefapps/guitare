@@ -79,7 +79,7 @@ test('les noms de cordes et de notes des SVG basse sont des lettres', () => {
 test('chaque note des tablatures est colorée selon la note réellement jouée', () => {
   const { doc } = load();
   openTab(doc, 'basse');
-  const svgs = [...doc.querySelectorAll('#pluck-list .tab-scroll svg, #penta-list .tab-scroll svg, #u2-tab .tab-scroll svg, #renversements-list .tab-scroll svg')];
+  const svgs = [...doc.querySelectorAll('#pluck-list .tab-scroll svg, #penta-list .tab-scroll svg, #u2-tab .tab-scroll svg')];
   assert.ok(svgs.length > 0);
   for (const svg of svgs){
     for (const n of lireTablature(svg)){

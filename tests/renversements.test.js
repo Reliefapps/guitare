@@ -19,23 +19,31 @@ function hauteur(nom){
   return ((h % 12) + 12) % 12;
 }
 
-/* les notes d'une tablature, relues depuis le SVG ; une note liée (écrite
-   mais pas rejouée) est celle que la page estompe */
+/* les notes d'une tablature, relues depuis le SVG : chaque chiffre porte sa
+   corde et sa case ; une note liée (écrite mais pas rejouée) est marquée */
 function lireTablature(svg){
-  return [...svg.querySelectorAll('text')]
-    .filter(t => t.getAttribute('text-anchor') === 'middle'
-              && +t.getAttribute('font-size') === 12.5
-              && /^\d+$/.test(t.textContent)
-              && +t.getAttribute('y') > 30)
+  return [...svg.querySelectorAll('text.case')]
     .map(t => ({
       x: +t.getAttribute('x'),
-      corde: CORDES[Math.round((+t.getAttribute('y') - 34) / 20)],
-      fret: +t.textContent,
-      liee: t.hasAttribute('opacity'),
+      corde: t.dataset.corde,
+      fret: +t.dataset.case,
+      croches: +t.dataset.croches,
+      fill: t.getAttribute('fill'),
+      liee: t.dataset.liee === '1',
     }))
     .sort((a, b) => a.x - b.x)
     .map(n => ({ ...n, hauteur: (CHROMA.indexOf(n.corde) + n.fret) % 12 }));
 }
+/* les têtes de notes de la portée, de gauche à droite */
+function lirePortee(svg){
+  return [...svg.querySelectorAll('.tete')]
+    .map(e => ({ x: +e.getAttribute('cx'), y: +e.getAttribute('cy'), note: e.dataset.note,
+      octave: +e.dataset.octave, pas: +e.dataset.pas, fill: e.getAttribute('fill') }))
+    .sort((a, b) => a.x - b.x);
+}
+const NOTE_COLORS = { C:'#0E9594', D:'#8E44AD', E:'#2E8B57', F:'#DE4229',
+                      G:'#E67E22', A:'#2C7FB8', B:'#8D6E4B' };
+const compte = (svg, sel) => svg.querySelectorAll(sel).length;
 
 /* les accords écrits au-dessus, de gauche à droite */
 function lireAccords(svg){
@@ -119,12 +127,14 @@ test('chaque exercice reproduit la feuille : mêmes cases, mêmes cordes, mêmes
     ex.lignes.forEach((ligne, i) => {
       const notes = lireTablature(svgs[i]);
       assert.deepEqual(notes.map(n => [n.corde, n.fret]), ligne.notes, `${id} ligne ${i + 1} : la tablature diverge de la feuille`);
-      assert.deepEqual(lireAccords(svgs[i]).filter(t => !/^×/.test(t)), ligne.accords, `${id} ligne ${i + 1} : accords`);
+      assert.deepEqual(lireAccords(svgs[i]), ligne.accords, `${id} ligne ${i + 1} : accords`);
       assert.deepEqual(lireDoigts(svgs[i]), ligne.doigts, `${id} ligne ${i + 1} : doigtés différents de la feuille`);
       assert.equal(notes.filter(n => n.liee).length, ligne.liees, `${id} ligne ${i + 1} : notes liées`);
       assert.equal(svgs[i].querySelectorAll('path.liaison').length, ligne.liees, `${id} ligne ${i + 1} : arcs de liaison`);
-      const reprises = [...svgs[i].querySelectorAll('text')].filter(t => t.textContent === '×2');
-      assert.equal(reprises.length, ligne.reprises, `${id} ligne ${i + 1} : mesures à jouer deux fois`);
+      /* le signe « % » de la feuille : une fois sur la portée, une fois sur la tablature */
+      assert.equal(compte(svgs[i], '.simile'), ligne.reprises, `${id} ligne ${i + 1} : mesures à rejouer`);
+      assert.equal(compte(svgs[i], '.simile-tab'), ligne.reprises, `${id} ligne ${i + 1} : signe % de la tablature`);
+      assert.equal(compte(svgs[i], 'path.liaison-portee'), ligne.liees, `${id} ligne ${i + 1} : liaisons de la portée`);
     });
   }
 });
@@ -140,11 +150,18 @@ test('chaque mesure fait quatre temps : noire, noire pointée et liaison compris
     });
   }
   /* la basse tient deux croches dans les exercices 1 et 2, trois dans le 3 :
-     l'écart entre la basse et la note suivante le montre */
-  const pas = id => { const n = lireTablature(tabsDe(doc, id)[0]); return n[1].x - n[0].x; };
-  assert.equal(pas('ar-1'), 50, 'exercice 1 : la basse est une noire');
-  assert.equal(pas('ar-2'), 50, 'exercice 2 : la basse est une noire');
-  assert.equal(pas('ar-3'), 75, 'exercice 3 : la basse est une noire pointée');
+     la durée est notée, et l'écart jusqu'à la note suivante la respecte */
+  const basse = id => { const n = lireTablature(tabsDe(doc, id)[0]); return [n[0].croches, n[1].x - n[0].x]; };
+  assert.deepEqual(basse('ar-1'), [2, 52], 'exercice 1 : la basse est une noire');
+  assert.deepEqual(basse('ar-2'), [2, 52], 'exercice 2 : la basse est une noire');
+  assert.deepEqual(basse('ar-3'), [3, 78], 'exercice 3 : la basse est une noire pointée');
+  /* chaque mesure fait bien huit croches, notes liées comprises */
+  for (const [id, ex] of Object.entries(FEUILLE)){
+    tabsDe(doc, id).forEach((svg, i) => {
+      const total = lireTablature(svg).reduce((s, n) => s + n.croches, 0);
+      assert.equal(total, ex.lignes[i].accords.length * 8, `${id} ligne ${i + 1}`);
+    });
+  }
 });
 
 test('chaque mesure joue la basse puis fondamentale, quinte et tierce de son accord', () => {
@@ -195,6 +212,80 @@ test('la légende de chaque ligne nomme les notes attaquées, en lettres et avec
   assert.match(texte, /E♭/);
   assert.match(texte, /F♯/);
   assert.doesNotMatch(texte, /A♯|D♯|G♭/);
+});
+
+test('la portée en clé de fa écrit les mêmes notes que la tablature, à la bonne hauteur', () => {
+  const { doc } = load();
+  openTab(doc, 'basse');
+  for (const id of Object.keys(FEUILLE)){
+    for (const svg of tabsDe(doc, id)){
+      assert.equal(compte(svg, '.clef'), 1, id + ' : clé de fa');
+      assert.equal(compte(svg, 'line.portee'), 5, id + ' : cinq lignes de portée');
+      assert.equal(compte(svg, 'line.ligne-tab'), 4, id + ' : quatre lignes de tablature');
+      const tab = lireTablature(svg), tetes = lirePortee(svg);
+      assert.equal(tetes.length, tab.length, id + ' : une tête de note par chiffre');
+      const lignes = [...svg.querySelectorAll('line.portee')].map(l => +l.getAttribute('y1')).sort((a, b) => a - b);
+      const demiInterligne = (lignes[4] - lignes[0]) / 8;
+      tetes.forEach((t, i) => {
+        /* même abscisse, même note, même couleur que le chiffre en dessous */
+        assert.equal(t.x, tab[i].x, id);
+        assert.equal(hauteur(t.note), tab[i].hauteur, `${id} : ${t.note} au-dessus de ${tab[i].corde}${tab[i].fret}`);
+        assert.equal(t.fill, NOTE_COLORS[t.note[0]], `${id} : ${t.note} mal colorée`);
+        assert.equal(tab[i].fill, t.fill, id + ' : la tête et le chiffre ont la même couleur');
+        /* la hauteur écrite : G2 sur la ligne du bas, un pas par demi-interligne */
+        const pas = t.octave * 7 + 'CDEFGAB'.indexOf(t.note[0]);
+        assert.equal(t.pas, pas, id);
+        assert.equal(t.y, lignes[4] - (pas - 18) * demiInterligne, `${id} : ${t.note}${t.octave} mal placée`);
+      });
+    }
+  }
+  /* la première mesure de la feuille, note à note : la basse dans le premier
+     interligne, l'octave sur la ligne du haut, le C au-dessus de la portée */
+  const am = lirePortee(tabsDe(doc, 'ar-1')[0]).slice(0, 7);
+  assert.deepEqual(am.map(t => t.note + t.octave), ['A2', 'A3', 'E3', 'A3', 'C4', 'A3', 'E3']);
+  /* lignes supplémentaires : une par C4, deux par E4, aucune ailleurs */
+  assert.equal(compte(tabsDe(doc, 'ar-1')[0], '.ligne-sup'), 1 + 3 + 2);
+});
+
+test('le rythme est écrit comme sur la feuille : hampes, ligatures, point, crochet, liaison', () => {
+  const { doc } = load();
+  openTab(doc, 'basse');
+  const [ex1] = tabsDe(doc, 'ar-1'), [ex2] = tabsDe(doc, 'ar-2'), [ex3a, ex3b] = tabsDe(doc, 'ar-3');
+  /* exercices 1 et 2 : par mesure, une noire seule, deux croches ligaturées,
+     puis quatre — sur la portée comme sous la tablature */
+  for (const svg of [ex1, ex2]){
+    assert.equal(compte(svg, '.ligature'), 8);
+    assert.equal(compte(svg, '.ligature-tab'), 8);
+    assert.equal(compte(svg, '.crochet'), 0);
+    assert.equal(compte(svg, '.point'), 0);
+    /* une hampe par note, sur chaque système */
+    assert.equal(compte(svg, '.hampe'), 2 * lireTablature(svg).length);
+  }
+  /* exercice 3 : par mesure jouée, une noire pointée, une croche seule avec
+     son crochet, puis quatre croches ligaturées */
+  for (const [svg, mesures] of [[ex3a, 2], [ex3b, 3]]){
+    assert.equal(compte(svg, '.point'), mesures);
+    assert.equal(compte(svg, '.point-tab'), mesures);
+    assert.equal(compte(svg, '.crochet'), mesures);
+    assert.equal(compte(svg, '.crochet-tab'), mesures);
+    assert.equal(compte(svg, '.ligature'), mesures);
+    assert.equal(compte(svg, '.ligature-tab'), mesures);
+  }
+  /* le 4/4 en tête de chaque exercice, les barres de reprise au début et à la fin */
+  assert.equal(compte(ex1, '.chiffrage'), 2);
+  assert.equal(compte(ex3a, '.chiffrage'), 2);
+  assert.equal(compte(ex3b, '.chiffrage'), 0);
+  assert.equal(compte(ex1, '.reprise'), 8, 'reprise au début et à la fin');
+  assert.equal(compte(ex3a, '.reprise'), 4, 'exercice 3 : la reprise s\'ouvre sur la première ligne');
+  assert.equal(compte(ex3b, '.reprise'), 4, 'et se ferme sur la seconde');
+  /* l'armure de deux bémols ne vaut que pour l'exercice 3 ; les B♭ et E♭ ne
+     sont donc pas réécrits, seul le F♯ de l'accord de D porte son dièse */
+  assert.equal(compte(ex1, '.armure') + compte(ex2, '.armure'), 0);
+  assert.equal(compte(ex3a, '.armure'), 2);
+  assert.equal(compte(ex3b, '.armure'), 2);
+  assert.equal(compte(ex1, '.alteration') + compte(ex2, '.alteration') + compte(ex3a, '.alteration'), 0);
+  assert.deepEqual([...ex3b.querySelectorAll('.alteration')].map(t => t.textContent), ['♯']);
+  assert.match(doc.querySelector('#renversements .hint').textContent, /portée en clé de fa/);
 });
 
 test("improviser sur un seul accord : la piste du cours, la règle et la méthode", () => {

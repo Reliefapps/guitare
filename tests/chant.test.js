@@ -193,7 +193,8 @@ test("les réglages : piano, ténor, note de 3 s, mode débutant à ± 50 cents"
   assert.equal(voix.value, 'tenor');
   assert.equal(voix.selectedOptions[0].textContent, 'ténor · C3 → G4');
   assert.equal([...voix.options].map(o => o.value).join(' '), 'basse baryton tenor alto mezzo soprano');
-  assert.equal(doc.getElementById('chant-duree').value, '3');
+  assert.equal(doc.getElementById('chant-duree').value, '1');
+  assert.equal([...doc.getElementById('chant-duree').options].map(o => o.value).join(' '), '1 2 3 4');
   assert.equal(doc.getElementById('chant-mode').value, 'debutant');
   assert.equal(doc.getElementById('chant-tol').value, '50');
   assert.equal(doc.getElementById('chant-hold').value, '1000');
@@ -235,8 +236,8 @@ test("placer la note : la note joue, puis le micro, puis la note tenue est valid
   assert.ok(cible.midi >= 48 && cible.midi <= 67, 'hors de la tessiture du ténor');
   assert.equal(doc.getElementById('placer-note').textContent, cible.en);
   assert.equal(doc.getElementById('placer-fr').textContent, cible.fr);
-  /* la note dure moitié moins que le réglage (3 s → 1,5 s) */
-  assert.match(doc.querySelector('#placer-disque .prog').style.transition, /\b1\.5s\b/);
+  /* la note dure ce que dit le réglage : 1 s par défaut */
+  assert.match(doc.querySelector('#placer-disque .prog').style.transition, /\b1s\b/);
   /* pendant que la note joue, la voix n'est pas jugée */
   chanter(placer, cible.midi, 0, 1500);
   assert.equal(placer.phase, 'ecoute');

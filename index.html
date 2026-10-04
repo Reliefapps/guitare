@@ -1978,8 +1978,9 @@
       </label>
       <label class="quiz-choix">La note dure
         <select class="quiz-select" id="chant-duree">
+          <option value="1" selected>1 s</option>
           <option value="2">2 s</option>
-          <option value="3" selected>3 s</option>
+          <option value="3">3 s</option>
           <option value="4">4 s</option>
         </select>
       </label>
@@ -6087,8 +6088,7 @@ function creerJeu(o){
     maintien.reset(); o.suivre(null);
     anneau(o.disqueBut, 0);
     dire(o.consigneEcoute(), '');
-    const base = o.duree ? o.duree() : dureeNote();
-    const d = notes.length > 1 ? Math.min(2, base) : base;
+    const d = notes.length > 1 ? Math.min(2, dureeNote()) : dureeNote();
     notes.forEach((m, i) => {
       if (i === 0) jouerNote(m, d);
       else plusTard(() => jouerNote(m, d), i * (d * 1000 + 120));
@@ -6266,9 +6266,6 @@ const placer = (function(){
       rendreJauge();
     },
     notes: () => [cible.midi],
-    /* deux fois plus courte que le réglage : une seule note à retenir, pas
-       besoin de l'entendre longtemps (demande de Raphaël, 4 octobre 2026) */
-    duree: () => dureeNote() / 2,
     cible: () => cible.midi,
     question: () => cible,
     /* l'écart à la cible, à l'octave près : un C chanté une octave plus bas

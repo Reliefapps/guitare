@@ -905,6 +905,89 @@
     border:1px solid var(--line); border-radius:999px; padding:5px 11px 5px 8px; background:var(--paper);
   }
   .chant-intervals .chant-check:has(input:checked){border-color:var(--ink); background:var(--card);}
+
+  /* les chants : une carte par chant, un lecteur par carte */
+  .chants-grille{display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap:16px;}
+  .chant-carte{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px 18px 16px; display:flex; flex-direction:column; gap:12px;
+  }
+  .chant-carte.joue{border-color:var(--ink);}
+  .chant-titre{font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:18px; line-height:1.2;}
+  .chant-sous{font-size:13.5px; color:var(--ink-soft); margin-top:2px;}
+  .chant-commandes{display:flex; flex-direction:column; gap:10px;}
+  .chant-choix{display:flex; flex-wrap:wrap; gap:6px;}
+  .chant-choix button{
+    font-family:"Spline Sans Mono",monospace; font-size:12.5px; font-weight:700;
+    color:var(--ink-soft); background:var(--paper); border:1px solid var(--line);
+    border-radius:999px; padding:6px 13px; cursor:pointer; transition:all .15s ease;
+  }
+  .chant-choix button:hover{border-color:var(--ink-soft); color:var(--ink);}
+  .chant-choix button[aria-pressed="true"]{background:var(--ink); border-color:var(--ink); color:var(--paper);}
+  .lecteur{display:flex; align-items:center; gap:10px;}
+  .lecteur-jouer{
+    flex:none; width:44px; height:44px; border-radius:50%; border:none; cursor:pointer;
+    background:var(--ink); color:var(--paper); display:grid; place-items:center;
+    transition:transform .12s ease;
+  }
+  .lecteur-jouer:hover{transform:scale(1.06);}
+  .lecteur-jouer svg{width:20px; height:20px; fill:currentColor;}
+  .lecteur-jouer .ic-pause{display:none;}
+  .lecteur.joue .lecteur-jouer .ic-play{display:none;}
+  .lecteur.joue .lecteur-jouer .ic-pause{display:block;}
+  .lecteur-petit{
+    flex:none; font-family:"Spline Sans Mono",monospace; font-size:11.5px; font-weight:700;
+    color:var(--ink-soft); background:transparent; border:1px solid var(--line);
+    border-radius:999px; padding:5px 9px; cursor:pointer;
+  }
+  .lecteur-petit:hover{border-color:var(--ink-soft); color:var(--ink);}
+  .lecteur-petit[aria-pressed="true"]{background:var(--ink); border-color:var(--ink); color:var(--paper);}
+  .lecteur-barre{flex:1; min-width:60px; accent-color:var(--ink); cursor:pointer;}
+  .lecteur-temps{
+    flex:none; font-family:"Spline Sans Mono",monospace; font-size:12px; color:var(--ink-soft);
+    font-variant-numeric:tabular-nums; min-width:76px; text-align:right;
+  }
+  .chant-pied{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:auto;}
+  .chant-partition{
+    font-family:"Spline Sans Mono",monospace; font-size:12.5px; font-weight:700;
+    color:var(--ink); background:var(--paper); border:1px solid var(--line);
+    border-radius:999px; padding:7px 14px; cursor:pointer; transition:all .15s ease;
+  }
+  .chant-partition:hover{border-color:var(--ink);}
+  .chant-sans{font-family:"Spline Sans Mono",monospace; font-size:12px; color:var(--ink-soft);}
+
+  /* la fenêtre partition : le lecteur à gauche, les pages à droite */
+  .chant-modal{
+    width:min(1180px, 100vw - 24px); height:calc(100vh - 24px); max-width:none; max-height:none;
+    margin:auto; padding:0; border:none; border-radius:var(--radius);
+    background:var(--paper); color:var(--ink); overflow:hidden;
+  }
+  .chant-modal[open]{display:grid; grid-template-columns:320px 1fr;}
+  .chant-modal::backdrop{background:rgba(33,27,20,.6);}
+  body:has(.chant-modal[open]){overflow:hidden;}
+  .chant-modal-cote{
+    padding:20px 18px; border-right:1px solid var(--line); background:var(--card);
+    display:flex; flex-direction:column; gap:14px; overflow:auto;
+  }
+  .chant-modal-tete{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
+  .chant-modal-titre{font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:20px; line-height:1.2;}
+  .chant-modal-fermer{
+    flex:none; width:36px; height:36px; border-radius:50%; border:1px solid var(--line);
+    background:var(--paper); color:var(--ink); font-size:22px; line-height:1; cursor:pointer;
+  }
+  .chant-modal-fermer:hover{border-color:var(--ink);}
+  .chant-modal-pdf{font-family:"Spline Sans Mono",monospace; font-size:12.5px; color:var(--ink-soft);}
+  .chant-modal-pages{overflow:auto; min-height:0; padding:18px; display:flex; flex-direction:column; align-items:center; gap:14px;}
+  .chant-modal-pages img{
+    flex:none; width:100%; max-width:900px; height:auto; display:block; background:#fff;
+    border:1px solid var(--line); border-radius:6px;
+  }
+  @media (max-width:820px){
+    .chant-modal{width:100vw; height:100dvh; border-radius:0;}
+    .chant-modal[open]{grid-template-columns:1fr; grid-template-rows:auto 1fr;}
+    .chant-modal-cote{border-right:none; border-bottom:1px solid var(--line); padding:14px 16px; gap:10px;}
+    .chant-modal-pages{padding:12px;}
+  }
   @media (max-width:640px){
     .jeu{padding:16px 14px 20px;}
     .jeu-disque{width:132px; height:132px;}
@@ -1717,9 +1800,10 @@
 <aside class="sidenav" aria-label="Sommaire">
   <div class="sidenav-title">Sommaire</div>
   <nav id="sidenav-links-chant">
-    <a href="#placer" class="lvl1">1 · Placer la note</a>
-    <a href="#intervalles" class="lvl1">2 · Les intervalles</a>
-    <a href="#reglages" class="lvl1">3 · Réglages</a>
+    <a href="#chants" class="lvl1">1 · Les chants</a>
+    <a href="#placer" class="lvl1">2 · Placer la note</a>
+    <a href="#intervalles" class="lvl1">3 · Les intervalles</a>
+    <a href="#reglages" class="lvl1">4 · Réglages</a>
   </nav>
 </aside>
 
@@ -1732,16 +1816,41 @@
 
 <nav class="sticky" aria-label="Sommaire">
   <div class="wrap">
-    <a href="#placer">1 · Placer la note</a>
-    <a href="#intervalles">2 · Les intervalles</a>
-    <a href="#reglages">3 · Réglages</a>
+    <a href="#chants">1 · Les chants</a>
+    <a href="#placer">2 · Placer la note</a>
+    <a href="#intervalles">3 · Les intervalles</a>
+    <a href="#reglages">4 · Réglages</a>
   </div>
 </nav>
 
-<!-- ============ 1. PLACER LA NOTE ============ -->
+<!-- ============ 1. LES CHANTS ============ -->
+<!-- Les enregistrements de la chorale, une piste par voix, et la partition
+     quand on l'a. Les fichiers sont dans chant/ (ajoutés le 4 octobre 2026). -->
+<section id="chants">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">1</span><h2>Les chants</h2></div>
+    <p class="hint">Choisis ta voix et écoute ta partie. La partition s'ouvre à côté, le son continue.</p>
+    <div class="chants-grille" id="chants-liste"></div>
+  </div>
+</section>
+
+<!-- la partition en grand, avec le lecteur du chant à côté -->
+<dialog class="chant-modal" id="chant-modal" aria-labelledby="chant-modal-titre">
+  <div class="chant-modal-cote">
+    <div class="chant-modal-tete">
+      <div class="chant-modal-titre" id="chant-modal-titre"></div>
+      <button class="chant-modal-fermer" type="button" id="chant-modal-fermer" aria-label="Fermer la partition">×</button>
+    </div>
+    <div class="chant-modal-lecteur" id="chant-modal-lecteur"></div>
+    <a class="chant-modal-pdf" id="chant-modal-pdf" target="_blank" rel="noopener">Ouvrir le PDF ↗</a>
+  </div>
+  <div class="chant-modal-pages" id="chant-modal-pages"></div>
+</dialog>
+
+<!-- ============ 2. PLACER LA NOTE ============ -->
 <section id="placer">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">1</span><h2>Placer la note</h2></div>
+    <div class="sec-head"><span class="sec-num">2</span><h2>Placer la note</h2></div>
     <p class="hint">La note joue, puis c'est à toi : chante-la et garde la bille dans le vert.</p>
 
     <div class="jeu" id="placer-jeu" data-phase="repos">
@@ -1781,10 +1890,10 @@
   </div>
 </section>
 
-<!-- ============ 2. LES INTERVALLES ============ -->
+<!-- ============ 3. LES INTERVALLES ============ -->
 <section id="intervalles">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">2</span><h2>Les intervalles</h2></div>
+    <div class="sec-head"><span class="sec-num">3</span><h2>Les intervalles</h2></div>
     <p class="hint">Le départ joue. Chante la note d'arrivée : la bille grimpe l'escalier avec ta voix.</p>
 
     <div class="jeu" id="int-jeu" data-phase="repos">
@@ -1836,10 +1945,10 @@
   </div>
 </section>
 
-<!-- ============ 3. RÉGLAGES ============ -->
+<!-- ============ 4. RÉGLAGES ============ -->
 <section id="reglages">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-num">3</span><h2>Réglages</h2></div>
+    <div class="sec-head"><span class="sec-num">4</span><h2>Réglages</h2></div>
     <p class="hint">Le son du micro est analysé dans la page : rien n'est enregistré ni envoyé.</p>
     <div class="chant-settings">
       <button class="chant-mic" type="button" id="chant-mic" aria-pressed="false">
@@ -6238,6 +6347,185 @@ const inter = (function(){
   });
 })();
 
+/* ---------- les chants de la chorale ----------
+   Les enregistrements envoyés par Raphaël le 4 octobre 2026, une piste par
+   voix (alto, soprano). Les pages de partition sont des webp tirés du PDF :
+   une image s'affiche partout, un PDF dans une iframe non (iPhone). Pas de
+   partition pour « Les rêves » : la copie Musescore interdit le partage, et
+   le site est public. */
+const CHANTS = [
+  { id:'siyahamba', titre:'Siyahamba',
+    pistes:[ { voix:'Alto', src:'chant/siyahamba-alto.m4a' },
+             { voix:'Soprano', src:'chant/siyahamba-soprano.m4a' } ] },
+  { id:'anges', titre:'Les anges dans nos campagnes',
+    pistes:[ { voix:'Alto', src:'chant/anges-alto.m4a' },
+             { voix:'Soprano', src:'chant/anges-soprano.m4a' } ],
+    pdf:'chant/anges.pdf', pages:['chant/anges-1.webp'] },
+  { id:'white-sand', titre:'White Sand',
+    pistes:[ { voix:'', src:'chant/white-sand.m4a' } ] },
+  { id:'reves', titre:'Les rêves sont en nous', sous:'Pierre Rapsat · arr. JMiM',
+    pistes:[ { partie:'Partie 1', voix:'Alto', src:'chant/reves-1-alto.m4a' },
+             { partie:'Partie 1', voix:'Soprano', src:'chant/reves-1-soprano.m4a' },
+             { partie:'Partie 2', voix:'Alto', src:'chant/reves-2-alto.m4a' },
+             { partie:'Partie 2', voix:'Soprano', src:'chant/reves-2-soprano.m4a' } ] },
+];
+
+const sansDoublon = xs => [...new Set(xs)];
+function duree(s){
+  if (!isFinite(s) || s < 0) s = 0;
+  s = Math.floor(s);
+  return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+}
+/* la voix choisie suit d'un chant à l'autre et d'une visite à l'autre */
+function voixMemo(){ try { return localStorage.getItem('chant-voix') || 'Alto'; } catch(e){ return 'Alto'; } }
+function retenirVoix(v){ try { localStorage.setItem('chant-voix', v); } catch(e){} }
+
+const lecteurs = [];
+function toutArreter(sauf){ for (const l of lecteurs) if (l !== sauf) l.pause(); }
+
+function creerChant(chant){
+  const carte = document.createElement('article');
+  carte.className = 'chant-carte';
+  carte.id = 'chant-' + chant.id;
+  const parties = sansDoublon(chant.pistes.map(p => p.partie).filter(Boolean));
+  const voix = sansDoublon(chant.pistes.map(p => p.voix).filter(Boolean));
+  const sous = chant.sous || (voix.length ? voix.join(' · ') : 'un seul enregistrement');
+  carte.innerHTML = `
+    <div><div class="chant-titre">${chant.titre}</div><div class="chant-sous">${sous}</div></div>
+    <div class="chant-commandes">
+      ${parties.length > 1 ? `<div class="chant-choix" role="group" aria-label="Partie">${
+        parties.map(p => `<button type="button" data-partie="${p}">${p}</button>`).join('')}</div>` : ''}
+      ${voix.length > 1 ? `<div class="chant-choix" role="group" aria-label="Voix">${
+        voix.map(v => `<button type="button" data-voix="${v}">${v}</button>`).join('')}</div>` : ''}
+      <div class="lecteur">
+        <button class="lecteur-jouer" type="button" aria-label="Écouter">
+          <svg class="ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          <svg class="ic-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+        </button>
+        <button class="lecteur-petit lecteur-recul" type="button" title="Revenir de 5 secondes">−5 s</button>
+        <input class="lecteur-barre" type="range" min="0" max="1000" value="0" step="1" aria-label="Position">
+        <span class="lecteur-temps">0:00 / 0:00</span>
+        <button class="lecteur-petit lecteur-boucle" type="button" aria-pressed="false" title="Rejouer en boucle">↻</button>
+      </div>
+    </div>
+    <div class="chant-pied">
+      ${chant.pages ? `<button class="chant-partition" type="button">Partition</button>`
+                    : `<span class="chant-sans">pas de partition</span>`}
+    </div>`;
+
+  const commandes = carte.querySelector('.chant-commandes');
+  const ui = carte.querySelector('.lecteur');
+  const btnJouer = ui.querySelector('.lecteur-jouer');
+  const barre = ui.querySelector('.lecteur-barre');
+  const temps = ui.querySelector('.lecteur-temps');
+  const boucle = ui.querySelector('.lecteur-boucle');
+  const audio = new Audio();
+  audio.preload = 'metadata';
+
+  const etat = { partie: parties[0], voix: voix.includes(voixMemo()) ? voixMemo() : voix[0] };
+  const piste = () => chant.pistes.find(p => (!etat.partie || p.partie === etat.partie) && (!etat.voix || p.voix === etat.voix));
+
+  let glisse = false;
+  function afficher(){
+    const d = audio.duration, t = audio.currentTime;
+    if (!glisse) barre.value = isFinite(d) && d > 0 ? Math.round(t / d * 1000) : 0;
+    temps.textContent = duree(t) + ' / ' + duree(d);
+  }
+  function marquer(){
+    const joue = !audio.paused;
+    ui.classList.toggle('joue', joue);
+    carte.classList.toggle('joue', joue);
+    btnJouer.setAttribute('aria-label', joue ? 'Pause' : 'Écouter');
+  }
+  function charger(){
+    const relancer = !audio.paused;
+    if (relancer) audio.pause();
+    audio.src = piste().src;
+    for (const b of commandes.querySelectorAll('[data-partie]')) b.setAttribute('aria-pressed', String(b.dataset.partie === etat.partie));
+    for (const b of commandes.querySelectorAll('[data-voix]')) b.setAttribute('aria-pressed', String(b.dataset.voix === etat.voix));
+    afficher();
+    if (relancer) jouer();
+  }
+  function jouer(){
+    toutArreter(lecteur);
+    const p = audio.play();
+    if (p && p.catch) p.catch(() => marquer());
+  }
+  const lecteur = {
+    chant, carte, commandes, audio,
+    pause(){ if (!audio.paused) audio.pause(); },
+    choisir(cle, valeur){ etat[cle] = valeur; if (cle === 'voix') retenirVoix(valeur); charger(); },
+    get piste(){ return piste(); },
+  };
+  lecteurs.push(lecteur);
+
+  btnJouer.addEventListener('click', () => audio.paused ? jouer() : audio.pause());
+  ui.querySelector('.lecteur-recul').addEventListener('click', () => { audio.currentTime = Math.max(0, audio.currentTime - 5); afficher(); });
+  boucle.addEventListener('click', () => {
+    audio.loop = !audio.loop;
+    boucle.setAttribute('aria-pressed', String(audio.loop));
+  });
+  barre.addEventListener('input', () => {
+    glisse = true;
+    if (isFinite(audio.duration)) temps.textContent = duree(barre.value / 1000 * audio.duration) + ' / ' + duree(audio.duration);
+  });
+  barre.addEventListener('change', () => {
+    if (isFinite(audio.duration)) audio.currentTime = barre.value / 1000 * audio.duration;
+    glisse = false;
+    afficher();
+  });
+  for (const ev of ['timeupdate', 'loadedmetadata', 'durationchange']) audio.addEventListener(ev, afficher);
+  for (const ev of ['play', 'pause', 'ended']) audio.addEventListener(ev, marquer);
+  commandes.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-partie], [data-voix]');
+    if (!b) return;
+    if (b.dataset.partie) lecteur.choisir('partie', b.dataset.partie);
+    else lecteur.choisir('voix', b.dataset.voix);
+  });
+  carte.querySelector('.chant-partition')?.addEventListener('click', () => ouvrirPartition(lecteur));
+
+  charger();
+  return carte;
+}
+
+/* ---------- la fenêtre partition ----------
+   Les commandes de la carte (voix + lecteur) passent dans la fenêtre le
+   temps qu'elle est ouverte, puis reviennent : c'est le même lecteur, la
+   musique ne s'arrête pas. */
+const modal = document.getElementById('chant-modal');
+const modalLecteur = document.getElementById('chant-modal-lecteur');
+const modalPages = document.getElementById('chant-modal-pages');
+let ouvert = null;
+function ouvrirPartition(l){
+  if (ouvert) rendre();
+  ouvert = l;
+  document.getElementById('chant-modal-titre').textContent = l.chant.titre;
+  document.getElementById('chant-modal-pdf').href = l.chant.pdf;
+  modalPages.innerHTML = l.chant.pages.map((src, i) =>
+    `<img src="${src}" alt="${l.chant.titre} — page ${i + 1}" loading="lazy">`).join('');
+  modalLecteur.appendChild(l.commandes);
+  if (typeof modal.showModal === 'function') modal.showModal();
+  else modal.setAttribute('open', '');
+}
+function rendre(){
+  if (!ouvert) return;
+  ouvert.carte.querySelector('.chant-pied').before(ouvert.commandes);
+  ouvert = null;
+}
+function fermerPartition(){
+  if (typeof modal.close === 'function') modal.close();
+  else { modal.removeAttribute('open'); rendre(); }
+}
+/* « close » arrive après coup (Échap) : si la fenêtre a été rouverte entre
+   temps, le lecteur doit y rester */
+modal.addEventListener('close', () => { if (!modal.open) rendre(); });
+document.getElementById('chant-modal-fermer').addEventListener('click', fermerPartition);
+/* un clic sur le fond (hors de la fenêtre) ferme aussi */
+modal.addEventListener('click', (e) => { if (e.target === modal) fermerPartition(); });
+
+const liste = document.getElementById('chants-liste');
+for (const c of CHANTS) liste.appendChild(creerChant(c));
+
 /* ---------- menu latéral : scrollspy ---------- */
 const liens = {};
 for (const a of document.querySelectorAll('#sidenav-links-chant a')) liens[a.getAttribute('href').slice(1)] = a;
@@ -6249,11 +6537,12 @@ const spy = makeSpy((entries) => {
     }
   }
 }, { rootMargin:'-15% 0px -70% 0px' });
-for (const id of ['placer', 'intervalles', 'reglages']) spy.observe(document.getElementById(id));
+for (const id of ['chants', 'placer', 'intervalles', 'reglages']) spy.observe(document.getElementById(id));
 
 /* exposé pour les tests : l'état des jeux */
 window.chant.placer = placer;
 window.chant.inter = inter;
+window.chant.chants = { CHANTS, lecteurs, ouvrirPartition, fermerPartition };
 
 })();
 </script>

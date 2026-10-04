@@ -8,10 +8,13 @@ statique publié sur GitHub Pages : <https://reliefapps.github.io/guitare/>
 **Un seul fichier**, [`index.html`](index.html) : la mise en page, les styles et
 le JavaScript y sont tous embarqués. Aucune dépendance à l'exécution, aucune
 étape de build. Les partitions sont embarquées en webp ; les seules ressources
-externes sont Google Fonts et des vidéos YouTube.
+externes sont Google Fonts et des vidéos YouTube. Exception : les fichiers de la
+chorale (audio m4a, pages de partition en webp, PDF) sont dans `chant/` — 10 Mo
+d'audio n'ont rien à faire dans le HTML. Rien de ce qui interdit le partage
+(copies Musescore nominatives, par exemple) n'y entre : le site est public.
 
-Cinq onglets, un `<div class="page">` chacun, bascule sans rechargement
-(`#/guitare`, `#/basse`, `#/malaguena`, `#/theorie`, `#/library`). Chaque page a
+Six onglets, un `<div class="page">` chacun, bascule sans rechargement
+(`#/guitare`, `#/basse`, `#/malaguena`, `#/theorie`, `#/chant`, `#/library`). Chaque page a
 son propre IIFE `<script>` ; `NOTE_COLORS` est volontairement redéclaré dans
 chacun plutôt que partagé.
 

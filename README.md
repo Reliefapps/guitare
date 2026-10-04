@@ -8,7 +8,7 @@ page.
 
 ## Le contenu
 
-Le site est organisé en cinq onglets :
+Le site est organisé en six onglets :
 
 | Onglet | Contenu |
 | --- | --- |
@@ -16,6 +16,7 @@ Le site est organisé en cinq onglets :
 | 🎵 **Basse** | Les pistes de batterie par tempo (60 à 180 bpm), les notes sur le manche, la routine quotidienne, les exercices de main d'attaque (croisement de cordes, arpèges, cordes alternées, sauts d'octave), l'improvisation sur la piste Am / G du cours (les deux formes d'arpège, mineure et majeure, avec leurs degrés), les croches continues et l'araignée. |
 | 🪘 **Malagueña** | L'enregistrement de référence et la partition complète : les 4 pages se suivent au défilement, avec zoom, saut de page au clavier et téléchargement. |
 | 🎼 **Théorie** | Comment on construit une gamme — les intervalles W (un ton) et H (un demi-ton), A mineur et A majeur côte à côte — puis les deux gammes de La sur le manche (deux octaves, position ouverte et position fermée). Comment on construit un accord — on saute une note sur deux dans la gamme (A C E → Am, puis Am7). La pentatonique — la gamme mineure moins le 2ᵉ et le 6ᵉ degré — avec deux jeux : la relative majeure ou mineure, et poser la boîte position 1 sur le manche. Les boîtes 1, 4 et 5 de A mineur, chacune sur son manche, avec la piste d'improvisation du cours, un exercice pour les travailler et la consigne du prof : par cœur, en picking et au médiator. Et un seul jeu pour tout le chemin : la gamme, l'accord, la septième, la pentatonique, sur la même fondamentale. |
+| 🎤 **Chant** | Les chants de la chorale — Siyahamba, Les anges dans nos campagnes, White Sand, Les rêves sont en nous — avec un lecteur par chant (piste alto ou soprano) et la partition qui s'ouvre à côté pendant l'écoute ; puis deux jeux au micro pour placer la voix : tenir une note, chanter un intervalle. |
 | 📄 **Bibliothèque** | Les partitions et grilles d'accords, consultables directement dans la page : un onglet par document, pages qui se suivent au défilement, zoom et téléchargement. |
 
 Le fil conducteur : **une couleur par note**, la même partout — sur le manche,
@@ -28,6 +29,8 @@ Un seul fichier, [`index.html`](index.html), qui contient tout : la mise en
 page, les styles et le JavaScript. Aucune dépendance, aucune étape de build,
 rien à installer. Les partitions sont embarquées dans le fichier ; les seules
 ressources externes sont Google Fonts et une vidéo YouTube d'illustration.
+Seule exception : les enregistrements et les partitions de la chorale, trop
+lourds pour être embarqués, sont à côté dans [`chant/`](chant/).
 
 Pour travailler dessus, il suffit d'ouvrir le fichier dans un navigateur :
 

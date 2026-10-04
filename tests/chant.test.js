@@ -23,10 +23,10 @@ test("la page chant répond à #/chant et s'ouvre par l'onglet", () => {
   assert.deepEqual(jsErrors, []);
 });
 
-test("les trois sections sont rendues et visibles, numérotées comme les sommaires", () => {
+test("les quatre sections sont rendues et visibles, numérotées comme les sommaires", () => {
   const { doc } = load();
   openTab(doc, 'chant');
-  const ids = ['placer', 'intervalles', 'reglages'];
+  const ids = ['chants', 'placer', 'intervalles', 'reglages'];
   ids.forEach((id, i) => {
     const sec = doc.getElementById(id);
     assert.ok(sec, id + ' absent');
@@ -42,8 +42,8 @@ test("les trois sections sont rendues et visibles, numérotées comme les sommai
     assert.ok(sticky[i].textContent.startsWith((i + 1) + ' · '));
     assert.ok(side[i].textContent.startsWith((i + 1) + ' · '));
   });
-  assert.equal(sticky.length, 3);
-  assert.equal(side.length, 3);
+  assert.equal(sticky.length, 4);
+  assert.equal(side.length, 4);
   /* les deux scènes, leur jauge et leur bouton */
   for (const id of ['placer-jeu', 'placer-gauge', 'placer-go', 'int-jeu', 'int-ladder', 'int-go']){
     assert.equal(isVisible(doc.getElementById(id)), true, id + ' pas visible');
@@ -294,4 +294,96 @@ test("un seul jeu écoute à la fois", () => {
   assert.equal(inter.phase, 'ecoute');
   inter.arreter();
   win.close();
+});
+
+/* ---------- les chants de la chorale (4 octobre 2026) ---------- */
+const fs = require('node:fs');
+const path = require('node:path');
+const RACINE = path.join(__dirname, '..');
+
+test("les quatre chants ont leur carte visible et leur lecteur", () => {
+  const { doc, jsErrors } = load();
+  openTab(doc, 'chant');
+  const cartes = [...doc.querySelectorAll('#chants-liste .chant-carte')];
+  assert.deepEqual(cartes.map(c => c.querySelector('.chant-titre').textContent),
+    ['Siyahamba', 'Les anges dans nos campagnes', 'White Sand', 'Les rêves sont en nous']);
+  for (const c of cartes){
+    assert.equal(isVisible(c), true, c.id + ' pas visible');
+    assert.equal(isVisible(c.querySelector('.lecteur-jouer')), true, c.id + ' sans bouton lecture');
+    assert.equal(isVisible(c.querySelector('.lecteur-barre')), true, c.id + ' sans barre');
+  }
+  assert.deepEqual(jsErrors, []);
+});
+
+test("chaque piste et chaque page de partition existe dans chant/", () => {
+  const { win } = load();
+  const { CHANTS } = win.chant.chants;
+  for (const c of CHANTS){
+    for (const p of c.pistes) assert.ok(fs.existsSync(path.join(RACINE, p.src)), p.src + ' manquant');
+    for (const src of [c.pdf, ...(c.pages || [])].filter(Boolean))
+      assert.ok(fs.existsSync(path.join(RACINE, src)), src + ' manquant');
+  }
+});
+
+test("alto et soprano : un bouton par voix, il change la piste ; les rêves ont deux parties", () => {
+  const { doc, win } = load();
+  openTab(doc, 'chant');
+  const { lecteurs } = win.chant.chants;
+  const siya = lecteurs.find(l => l.chant.id === 'siyahamba');
+  const voix = [...siya.carte.querySelectorAll('[data-voix]')];
+  assert.deepEqual(voix.map(b => b.textContent), ['Alto', 'Soprano']);
+  voix[1].click();
+  assert.match(siya.audio.src, /chant\/siyahamba-soprano\.m4a$/);
+  assert.equal(voix[1].getAttribute('aria-pressed'), 'true');
+  assert.equal(voix[0].getAttribute('aria-pressed'), 'false');
+
+  const reves = lecteurs.find(l => l.chant.id === 'reves');
+  const parties = [...reves.carte.querySelectorAll('[data-partie]')];
+  assert.deepEqual(parties.map(b => b.textContent), ['Partie 1', 'Partie 2']);
+  parties[1].click();
+  /* la voix choisie sur Siyahamba est retenue pour les autres chants */
+  reves.carte.querySelector('[data-voix="Soprano"]').click();
+  assert.match(reves.audio.src, /chant\/reves-2-soprano\.m4a$/);
+
+  /* un seul enregistrement : pas de choix de voix */
+  const ws = lecteurs.find(l => l.chant.id === 'white-sand');
+  assert.equal(ws.carte.querySelector('[data-voix]'), null);
+  assert.match(ws.audio.src, /chant\/white-sand\.m4a$/);
+});
+
+test("« Partition » ouvre la fenêtre avec les pages et le lecteur, la fermer le rend à la carte", () => {
+  const { doc, win, jsErrors } = load();
+  openTab(doc, 'chant');
+  const modal = doc.getElementById('chant-modal');
+  assert.equal(isVisible(modal), false, 'fenêtre visible avant le clic');
+  const anges = doc.getElementById('chant-anges');
+  anges.querySelector('.chant-partition').click();
+  assert.equal(modal.hasAttribute('open'), true);
+  assert.equal(isVisible(modal), true);
+  assert.equal(doc.getElementById('chant-modal-titre').textContent, 'Les anges dans nos campagnes');
+  const pages = [...modal.querySelectorAll('.chant-modal-pages img')];
+  assert.equal(pages.length, 1);
+  assert.match(pages[0].getAttribute('src'), /chant\/anges-1\.webp$/);
+  assert.match(doc.getElementById('chant-modal-pdf').getAttribute('href'), /chant\/anges\.pdf$/);
+  /* le lecteur du chant est dans la fenêtre, pas ailleurs */
+  assert.ok(modal.querySelector('.lecteur'), 'lecteur absent de la fenêtre');
+  assert.equal(anges.querySelector('.lecteur'), null);
+  assert.equal(isVisible(modal.querySelector('.lecteur-jouer')), true);
+
+  doc.getElementById('chant-modal-fermer').click();
+  if (modal.hasAttribute('open')) modal.dispatchEvent(new win.Event('close'));
+  assert.equal(modal.hasAttribute('open'), false);
+  assert.ok(anges.querySelector('.lecteur'), 'le lecteur n\'est pas revenu dans la carte');
+  assert.equal(modal.querySelector('.lecteur'), null);
+  assert.deepEqual(jsErrors, []);
+});
+
+test("pas de bouton partition sans pages — ni pour les rêves, dont la copie interdit le partage", () => {
+  const { doc } = load();
+  openTab(doc, 'chant');
+  for (const id of ['siyahamba', 'white-sand', 'reves']){
+    const c = doc.getElementById('chant-' + id);
+    assert.equal(c.querySelector('.chant-partition'), null, id);
+    assert.ok(c.querySelector('.chant-sans'), id);
+  }
 });

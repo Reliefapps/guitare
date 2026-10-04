@@ -288,6 +288,134 @@ test('le rythme est écrit comme sur la feuille : hampes, ligatures, point, croc
   assert.match(doc.querySelector('#renversements .hint').textContent, /portée en clé de fa/);
 });
 
+/* un AudioContext de théâtre : jsdom n'a pas de son, on note ce que la page
+   programme — chaque oscillateur avec son type, sa fréquence et son départ */
+function fauxSon(win){
+  const journal = { oscillateurs: [], fermes: 0 };
+  const param = () => ({ value: 0, setValueAtTime(){}, linearRampToValueAtTime(){}, exponentialRampToValueAtTime(){} });
+  win.AudioContext = class {
+    constructor(){ this.currentTime = 0; this.destination = {}; }
+    resume(){}
+    close(){ journal.fermes++; }
+    createGain(){ return { gain: param(), connect(){}, disconnect(){} }; }
+    createOscillator(){
+      const o = { type: '', frequency: param(), connect(){}, stop(t){ o.fin = t; },
+        start(t){ o.debut = t; journal.oscillateurs.push(o); } };
+      return o;
+    }
+  };
+  return journal;
+}
+/* les départs des notes (le son pincé, en triangle), arrondis au millième
+   et comptés depuis la première */
+function departs(journal){
+  const t = journal.oscillateurs.filter(o => o.type === 'triangle').map(o => o.debut);
+  return t.map(x => Math.round((x - t[0]) * 1000) / 1000);
+}
+
+test('chaque exercice a son bouton d\'écoute et son choix de tempo, de 60 à 100', () => {
+  const { doc } = load();
+  openTab(doc, 'basse');
+  for (const id of Object.keys(FEUILLE)){
+    const bouton = doc.querySelector('#' + id + ' .rythme-play');
+    const tempo = doc.querySelector('#' + id + ' .rythme-tempo');
+    assert.equal(isVisible(bouton), true, id);
+    assert.equal(bouton.textContent, '▶ Écouter le rythme');
+    assert.equal(bouton.getAttribute('aria-pressed'), 'false');
+    assert.deepEqual([...tempo.options].map(o => o.textContent), ['60 bpm', '70 bpm', '80 bpm', '90 bpm', '100 bpm']);
+    assert.equal(tempo.value, '60');
+  }
+});
+
+test('écouter l\'exercice 1 à 60 : une mesure de décompte, un clic par temps, la noire puis six croches', () => {
+  const { doc, win } = load();
+  openTab(doc, 'basse');
+  const son = fauxSon(win);
+  const bouton = doc.querySelector('#ar-1 .rythme-play');
+  bouton.click();
+  assert.equal(bouton.getAttribute('aria-pressed'), 'true');
+  assert.equal(bouton.textContent, '■ Arrêter');
+  /* les clics : quatre de décompte, puis seize pour les quatre mesures ; un par seconde à 60 */
+  const clics = son.oscillateurs.filter(o => o.type === 'square');
+  assert.equal(clics.length, 4 + 16);
+  clics.forEach((c, i) => assert.ok(Math.abs(c.debut - clics[0].debut - i) < 1e-9, 'clic ' + i));
+  /* le premier temps de chaque mesure sonne plus aigu */
+  assert.deepEqual(clics.map(c => c.frequency.value > 1500), clics.map((_, i) => i % 4 === 0));
+  /* les notes : 7 par mesure ; la basse dure un temps, les croches un demi */
+  const mesure = [0, 1, 1.5, 2, 2.5, 3, 3.5];
+  assert.deepEqual(departs(son), [0, 4, 8, 12].flatMap(m => mesure.map(t => m + t)));
+  const notes = son.oscillateurs.filter(o => o.type === 'triangle');
+  /* la première note part après le décompte, et c'est le A écrit : 110 Hz */
+  assert.ok(Math.abs(notes[0].debut - clics[4].debut) < 1e-9);
+  assert.ok(Math.abs(notes[0].frequency.value - 110) < 0.01);
+  assert.ok(Math.abs((notes[0].fin - notes[0].debut) - 1) < 1e-9, 'la basse est une noire');
+  assert.ok(Math.abs((notes[1].fin - notes[1].debut) - 0.5) < 1e-9, 'puis des croches');
+  /* le curseur est posé sur la ligne, et disparaît à l'arrêt */
+  assert.equal(doc.querySelectorAll('#ar-1 .curseur').length, 1);
+  bouton.click();
+  assert.equal(bouton.getAttribute('aria-pressed'), 'false');
+  assert.equal(bouton.textContent, '▶ Écouter le rythme');
+  assert.equal(son.fermes, 1);
+  assert.equal(doc.querySelectorAll('#ar-1 .curseur').length, 0);
+});
+
+test('écouter : la liaison de l\'exercice 2 ne se rejoue pas, le « % » de l\'exercice 3 rejoue la mesure', () => {
+  const { doc, win } = load();
+  openTab(doc, 'basse');
+  const son = fauxSon(win);
+  /* exercice 2 : six attaques par mesure, l'octave tient une noire */
+  const b2 = doc.querySelector('#ar-2 .rythme-play');
+  b2.click();
+  assert.deepEqual(departs(son).slice(0, 6), [0, 1, 1.5, 2.5, 3, 3.5]);
+  const notes2 = son.oscillateurs.filter(o => o.type === 'triangle');
+  assert.equal(notes2.length, 4 * 6);
+  assert.ok(Math.abs((notes2[2].fin - notes2[2].debut) - 1) < 1e-9, 'la note liée prolonge la précédente');
+  /* lancer un autre exercice arrête le premier */
+  son.oscillateurs.length = 0;
+  const b3 = doc.querySelector('#ar-3 .rythme-play');
+  b3.click();
+  assert.equal(b2.getAttribute('aria-pressed'), 'false');
+  assert.equal(b3.getAttribute('aria-pressed'), 'true');
+  assert.equal(son.fermes, 1);
+  /* exercice 3 : huit mesures avec les reprises, la basse en noire pointée */
+  const t = departs(son);
+  assert.equal(t.length, 8 * 6);
+  assert.deepEqual(t.slice(0, 6), [0, 1.5, 2, 2.5, 3, 3.5]);
+  const f = son.oscillateurs.filter(o => o.type === 'triangle').map(o => Math.round(o.frequency.value * 100) / 100);
+  assert.deepEqual(f.slice(6, 12), f.slice(0, 6), 'la mesure « % » rejoue Gm');
+  assert.notDeepEqual(f.slice(12, 18), f.slice(0, 6), 'puis on passe à F');
+  assert.equal(son.oscillateurs.filter(o => o.type === 'square').length, 4 + 32);
+  /* changer de tempo en cours de lecture repart au nouveau tempo */
+  son.oscillateurs.length = 0;
+  const tempo = doc.querySelector('#ar-3 .rythme-tempo');
+  tempo.value = '100';
+  tempo.dispatchEvent(new win.Event('change', { bubbles: true }));
+  assert.equal(b3.getAttribute('aria-pressed'), 'true');
+  const clics = son.oscillateurs.filter(o => o.type === 'square');
+  assert.ok(Math.abs((clics[1].debut - clics[0].debut) - 0.6) < 1e-9, 'un temps dure 0,6 s à 100');
+  /* changer d'onglet coupe le son */
+  openTab(doc, 'theorie');
+  assert.equal(b3.getAttribute('aria-pressed'), 'false');
+  assert.equal(doc.querySelectorAll('#renversements .curseur').length, 0);
+});
+
+test('les lignes de partition se mettent à la largeur de la carte, toutes à la même échelle', () => {
+  const { doc } = load();
+  openTab(doc, 'basse');
+  const svgs = [...doc.querySelectorAll('#renversements-list .tab-scroll svg')];
+  assert.equal(svgs.length, 4);
+  const large = s => +s.getAttribute('viewBox').split(' ')[2];
+  const ref = Math.max(...svgs.map(large));
+  for (const s of svgs){
+    assert.equal(s.hasAttribute('width'), false, 'plus de largeur fixe en pixels');
+    assert.ok(Math.abs(parseFloat(s.style.width) - large(s) / ref * 100) < 0.01, 'largeur proportionnelle');
+    assert.match(s.style.width, /%$/);
+    assert.equal(s.style.height, 'auto');
+  }
+  /* la plus longue remplit la largeur */
+  assert.ok(svgs.some(s => parseFloat(s.style.width) === 100));
+});
+
 test("improviser sur un seul accord : la piste du cours, la règle et la méthode", () => {
   const { doc, win } = load();
   openTab(doc, 'basse');

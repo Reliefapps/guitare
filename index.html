@@ -334,6 +334,8 @@
   .tab-title{font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:17px;}
   .tab-sub{font-size:13.5px; color:var(--ink-soft);}
   .tab-scroll{overflow-x:auto; padding:4px 10px 2px;}
+  /* écouter le rythme d'un exercice : le bouton et le tempo, à droite du titre */
+  .rythme{margin-left:auto; display:inline-flex; align-items:center; gap:8px; flex-wrap:wrap;}
   .tab-scroll::-webkit-scrollbar{height:8px;}
   .tab-scroll::-webkit-scrollbar-thumb{background:var(--line); border-radius:4px;}
   .tab-scroll svg{display:block; height:auto;}
@@ -1362,7 +1364,7 @@
 <section id="renversements">
   <div class="wrap">
     <div class="sec-head"><span class="sec-num">11</span><h2>Les arpèges renversés</h2></div>
-    <p class="hint">La feuille <b>Arpeggio Exercises — Bass and second inversion</b> de Santiago, envoyée au cours du <b>2 octobre 2026</b>. Trois exercices, chacun entre barres de reprise : une <b>basse</b> — la fondamentale, sur la corde de E — puis l'accord au-dessus, sur les trois autres cordes. Chaque ligne se lit comme la feuille : la <b>portée en clé de fa</b> en haut, la <b>tablature</b> en dessous, et le <b>rythme</b> écrit sur les deux — une hampe seule pour une noire, des croches ligaturées, un point, une liaison. Les têtes de notes ont la couleur de leur note ; entre la portée et la tablature, les <b>chiffres colorés sont les doigts</b> — seulement ceux que la feuille écrit.</p>
+    <p class="hint">La feuille <b>Arpeggio Exercises — Bass and second inversion</b> de Santiago, envoyée au cours du <b>2 octobre 2026</b>. Trois exercices, chacun entre barres de reprise : une <b>basse</b> — la fondamentale, sur la corde de E — puis l'accord au-dessus, sur les trois autres cordes. Chaque ligne se lit comme la feuille : la <b>portée en clé de fa</b> en haut, la <b>tablature</b> en dessous, et le <b>rythme</b> écrit sur les deux — une hampe seule pour une noire, des croches ligaturées, un point, une liaison. Les têtes de notes ont la couleur de leur note ; entre la portée et la tablature, les <b>chiffres colorés sont les doigts</b> — seulement ceux que la feuille écrit. Le bouton <b>▶ Écouter le rythme</b> joue l'exercice en boucle, un clic par temps, après une mesure de décompte ; le tempo se choisit de <b>60 à 100</b>.</p>
     <div class="rule">
       <b>Si tu as un peu plus de temps.</b> Santiago : « essaie simplement de les jouer » — ce genre d'exercice <b>n'est pas facile</b>. Il n'a donné ni tempo ni objectif : on déchiffre, lentement.
     </div>
@@ -3896,17 +3898,142 @@ const ARPEGES = [
     note:'La basse dure une <b>noire pointée</b> — trois croches — et la quinte, seule avec son crochet, tombe sur le « et » du 2 ; puis <b>octave · tierce · octave · quinte</b>. La feuille passe à une armure de <b>deux bémols</b> (B♭ et E♭) : ils ne sont plus réécrits devant les notes, seul le <b>F♯</b> de l\'accord de D porte son dièse. Le signe <b>%</b> veut dire « rejoue la mesure précédente » : <b>Gm</b>, <b>F</b> et <b>Cm</b> se jouent donc <b>deux fois</b>, puis B♭ et D une fois — huit mesures, et on reprend.' },
 ];
 
+/* ------------------------------------------------------------
+   Écouter le rythme d'un exercice : les notes de la tablature, à leur
+   durée, sur un clic par temps — une mesure de décompte, puis l'exercice
+   en boucle, comme entre ses barres de reprise. Un seul exercice joue à
+   la fois.
+   ------------------------------------------------------------ */
+const RYTHME_TEMPOS = [60, 70, 80, 90, 100];
+let rythmeEnCours = null;
+function arreterRythme(){
+  if (rythmeEnCours){ rythmeEnCours.stop(); rythmeEnCours = null; }
+}
+/* la suite à jouer, en croches depuis le début : une entrée par note
+   attaquée. Une note liée prolonge la précédente ; une mesure « % » rejoue
+   la précédente. rendu = [ { bars, svg } ], une entrée par ligne. */
+function sequenceRythme(rendu){
+  const seq = [];
+  let t = 0;
+  for (const { bars, svg } of rendu){
+    const cases = [...svg.querySelectorAll('text.case')];
+    let i = 0, prec = [];
+    for (const bar of bars){
+      const evs = bar.simile ? prec : bar.events.map(ev => ({ ev, x: +cases[i++].getAttribute('x') }));
+      prec = evs;
+      for (const { ev, x } of evs){
+        if (ev.lie && seq.length) seq[seq.length - 1].n += ev.n;
+        /* la hauteur écrite sur la portée, en note MIDI (C0 = 12) */
+        else seq.push({ t, n: ev.n, midi: CORDE_ECRITE[ev.s] + ev.f + 12, svg, x });
+        t += ev.n;
+      }
+    }
+  }
+  return { seq, croches: t };
+}
+function jouerRythme(rendu, bpm){
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) return null;
+  const ctx = new AC();
+  try { if (ctx.resume) ctx.resume(); } catch (e) {}
+  const sortie = ctx.createGain();
+  sortie.gain.value = 0.9;
+  sortie.connect(ctx.destination);
+  const croche = 30 / bpm;                       /* durée d'une croche, en secondes */
+  const { seq, croches } = sequenceRythme(rendu);
+  let timers = [];
+  const plan = (t, fn) => timers.push(setTimeout(fn, Math.max(0, (t - ctx.currentTime) * 1000)));
+
+  /* le clic du temps ; le premier de chaque mesure est plus aigu */
+  function clic(t, fort){
+    const o = ctx.createOscillator(), gn = ctx.createGain();
+    o.type = 'square';
+    o.frequency.value = fort ? 1800 : 1200;
+    gn.gain.setValueAtTime(fort ? 0.16 : 0.1, t);
+    gn.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+    o.connect(gn); gn.connect(sortie);
+    o.start(t); o.stop(t + 0.05);
+  }
+  /* la note : un son pincé, avec son octave pour rester audible sur de
+     petits haut-parleurs */
+  function note(t, midi, duree){
+    const f = 440 * Math.pow(2, (midi - 69) / 12);
+    const gn = ctx.createGain();
+    gn.gain.setValueAtTime(0.0001, t);
+    gn.gain.linearRampToValueAtTime(0.5, t + 0.012);
+    gn.gain.exponentialRampToValueAtTime(0.001, t + duree * 0.95);
+    gn.connect(sortie);
+    for (const [type, mult, vol] of [['triangle', 1, 1], ['sine', 2, 0.35]]){
+      const o = ctx.createOscillator(), v = ctx.createGain();
+      o.type = type;
+      o.frequency.value = f * mult;
+      v.gain.value = vol;
+      o.connect(v); v.connect(gn);
+      o.start(t); o.stop(t + duree);
+    }
+  }
+  /* le curseur : une bande derrière la note en cours, sur sa ligne */
+  const curseurs = new Map();
+  for (const { svg } of rendu){
+    const h = +svg.getAttribute('viewBox').split(' ')[3];
+    const r = el('rect',{x:0, y:26, width:22, height:h - 48, rx:6, class:'curseur', fill:'var(--c-F)',
+      opacity:'.14', visibility:'hidden'});
+    svg.insertBefore(r, svg.firstChild);
+    curseurs.set(svg, r);
+  }
+  function montrer(n){
+    for (const [svg, r] of curseurs){
+      r.setAttribute('visibility', svg === n.svg ? 'visible' : 'hidden');
+      if (svg === n.svg) r.setAttribute('x', n.x - 11);
+    }
+  }
+  /* un passage entier, programmé d'un coup ; le suivant s'enchaîne */
+  function passage(t0){
+    timers = [];
+    for (let b = 0; b < croches / 2; b++) clic(t0 + b * 2 * croche, b % 4 === 0);
+    for (const n of seq){
+      note(t0 + n.t * croche, n.midi, n.n * croche);
+      plan(t0 + n.t * croche, () => montrer(n));
+    }
+    const fin = t0 + croches * croche;
+    plan(fin - 0.3, () => passage(fin));
+  }
+  /* une mesure pour rien, puis on part */
+  const depart = ctx.currentTime + 0.15;
+  for (let b = 0; b < 4; b++) clic(depart + b * 2 * croche, b === 0);
+  passage(depart + 8 * croche);
+  return {
+    stop(){
+      timers.forEach(clearTimeout);
+      try { sortie.disconnect(); } catch (e) {}
+      try { ctx.close(); } catch (e) {}
+      for (const r of curseurs.values()) r.remove();
+    },
+  };
+}
+/* on coupe le son en changeant d'onglet */
+document.querySelectorAll('.pagetab').forEach(t => t.addEventListener('click', arreterRythme));
+
 const arpegesList = document.getElementById('renversements-list');
 for (const ar of ARPEGES){
   const block = document.createElement('div');
   block.className = 'tab-block';
   block.id = 'ar-' + ar.id;
   block.innerHTML = `<div class="tab-head"><span class="tab-title">${ar.titre}</span>
-    <span class="tab-sub">${ar.sub}</span></div>`;
+    <span class="tab-sub">${ar.sub}</span>
+    <span class="rythme">
+      <button class="quiz-btn rythme-play" type="button" aria-pressed="false">▶ Écouter le rythme</button>
+      <label class="quiz-choix">Tempo
+        <select class="quiz-select rythme-tempo">${RYTHME_TEMPOS.map(b => `<option value="${b}">${b} bpm</option>`).join('')}</select>
+      </label>
+    </span></div>`;
+  ar.rendu = [];
   for (const ligne of ar.lignes){
     const sc = document.createElement('div');
     sc.className = 'tab-scroll';
-    sc.appendChild(partitionSVG(ligne.bars, ligne.o));
+    const svg = partitionSVG(ligne.bars, ligne.o);
+    sc.appendChild(svg);
+    ar.rendu.push({ bars: ligne.bars, svg });
     block.appendChild(sc);
     /* la légende nomme les notes attaquées : une note liée ne se rejoue pas */
     const lg = document.createElement('div');
@@ -3920,6 +4047,41 @@ for (const ar of ARPEGES){
   nt.innerHTML = ar.note;
   block.appendChild(nt);
   arpegesList.appendChild(block);
+
+  /* ▶ / ■ : lancer, arrêter, et repartir au nouveau tempo si on le change */
+  const bouton = block.querySelector('.rythme-play'), tempo = block.querySelector('.rythme-tempo');
+  const eteindre = () => { bouton.setAttribute('aria-pressed', 'false'); bouton.textContent = '▶ Écouter le rythme'; };
+  function lancer(){
+    arreterRythme();
+    const lecture = jouerRythme(ar.rendu, +tempo.value);
+    if (!lecture){ bouton.textContent = 'Son indisponible sur ce navigateur'; return; }
+    bouton.setAttribute('aria-pressed', 'true');
+    bouton.textContent = '■ Arrêter';
+    rythmeEnCours = { stop(){ lecture.stop(); eteindre(); } };
+  }
+  bouton.addEventListener('click', () => {
+    if (bouton.getAttribute('aria-pressed') === 'true') arreterRythme(); else lancer();
+  });
+  tempo.addEventListener('change', () => {
+    if (bouton.getAttribute('aria-pressed') === 'true') lancer();
+  });
+}
+/* toutes les lignes à la même échelle, la plus longue remplissant la
+   largeur : on voit l'exercice entier sans faire défiler. Sur un écran
+   étroit, une largeur plancher garde les chiffres lisibles. */
+{
+  const svgs = ARPEGES.flatMap(ar => ar.rendu.map(r => r.svg));
+  const larges = svgs.map(s => +s.getAttribute('width'));
+  const ref = Math.max(...larges);
+  svgs.forEach((s, i) => {
+    const part = larges[i] / ref;
+    s.removeAttribute('width');
+    s.style.display = 'block';
+    s.style.height = 'auto';
+    s.style.width = (part * 100).toFixed(2) + '%';
+    s.style.minWidth = Math.round(part * 700) + 'px';
+    s.style.maxWidth = Math.round(larges[i] * 1.35) + 'px';
+  });
 }
 
 /* ------------------------------------------------------------

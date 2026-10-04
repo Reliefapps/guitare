@@ -110,6 +110,40 @@ test("une voix riche en harmoniques ne fait pas d'erreur d'octave", () => {
   assert.ok(Math.abs(freqVersMidi(r.freq) - 52) < 0.05, 'E3 lu comme ' + r.freq.toFixed(1) + ' Hz');
 });
 
+/* une voix plus proche du vrai : vibrato, harmoniques plus fortes que la
+   fondamentale, souffle. L'ancienne autocorrélation se trompait sur un tiers
+   de ces trames (d'une quinte, d'une octave et demie) : la bille collait au
+   bord de la jauge (4 octobre 2026). */
+function voix(f, sr, n, harm, souffle, t0){
+  const b = new Float32Array(n);
+  let ph = 0, x = 99 + t0;
+  for (let i = 0; i < n; i++){
+    const fi = f * Math.pow(2, 0.3 / 12 * Math.sin(2 * Math.PI * 5.5 * (t0 + i) / sr));
+    ph += 2 * Math.PI * fi / sr;
+    let v = 0;
+    harm.forEach((g, k) => { v += g * Math.sin((k + 1) * ph + k); });
+    x = (x * 1103515245 + 12345) & 0x7fffffff;
+    b[i] = v * 0.1 + (x / 0x7fffffff - 0.5) * souffle;
+  }
+  return b;
+}
+
+test("une vraie voix — vibrato, harmoniques fortes, souffle — est lue à moins d'un demi-ton", () => {
+  const { win } = load();
+  const { detecterHauteur, freqVersMidi } = win.chant;
+  const timbres = { grave:[.4, 1, .8, .5, .3, .2, .15, .1], clair:[1, .5, .3, .1], creux:[.2, 1, .2, .6, .1] };
+  const rates = [];
+  for (const [nom, h] of Object.entries(timbres))
+    for (const f of [82, 110, 147, 196, 262, 349, 440, 587])
+      for (const souffle of [0, .02, .05])
+        for (let k = 0; k < 3; k++){
+          const r = detecterHauteur(voix(f, 48000, 2048, h, souffle, k * 800), 48000);
+          const c = r ? (freqVersMidi(r.freq) - freqVersMidi(f)) * 100 : null;
+          if (c === null || Math.abs(c) > 50) rates.push(`${nom} ${f} Hz souffle ${souffle} → ${c === null ? 'rien' : Math.round(c) + ' ¢'}`);
+        }
+  assert.deepEqual(rates, []);
+});
+
 test("le silence et le bruit ne donnent pas de note", () => {
   const { win } = load();
   const { detecterHauteur } = win.chant;
@@ -151,7 +185,7 @@ test("les intervalles : douze au choix, les cinq du début cochés, noms correct
   assert.equal(win.chant.nomIntervalle(0), 'unisson');
 });
 
-test("les réglages : piano, ténor, note de 3 s, tolérance indulgente", () => {
+test("les réglages : piano, ténor, note de 3 s, mode débutant à ± 50 cents", () => {
   const { doc, win } = load();
   openTab(doc, 'chant');
   assert.equal(doc.getElementById('chant-piano').checked, true);
@@ -160,7 +194,8 @@ test("les réglages : piano, ténor, note de 3 s, tolérance indulgente", () => 
   assert.equal(voix.selectedOptions[0].textContent, 'ténor · C3 → G4');
   assert.equal([...voix.options].map(o => o.value).join(' '), 'basse baryton tenor alto mezzo soprano');
   assert.equal(doc.getElementById('chant-duree').value, '3');
-  assert.equal(doc.getElementById('chant-tol').value, '35');
+  assert.equal(doc.getElementById('chant-mode').value, 'debutant');
+  assert.equal(doc.getElementById('chant-tol').value, '50');
   assert.equal(doc.getElementById('chant-hold').value, '1000');
   /* chaque voix couvre une douzième, de plus en plus haut */
   let avant = 0;
@@ -386,4 +421,94 @@ test("pas de bouton partition sans pages — ni pour les rêves, dont la copie i
     assert.equal(c.querySelector('.chant-partition'), null, id);
     assert.ok(c.querySelector('.chant-sans'), id);
   }
+});
+
+/* ---------- mode débutant, test du micro, « Trouver ma voix » (4 octobre 2026) ---------- */
+
+test("mode débutant : la jauge couvre l'octave, nomme les notes, et la bille ne colle pas au bord", () => {
+  const { doc, win, jsErrors } = load();
+  openTab(doc, 'chant');
+  const { placer } = win.chant;
+  placer.lancer(); placer.aToi();
+  const cible = placer.question;
+  const textes = [...doc.querySelectorAll('#placer-gauge .graduations text')].map(t => t.textContent);
+  assert.ok(textes.includes(cible.lettre + cible.alt), 'la cible n\'est pas nommée sur la jauge');
+  assert.equal(doc.querySelectorAll('#placer-gauge .graduations line').length, 13);
+  /* quatre demi-tons trop haut : la bille est à 4/6 de la demi-jauge, pas en butée */
+  chanter(placer, cible.midi + 4, 0, 400);
+  const x = +doc.querySelector('#placer-gauge .bille').getAttribute('transform').match(/translate\(([\d.]+)/)[1];
+  assert.ok(Math.abs(x - (320 + 280 * 4 / 6)) < 1, 'bille à ' + x);
+  assert.match(doc.getElementById('placer-msg').textContent, new RegExp('tu chantes ' + win.chant.nomNote(cible.midi + 4).en.replace('♯', '.')));
+  /* un demi-ton de tolérance : 45 cents à côté, c'est juste */
+  chanter(placer, cible.midi + 0.45, 500, 1100);
+  assert.equal(placer.phase, 'bravo');
+  placer.arreter();
+  assert.deepEqual(jsErrors, []);
+});
+
+test("mode confirmé : retour à la jauge au cent près et à ± 35 cents", () => {
+  const { doc, win } = load();
+  openTab(doc, 'chant');
+  const mode = doc.getElementById('chant-mode');
+  mode.value = 'confirme';
+  mode.dispatchEvent(new win.Event('change'));
+  assert.equal(doc.getElementById('chant-tol').value, '35');
+  const textes = [...doc.querySelectorAll('#placer-gauge .graduations text')].map(t => t.textContent);
+  assert.deepEqual(textes, ['↓ trop bas', 'juste', 'trop haut ↑']);
+  const zone = doc.querySelector('#placer-gauge .zone');
+  assert.ok(Math.abs(+zone.getAttribute('width') - 2 * 35 * 560 / 300) < 0.01);
+  mode.value = 'debutant';
+  mode.dispatchEvent(new win.Event('change'));
+  assert.equal(doc.getElementById('chant-tol').value, '50');
+});
+
+test("le test du micro et « Trouver ma voix » sont visibles dans les réglages", () => {
+  const { doc } = load();
+  openTab(doc, 'chant');
+  for (const id of ['chant-mic', 'chant-lu', 'chant-trouver', 'chant-test-msg', 'chant-mode'])
+    assert.equal(isVisible(doc.getElementById(id)), true, id + ' pas visible');
+});
+
+test("« Trouver ma voix » : la note grave puis l'aiguë tenues deviennent la tessiture des jeux", () => {
+  const { doc, win, jsErrors } = load();
+  openTab(doc, 'chant');
+  const { testeur, placer, nomNote } = win.chant;
+  const lu = doc.querySelector('#chant-lu .note');
+  testeur.commencer(0);
+  assert.equal(testeur.etape, 'grave');
+  assert.match(doc.getElementById('chant-test-msg').textContent, /plus grave/);
+  let t = 0;
+  /* on arrive en glissant sur D3, puis on tient */
+  for (let i = 0; i < 20; i++, t += 16) testeur.trame({ midi: 47 + i * 0.15, freq: 0 }, t);
+  for (let i = 0; i < 80; i++, t += 16) testeur.trame({ midi: 50.1, freq: 147 }, t);
+  assert.equal(lu.textContent, 'D3');
+  assert.equal(testeur.etape, 'aigu');
+  for (let i = 0; i < 90; i++, t += 16) testeur.trame({ midi: 68.8, freq: 415 }, t);
+  assert.equal(testeur.etape, null);
+  assert.match(doc.getElementById('chant-test-msg').textContent, /D3 → A4/);
+  const voix = doc.getElementById('chant-voix');
+  assert.equal(voix.value, 'mesuree');
+  assert.equal(voix.selectedOptions[0].textContent, 'ma voix · D3 → A4');
+  /* les jeux tirent dans la voix mesurée */
+  for (let k = 0; k < 30; k++){
+    placer.lancer();
+    assert.ok(placer.question.midi >= 50 && placer.question.midi <= 69, nomNote(placer.question.midi).en);
+    placer.arreter();
+  }
+  assert.deepEqual(jsErrors, []);
+});
+
+test("« Trouver ma voix » refuse un écart de moins d'une quinte", () => {
+  const { doc, win } = load();
+  openTab(doc, 'chant');
+  const { testeur, voixMesuree } = win.chant;
+  assert.equal(voixMesuree(50, 55), null);
+  assert.deepEqual({ ...voixMesuree(69.2, 50.4) }, { id:'mesuree', nom:'ma voix', lo:50, hi:69 });
+  testeur.commencer(0);
+  let t = 0;
+  for (let i = 0; i < 90; i++, t += 16) testeur.trame({ midi: 55, freq: 196 }, t);
+  for (let i = 0; i < 90; i++, t += 16) testeur.trame({ midi: 58, freq: 233 }, t);
+  assert.equal(testeur.etape, null);
+  assert.match(doc.getElementById('chant-test-msg').textContent, /quinte/);
+  assert.equal(doc.getElementById('chant-voix').value, 'tenor');
 });

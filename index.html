@@ -900,6 +900,13 @@
   .chant-mic.ko .led{background:var(--c-F);}
   .chant-mic .vu{width:54px; height:6px; border-radius:3px; background:var(--line); overflow:hidden;}
   .chant-mic .vu i{display:block; height:100%; width:0; background:var(--c-E); transition:width .06s linear;}
+  .chant-lu{display:inline-flex; align-items:baseline; gap:8px; min-width:120px;}
+  .chant-lu .note{font-family:"Spline Sans Mono",monospace; font-weight:700; font-size:26px; line-height:1; color:var(--ink-soft);}
+  .chant-lu .hz{font-family:"Spline Sans Mono",monospace; font-size:12px; color:var(--ink-soft);}
+  .chant-trouver, .chant-trouver:hover{background:var(--ink); color:var(--paper); border-color:var(--ink);}
+  .chant-trouver.actif{background:var(--c-F); border-color:var(--c-F);}
+  .chant-test-msg{width:100%; margin:0; font-size:14px; color:var(--ink-soft);}
+  .chant-test-msg b{color:var(--ink);}
   .chant-intervals{display:flex; flex-wrap:wrap; gap:6px; width:100%;}
   .chant-intervals .chant-check{
     border:1px solid var(--line); border-radius:999px; padding:5px 11px 5px 8px; background:var(--paper);
@@ -1950,10 +1957,22 @@
   <div class="wrap">
     <div class="sec-head"><span class="sec-num">4</span><h2>Réglages</h2></div>
     <p class="hint">Le son du micro est analysé dans la page : rien n'est enregistré ni envoyé.</p>
-    <div class="chant-settings">
+    <div class="chant-settings chant-test">
       <button class="chant-mic" type="button" id="chant-mic" aria-pressed="false">
         <span class="led"></span><span class="mic-lbl">Activer le micro</span><span class="vu"><i id="chant-vu"></i></span>
       </button>
+      <div class="chant-lu" id="chant-lu" aria-live="off"><span class="note">—</span><span class="hz"></span></div>
+      <button class="jeu-btn chant-trouver" type="button" id="chant-trouver">Trouver ma voix</button>
+      <p class="chant-test-msg" id="chant-test-msg">Active le micro et chante : la note que tu chantes s'affiche ici.</p>
+      <p class="chant-test-msg chant-brave" id="chant-brave" hidden>Sur Brave, baisse les boucliers pour ce site (le lion dans la barre d'adresse) : ils peuvent brouiller le son du micro.</p>
+    </div>
+    <div class="chant-settings">
+      <label class="quiz-choix">Mode
+        <select class="quiz-select" id="chant-mode">
+          <option value="debutant" selected>débutant · toute l'octave</option>
+          <option value="confirme">confirmé · au cent près</option>
+        </select>
+      </label>
       <label class="chant-check" title="Décoché : un son pur (sinusoïde)">
         <input type="checkbox" id="chant-piano" checked> <b>Timbre piano</b> <span>(décoché : son pur)</span>
       </label>
@@ -1971,7 +1990,8 @@
         <select class="quiz-select" id="chant-tol">
           <option value="10">± 10 cents · exigeant</option>
           <option value="20">± 20 cents</option>
-          <option value="35" selected>± 35 cents · indulgent</option>
+          <option value="35">± 35 cents · indulgent</option>
+          <option value="50" selected>± 50 cents · débutant</option>
         </select>
       </label>
       <label class="quiz-choix">Tenir
@@ -5730,11 +5750,15 @@ function nomIntervalle(st){
 }
 
 /* ---------- détection de hauteur ----------
-   Autocorrélation sur la fenêtre du micro, avec interpolation parabolique
-   autour du pic. On ne cherche que les périodes plausibles pour une voix
-   (60 → 1200 Hz), et on corrige l'erreur d'octave classique : si un pic
-   presque aussi haut existe à la moitié (ou au tiers) de la période, c'est
-   lui la vraie fondamentale. Renvoie null quand il n'y a pas de son voisé. */
+   Méthode de McLeod (MPM) : la NSDF — l'autocorrélation normalisée par
+   l'énergie des deux segments comparés, bornée à ±1 — ne penche ni vers les
+   graves ni vers les aigus. On relève le sommet de chaque bosse positive, et
+   on garde la première bosse presque aussi haute que la plus haute : c'est la
+   vraie période, pas un multiple (erreur d'octave vers le grave) ni une
+   harmonique forte (vers l'aigu). On ne cherche que les périodes plausibles
+   pour une voix (60 → 1200 Hz). Renvoie null quand il n'y a pas de son voisé
+   assez net. Réécrit le 4 octobre 2026 : l'autocorrélation brute sautait
+   d'une note à l'autre sur une vraie voix. */
 function detecterHauteur(buf, sampleRate){
   const N = buf.length;
   let rms = 0;
@@ -5744,40 +5768,38 @@ function detecterHauteur(buf, sampleRate){
 
   const minLag = Math.max(2, Math.floor(sampleRate / 1200));
   const maxLag = Math.min(N - 2, Math.floor(sampleRate / 60));
-  /* c : autocorrélation brute (pour choisir le pic) ; m : énergie des deux
-     segments comparés (pour la NSDF de McLeod, qui interpole sans biais) */
-  const c = new Float32Array(maxLag + 2), m = new Float32Array(maxLag + 2);
+  const nsdf = new Float32Array(maxLag + 2);
   for (let lag = 0; lag <= maxLag + 1; lag++){
     let s = 0, q = 0;
     for (let j = 0; j < N - lag; j++){
       s += buf[j] * buf[j + lag];
       q += buf[j] * buf[j] + buf[j + lag] * buf[j + lag];
     }
-    c[lag] = s; m[lag] = q;
+    nsdf[lag] = q ? 2 * s / q : 0;
   }
-  /* on saute le lobe principal, puis on prend le pic le plus haut */
-  let d = 0;
-  while (d < maxLag && c[d] > c[d + 1]) d++;
-  let maxval = -Infinity, T = -1;
-  for (let lag = Math.max(d, minLag); lag <= maxLag; lag++){
-    if (c[lag] > maxval){ maxval = c[lag]; T = lag; }
+  /* le sommet de chaque bosse positive, après le lobe principal */
+  let lag = 1;
+  while (lag <= maxLag && nsdf[lag] > 0) lag++;
+  const sommets = [];
+  let haut = 0;
+  while (lag <= maxLag){
+    while (lag <= maxLag && nsdf[lag] <= 0) lag++;
+    let best = -1;
+    while (lag <= maxLag && nsdf[lag] > 0){
+      if (lag >= minLag && (best < 0 || nsdf[lag] > nsdf[best])) best = lag;
+      lag++;
+    }
+    if (best > 0 && best < maxLag + 1){
+      sommets.push(best);
+      if (nsdf[best] > haut) haut = nsdf[best];
+    }
   }
-  if (T < 0 || maxval <= 0) return null;
-  const clarte = maxval / c[0];
-  if (clarte < 0.6) return null;
-  /* erreur d'octave : un pic presque aussi haut à T/2 ou T/3 ? */
-  for (const k of [2, 3]){
-    const t = Math.round(T / k);
-    if (t < minLag + 1) continue;
-    let best = t;
-    for (let lag = t - 2; lag <= t + 2; lag++) if (lag > 0 && c[lag] > c[best]) best = lag;
-    if (c[best] >= 0.9 * maxval && c[best] > c[best - 1] && c[best] > c[best + 1]){ T = best; maxval = c[best]; break; }
-  }
-  /* interpolation parabolique autour du pic, sur la NSDF (2c/m, bornée à
-     ±1) : l'autocorrélation brute penche vers les graves et fausserait la
-     parabole de plusieurs cents */
-  const nsdf = lag => m[lag] ? 2 * c[lag] / m[lag] : 0;
-  const x1 = nsdf(T - 1), x2 = nsdf(T), x3 = nsdf(T + 1);
+  if (!sommets.length) return null;
+  const T = sommets.find(t => nsdf[t] >= 0.9 * haut);
+  const clarte = nsdf[T];
+  if (clarte < 0.7) return null;
+  /* interpolation parabolique autour du sommet */
+  const x1 = nsdf[T - 1], x2 = nsdf[T], x3 = nsdf[T + 1];
   const a = (x1 + x3 - 2 * x2) / 2, b = (x3 - x1) / 2;
   const Tf = a ? T - b / (2 * a) : T;
   return { freq: sampleRate / Tf, clarte, rms };
@@ -5812,8 +5834,16 @@ const VOIX = [
   { id:'soprano', nom:'soprano',       lo:60, hi:79 },   /* C4 → G5 */
 ];
 
+/* « Trouver ma voix » : la note grave et la note aiguë tenues sans forcer
+   donnent la tessiture. Une quinte au minimum, sinon la mesure a raté. */
+function voixMesuree(grave, aigu){
+  const lo = Math.round(Math.min(grave, aigu)), hi = Math.round(Math.max(grave, aigu));
+  if (hi - lo < 7) return null;
+  return { id:'mesuree', nom:'ma voix', lo, hi };
+}
+
 /* exposé pour les tests : les calculs, hors DOM et hors micro */
-window.chant = { nomNote, midiVersFreq, freqVersMidi, detecterHauteur, nomIntervalle, INTERVALLES, INTERVALLES_DEFAUT, Maintien, VOIX, mediane };
+window.chant = { nomNote, midiVersFreq, freqVersMidi, detecterHauteur, nomIntervalle, INTERVALLES, INTERVALLES_DEFAUT, Maintien, VOIX, mediane, voixMesuree };
 
 const page = document.getElementById('page-chant');
 if (!page) return;
@@ -5828,8 +5858,32 @@ for (const v of VOIX){
   voixSel.appendChild(o);
 }
 voixSel.value = 'tenor';
-const tessiture = () => VOIX.find(v => v.id === voixSel.value) || VOIX[2];
+let maVoix = null;                          /* mesurée par « Trouver ma voix » */
+function poserMaVoix(v){
+  maVoix = v;
+  let o = voixSel.querySelector('option[value="mesuree"]');
+  if (!o){ o = document.createElement('option'); o.value = 'mesuree'; voixSel.prepend(o); }
+  o.textContent = `ma voix · ${nomNote(v.lo).en} → ${nomNote(v.hi).en}`;
+  voixSel.value = 'mesuree';
+}
+try { const v = JSON.parse(localStorage.getItem('chant-ma-voix')); if (v && v.hi - v.lo >= 7) poserMaVoix(voixMesuree(v.lo, v.hi)); } catch (e) {}
+const tessiture = () => (voixSel.value === 'mesuree' && maVoix) || VOIX.find(v => v.id === voixSel.value) || VOIX[2];
 const tolerance = () => +tolSel.value;
+
+/* Le mode débutant : la jauge couvre toute l'octave (la bille ne colle
+   jamais au bord, on voit quelle note on chante), le vert fait un demi-ton,
+   et la lecture est lissée plus longtemps. Demandé le 4 octobre 2026 :
+   « toujours en butée en bas ou en haut ». */
+const modeSel = $('chant-mode');
+try { const m = localStorage.getItem('chant-mode'); if (m === 'confirme') { modeSel.value = m; tolSel.value = '35'; } } catch (e) {}
+const debutant = () => modeSel.value === 'debutant';
+modeSel.addEventListener('change', () => {
+  try { localStorage.setItem('chant-mode', modeSel.value); } catch (e) {}
+  if (debutant()) tolSel.value = '50';
+  else if (tolSel.value === '50') tolSel.value = '35';
+  tolSel.dispatchEvent(new Event('change'));
+});
+if (navigator.brave) $('chant-brave').hidden = false;
 const dureeTenue = () => +holdSel.value;
 const dureeNote = () => +dureeSel.value;   /* en secondes */
 
@@ -5845,8 +5899,9 @@ function assurerCtx(){
   if (ctx.state === 'suspended') ctx.resume();
   return ctx;
 }
-/* Annulation d'écho et réduction de bruit coupées : elles sont faites pour
-   la parole et étouffent une note tenue, surtout celle qu'on vient de jouer.
+/* Annulation d'écho, réduction de bruit et gain automatique coupés : ils
+   sont faits pour la parole, étouffent une note tenue (surtout celle qu'on
+   vient de jouer) et le gain qui pompe fait remonter le bruit de la pièce.
    La source est gardée dans une variable — sans référence, certains
    navigateurs la ramassent et l'analyseur ne reçoit plus rien. */
 async function activerMicro(){
@@ -5856,7 +5911,7 @@ async function activerMicro(){
   }
   try {
     assurerCtx();
-    flux = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation:false, noiseSuppression:false, autoGainControl:true } });
+    flux = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation:false, noiseSuppression:false, autoGainControl:false } });
     source = ctx.createMediaStreamSource(flux);
     analyser = ctx.createAnalyser();
     analyser.fftSize = 2048; analyser.smoothingTimeConstant = 0;
@@ -5876,6 +5931,7 @@ function couperMicro(){
   flux = null; source = null; analyser = null; micEtat = 'off'; rendreMic('Activer le micro');
   vu.style.width = '0';
   for (const ex of [placer, inter]) ex.arreter();
+  testeur.couper();
 }
 function rendreMic(label){
   micBtn.classList.toggle('on', micEtat === 'on');
@@ -5931,33 +5987,41 @@ function jouerNote(midi, duree, volume){
 }
 
 /* ---------- la boucle d'écoute ----------
-   Une seule boucle pour les deux jeux : la lecture (numéro MIDI
-   fractionnaire, lissé par la médiane des cinq dernières trames) est passée
-   au jeu actif, qui la ramène lui-même à l'octave de sa cible. */
+   Une seule boucle pour les deux jeux et le test du micro : la lecture
+   (numéro MIDI fractionnaire, lissé par la médiane des dernières trames —
+   cinq, neuf en mode débutant) est passée au jeu actif, qui la ramène
+   lui-même à l'octave de sa cible. Il faut trois trames voisées d'affilée
+   pour parler : un claquement ou un souffle ne font pas sauter la bille.
+   Le bruit de fond de la pièce est suivi pendant les silences, et un son à
+   peine au-dessus ne compte pas. */
 let exerciceActif = null;
 const lisse = [];
+let plancher = 0.003;
 function boucle(){
   if (micEtat !== 'on' || !analyser) return;
   requestAnimationFrame(boucle);
   analyser.getFloatTimeDomainData(buf);
   const now = performance.now();
   let lecture = null, rms = 0;
-  if (now < muetJusqua){
-    lisse.length = 0;
+  for (let i = 0; i < buf.length; i += 4) rms += buf[i] * buf[i];
+  rms = Math.sqrt(rms / (buf.length / 4));
+  const r = now < muetJusqua || rms < plancher * 3 ? null : detecterHauteur(buf, ctx.sampleRate);
+  if (r){
+    lisse.push(freqVersMidi(r.freq));
+    while (lisse.length > (debutant() ? 9 : 5)) lisse.shift();
+    if (lisse.length >= 3) lecture = { midi: mediane(lisse), t: now, freq: r.freq };
   } else {
-    const r = detecterHauteur(buf, ctx.sampleRate);
-    if (r){
-      rms = r.rms;
-      lisse.push(freqVersMidi(r.freq)); if (lisse.length > 5) lisse.shift();
-      lecture = { midi: mediane(lisse), t: now };
-    } else {
-      lisse.length = 0;
-      for (let i = 0; i < buf.length; i += 4) rms += buf[i] * buf[i];
-      rms = Math.sqrt(rms / (buf.length / 4));
+    lisse.length = 0;
+    /* seuls les sons proches du plancher le font monter : une voix qui
+       passe mal ne le hisse pas jusqu'à se couper elle-même */
+    if (now >= muetJusqua){
+      if (rms < plancher) plancher = Math.max(0.0005, rms);
+      else if (rms < plancher * 2) plancher += (rms - plancher) * 0.05;
     }
   }
   const niveau = Math.min(100, Math.round(rms * 400)) + '%';
   vu.style.width = niveau;
+  testeur.trame(lecture, now);
   if (exerciceActif){
     exerciceActif.niveau(niveau);
     exerciceActif.trame(lecture, now);
@@ -5965,6 +6029,7 @@ function boucle(){
 }
 function activer(ex){
   for (const o of [placer, inter]) if (o !== ex) o.arreter();
+  testeur.couper();
   exerciceActif = ex;
 }
 
@@ -6139,7 +6204,9 @@ const placer = (function(){
   const noteEl = $('placer-note'), frEl = $('placer-fr'), disque = $('placer-disque'), gauge = $('placer-gauge');
   let cible = null;
 
-  /* la jauge : −150 → +150 cents, zone verte = tolérance */
+  /* la jauge : −150 → +150 cents en mode confirmé ; en débutant, toute
+     l'octave (−6 → +6 demi-tons, ce que donne le repli à l'octave), une
+     graduation par demi-ton avec le nom de la note. Zone verte = tolérance. */
   const G = { x0:40, w:560, y:22, h:22, max:150 };
   const px = cents => G.x0 + G.w / 2 + Math.max(-G.max, Math.min(G.max, cents)) * (G.w / (2 * G.max));
   function el(tag, attrs, parent){
@@ -6150,21 +6217,40 @@ const placer = (function(){
   }
   el('rect', { x:G.x0, y:G.y, width:G.w, height:G.h, rx:11, fill:'#3B2E24' });
   const zone = el('rect', { class:'zone', x:0, y:G.y, width:0, height:G.h, rx:11 });
-  for (const c of [-100, 0, 100]){
-    el('line', { x1:px(c), x2:px(c), y1:G.y + G.h + 5, y2:G.y + G.h + 11, stroke:'#6E5A49', 'stroke-width':1.5 });
-  }
-  el('text', { x:G.x0, y:G.y + G.h + 30, 'text-anchor':'start', 'font-size':12 }).textContent = '↓ trop bas';
-  el('text', { x:G.x0 + G.w / 2, y:G.y + G.h + 30, 'text-anchor':'middle', 'font-size':12 }).textContent = 'juste';
-  el('text', { x:G.x0 + G.w, y:G.y + G.h + 30, 'text-anchor':'end', 'font-size':12 }).textContent = 'trop haut ↑';
+  const graduations = el('g', { class:'graduations' });
   const bille = el('g', { class:'bille', opacity:0 });
   const tete = el('circle', { cx:0, cy:G.y + G.h / 2, r:15, fill:'#F3EADD', stroke:'#fff', 'stroke-width':3 }, bille);
-  function rendreZone(){
+  function rendreJauge(){
+    G.max = debutant() ? 600 : 150;
+    graduations.innerHTML = '';
+    const yT = G.y + G.h + 30;
+    if (debutant()){
+      for (let st = -6; st <= 6; st++){
+        const x = px(st * 100), n = cible ? nomNote(cible.midi + st) : null;
+        el('line', { x1:x, x2:x, y1:G.y + G.h + 4, y2:G.y + G.h + (n && n.alt ? 8 : 12), stroke:'#6E5A49', 'stroke-width':1.5 }, graduations);
+        if (!n || (n.alt && st)) continue;      /* les dièses en petit trait, sauf la cible */
+        const t = el('text', { x, y:yT - 2, 'text-anchor':'middle', 'font-size': st ? 16 : 20 }, graduations);
+        t.textContent = n.lettre + (st ? '' : n.alt);
+        if (!st) t.setAttribute('fill', '#fff');
+      }
+      el('text', { x:G.x0 - 8, y:G.y + G.h / 2 + 4, 'text-anchor':'end', 'font-size':18 }, graduations).textContent = '↓';
+      el('text', { x:G.x0 + G.w + 8, y:G.y + G.h / 2 + 4, 'text-anchor':'start', 'font-size':18 }, graduations).textContent = '↑';
+    } else {
+      for (const c of [-100, 0, 100]){
+        el('line', { x1:px(c), x2:px(c), y1:G.y + G.h + 5, y2:G.y + G.h + 11, stroke:'#6E5A49', 'stroke-width':1.5 }, graduations);
+      }
+      el('text', { x:G.x0, y:yT, 'text-anchor':'start', 'font-size':12 }, graduations).textContent = '↓ trop bas';
+      el('text', { x:G.x0 + G.w / 2, y:yT, 'text-anchor':'middle', 'font-size':12 }, graduations).textContent = 'juste';
+      el('text', { x:G.x0 + G.w, y:yT, 'text-anchor':'end', 'font-size':12 }, graduations).textContent = 'trop haut ↑';
+    }
+    tete.setAttribute('r', debutant() ? 11 : 15);
     const demi = tolerance() * (G.w / (2 * G.max));
     zone.setAttribute('x', G.x0 + G.w / 2 - demi);
     zone.setAttribute('width', demi * 2);
   }
-  rendreZone();
-  tolSel.addEventListener('change', rendreZone);
+  rendreJauge();
+  tolSel.addEventListener('change', rendreJauge);
+  modeSel.addEventListener('change', rendreJauge);
 
   return creerJeu({
     id:'placer', disqueSource:disque, disqueBut:disque,
@@ -6176,21 +6262,24 @@ const placer = (function(){
       disque.style.setProperty('--c', cible.couleur);
       noteEl.innerHTML = htmlNote(cible);
       frEl.textContent = cible.fr;
+      rendreJauge();
     },
     notes: () => [cible.midi],
     cible: () => cible.midi,
     question: () => cible,
     /* l'écart à la cible, à l'octave près : un C chanté une octave plus bas
-       est un C juste */
+       est un C juste. Le message dit quelle note on chante : on sait d'où
+       l'on part. */
     mesurer(lecture){
       if (!lecture) return null;
       let d = lecture.midi - cible.midi;
       d -= 12 * Math.round(d / 12);
       const cents = Math.round(d * 100);
       const sens = cents < 0 ? ['Trop bas', 'monte'] : ['Trop haut', 'descends'];
+      const chante = nomNote(Math.round(lecture.midi)).en;
       const message = Math.abs(cents) < 150
         ? `<b>${sens[0]}</b> — ${sens[1]} un peu.`
-        : `<b>${sens[0]}</b> — ${sens[1]} de ${pluriel(Math.round(Math.abs(cents) / 100), 'demi-ton')}.`;
+        : `<b>${sens[0]}</b> (tu chantes ${chante}) — ${sens[1]} de ${pluriel(Math.round(Math.abs(cents) / 100), 'demi-ton')}.`;
       return { cents, midi: cible.midi + d, message };
     },
     suivre(e){
@@ -6345,6 +6434,70 @@ const inter = (function(){
     consigneEcoute: () => 'Écoute le départ.',
     consigneChant: () => `Chante la note ${dUne()} ${q.st > 0 ? 'au-dessus' : 'en dessous'}.`,
   });
+})();
+
+/* ---------- le test du micro et « Trouver ma voix » ----------
+   Micro actif, la note chantée s'affiche en continu : on vérifie que le
+   micro entend juste avant de jouer. « Trouver ma voix » fait tenir la note
+   la plus grave puis la plus aiguë, sans forcer, et en fait la tessiture
+   des jeux. Chaque note compte sur une seconde et demie de voix (médiane
+   des deux derniers tiers : on arrive souvent en glissant). */
+const testeur = (function(){
+  const lu = $('chant-lu'), noteEl = lu.querySelector('.note'), hzEl = lu.querySelector('.hz');
+  const msg = $('chant-test-msg'), btn = $('chant-trouver');
+  const MSG_DEFAUT = msg.innerHTML;
+  const PRISES = 90;                        /* ≈ 1,5 s de trames voisées */
+  let etape = null, prises = [], debut = 0, grave = null;
+
+  function afficher(lecture){
+    if (!lecture){ noteEl.textContent = '—'; noteEl.style.color = ''; hzEl.textContent = ''; return; }
+    const n = nomNote(Math.round(lecture.midi));
+    noteEl.innerHTML = htmlNote(n);
+    noteEl.style.color = n.couleur;
+    hzEl.textContent = lecture.freq ? Math.round(lecture.freq) + ' Hz' : '';
+  }
+  function demarrer(e, now){
+    etape = e; prises = []; debut = now;
+    msg.innerHTML = e === 'grave'
+      ? 'Chante ta note <b>la plus grave</b>, sans forcer, sur « aaa » — et tiens-la.'
+      : 'Maintenant ta note <b>la plus aiguë</b>, sans forcer — tiens-la.';
+  }
+  function finir(html){
+    etape = null;
+    btn.textContent = 'Trouver ma voix'; btn.classList.remove('actif');
+    msg.innerHTML = html;
+  }
+  function trame(lecture, now){
+    afficher(lecture);
+    if (!etape) return;
+    if (lecture) prises.push(lecture.midi);
+    if (prises.length < PRISES){
+      if (now - debut > 12000) finir('Je n\'entends pas de note tenue — rapproche-toi du micro et réessaie.');
+      return;
+    }
+    const note = mediane(prises.slice(Math.floor(prises.length / 3)));
+    if (etape === 'grave'){ grave = note; return demarrer('aigu', now); }
+    const v = voixMesuree(grave, note);
+    if (!v) return finir('Moins d\'une quinte entre les deux : va un peu plus loin dans le grave et dans l\'aigu, puis recommence.');
+    poserMaVoix(v);
+    try { localStorage.setItem('chant-ma-voix', JSON.stringify({ lo:v.lo, hi:v.hi })); } catch (e) {}
+    finir(`Ta voix : <b>${nomNote(v.lo).en} → ${nomNote(v.hi).en}</b>. Les jeux tirent leurs notes là-dedans.`);
+  }
+  function couper(){
+    if (etape) finir(MSG_DEFAUT);
+    if (micEtat !== 'on') afficher(null);
+  }
+  btn.addEventListener('click', async () => {
+    if (etape) return couper();
+    if (!await activerMicro()) return finir('Le micro n\'est pas disponible : autorise-le dans la barre d\'adresse du navigateur.');
+    commencer(performance.now());
+  });
+  function commencer(now){
+    for (const ex of [placer, inter]) ex.arreter();
+    btn.textContent = 'Annuler'; btn.classList.add('actif');
+    demarrer('grave', now);
+  }
+  return { trame, couper, commencer, get etape(){ return etape; } };
 })();
 
 /* ---------- les chants de la chorale ----------
@@ -6542,6 +6695,7 @@ for (const id of ['chants', 'placer', 'intervalles', 'reglages']) spy.observe(do
 /* exposé pour les tests : l'état des jeux */
 window.chant.placer = placer;
 window.chant.inter = inter;
+window.chant.testeur = testeur;
 window.chant.chants = { CHANTS, lecteurs, ouvrirPartition, fermerPartition };
 
 })();

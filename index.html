@@ -6470,9 +6470,11 @@ const inter = (function(){
       const cents = Math.round((rel - q.st) * 100);
       const vers = lecture.midi - q.target.midi, oct = Math.round(vers / 12);
       let message;
-      if (octaveExacte() && oct && Math.abs((vers - 12 * oct) * 100) <= tolerance())
+      /* le départ d'abord : pour l'octave, le départ est aussi « la bonne
+         note à la mauvaise octave », mais le dire ainsi n'aide pas */
+      if (Math.abs(rel) < 0.5) message = `Tu es sur le <b>départ</b> — ${q.st > 0 ? 'monte' : 'descends'} ${dUne()}.`;
+      else if (octaveExacte() && oct && Math.abs((vers - 12 * oct) * 100) <= tolerance())
         message = mauvaiseOctave(oct, nomNote(Math.round(lecture.midi)).en);
-      else if (Math.abs(rel) < 0.5) message = `Tu es sur le <b>départ</b> — ${q.st > 0 ? 'monte' : 'descends'} ${dUne()}.`;
       else {
         const sens = cents < 0 ? 'Plus haut' : 'Plus bas';
         message = Math.abs(cents) < 150

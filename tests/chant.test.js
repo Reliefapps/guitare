@@ -305,6 +305,8 @@ test("les intervalles en octave exacte : l'arrivée une octave trop bas est sign
   const { doc, win } = load();
   openTab(doc, 'chant');
   const { inter, nomNote } = win.chant;
+  /* une quinte : pour l'octave, l'arrivée une octave plus bas serait le départ */
+  for (const c of doc.querySelectorAll('#int-choices input')) c.checked = c.value === '7';
   inter.lancer(); inter.aToi();
   const q = inter.question;
   chanter(inter, q.target.midi - 12, 0, 1500);
@@ -313,6 +315,21 @@ test("les intervalles en octave exacte : l'arrivée une octave trop bas est sign
     new RegExp(`mauvaise octave — tu chantes ${nomNote(q.target.midi - 12).en.replace('♯', '.')}, monte d'une octave`));
   chanter(inter, q.target.midi, 1600, 1200);
   assert.equal(inter.phase, 'bravo');
+  inter.arreter();
+  win.close();
+});
+
+test("l'intervalle d'octave : chanter le départ dit « départ », pas « mauvaise octave »", () => {
+  const { doc, win } = load();
+  openTab(doc, 'chant');
+  const { inter } = win.chant;
+  for (const c of doc.querySelectorAll('#int-choices input')) c.checked = c.value === '12';
+  inter.lancer(); inter.aToi();
+  const q = inter.question;
+  assert.equal(Math.abs(q.st), 12);
+  chanter(inter, q.root.midi, 0, 1500);
+  assert.equal(inter.phase, 'chante');
+  assert.match(doc.getElementById('int-msg').textContent, /Tu es sur le départ/);
   inter.arreter();
   win.close();
 });

@@ -1973,6 +1973,9 @@
           <option value="confirme">confirmé · au cent près</option>
         </select>
       </label>
+      <label class="chant-check" title="Décoché : la note compte juste à n'importe quelle octave">
+        <input type="checkbox" id="chant-octave" checked> <b>Octave exacte</b> <span>(décoché : n'importe quelle octave)</span>
+      </label>
       <label class="chant-check" title="Décoché : un son pur (sinusoïde)">
         <input type="checkbox" id="chant-piano" checked> <b>Timbre piano</b> <span>(décoché : son pur)</span>
       </label>
@@ -5885,6 +5888,17 @@ modeSel.addEventListener('change', () => {
   tolSel.dispatchEvent(new Event('change'));
 });
 if (navigator.brave) $('chant-brave').hidden = false;
+
+/* L'octave exacte : la voix choisie fait tirer des notes chantables telles
+   quelles, donc on peut exiger la bonne octave — un A4 se chante A4, pas
+   A3. Décochée, on retrouve l'ancien repli : la note juste à n'importe
+   quelle octave. Demandé le 6 octobre 2026. */
+const octaveChk = $('chant-octave');
+try { if (localStorage.getItem('chant-octave') === 'libre') octaveChk.checked = false; } catch (e) {}
+octaveChk.addEventListener('change', () => {
+  try { localStorage.setItem('chant-octave', octaveChk.checked ? 'exacte' : 'libre'); } catch (e) {}
+});
+const octaveExacte = () => octaveChk.checked;
 const dureeTenue = () => +holdSel.value;
 const dureeNote = () => +dureeSel.value;   /* en secondes */
 
@@ -6038,6 +6052,18 @@ function htmlNote(n){
   return n.lettre + (n.alt ? `<span class="alt">${n.alt}</span>` : '') + `<span class="oct">${n.octave}</span>`;
 }
 function pluriel(n, mot){ return n + ' ' + mot + (n > 1 ? 's' : ''); }
+/* « de 3 demi-tons », « d'une octave », « d'une octave et 2 demi-tons » */
+function deEcart(st){
+  const oct = Math.floor(st / 12), reste = st % 12;
+  if (!oct) return 'de ' + pluriel(reste, 'demi-ton');
+  const o = oct === 1 ? 'd\'une octave' : 'de ' + oct + ' octaves';
+  return reste ? o + ' et ' + pluriel(reste, 'demi-ton') : o;
+}
+/* bonne note, mauvaise octave : le message qui l'explique */
+function mauvaiseOctave(oct, chante){
+  const n = Math.abs(oct);
+  return `<b>Bonne note, mauvaise octave</b> — tu chantes ${chante}, ${oct < 0 ? 'monte' : 'descends'} ${n === 1 ? 'd\'une octave' : 'de ' + n + ' octaves'}.`;
+}
 
 /* ---------- le déroulé d'un jeu ----------
    repos → écoute (la note joue, l'anneau se remplit) → chante (le micro
@@ -6205,9 +6231,11 @@ const placer = (function(){
   const noteEl = $('placer-note'), frEl = $('placer-fr'), disque = $('placer-disque'), gauge = $('placer-gauge');
   let cible = null;
 
-  /* la jauge : −150 → +150 cents en mode confirmé ; en débutant, toute
-     l'octave (−6 → +6 demi-tons, ce que donne le repli à l'octave), une
-     graduation par demi-ton avec le nom de la note. Zone verte = tolérance. */
+  /* la jauge : −150 → +150 cents en mode confirmé ; en débutant, une
+     graduation par demi-ton avec le nom de la note, sur toute l'octave
+     (−6 → +6, ce que donne le repli à l'octave) ou, en octave exacte, une
+     octave de chaque côté — la même note à l'octave est nommée en entier,
+     pour voir où l'on s'est trompé. Zone verte = tolérance. */
   const G = { x0:40, w:560, y:22, h:22, max:150 };
   const px = cents => G.x0 + G.w / 2 + Math.max(-G.max, Math.min(G.max, cents)) * (G.w / (2 * G.max));
   function el(tag, attrs, parent){
@@ -6222,14 +6250,24 @@ const placer = (function(){
   const bille = el('g', { class:'bille', opacity:0 });
   const tete = el('circle', { cx:0, cy:G.y + G.h / 2, r:15, fill:'#F3EADD', stroke:'#fff', 'stroke-width':3 }, bille);
   function rendreJauge(){
-    G.max = debutant() ? 600 : 150;
+    const etendue = octaveExacte() ? 12 : 6;
+    G.max = debutant() ? etendue * 100 : 150;
     graduations.innerHTML = '';
     const yT = G.y + G.h + 30;
     if (debutant()){
-      for (let st = -6; st <= 6; st++){
+      for (let st = -etendue; st <= etendue; st++){
         const x = px(st * 100), n = cible ? nomNote(cible.midi + st) : null;
-        el('line', { x1:x, x2:x, y1:G.y + G.h + 4, y2:G.y + G.h + (n && n.alt ? 8 : 12), stroke:'#6E5A49', 'stroke-width':1.5 }, graduations);
-        if (!n || (n.alt && st)) continue;      /* les dièses en petit trait, sauf la cible */
+        const repere = st % 12 === 0;          /* la cible, et la même note à l'octave */
+        el('line', { x1:x, x2:x, y1:G.y + G.h + 4, y2:G.y + G.h + (n && n.alt && !repere ? 8 : 12), stroke:'#6E5A49', 'stroke-width':1.5 }, graduations);
+        if (!n) continue;
+        /* la même note à l'octave : son nom complet au-dessus de la barre */
+        if (st && repere){
+          el('text', { x, y:G.y - 6, 'text-anchor':'middle', 'font-size':14, fill:'#F3EADD' }, graduations).textContent = n.en;
+          continue;
+        }
+        /* les dièses en petit trait ; les voisins d'une cible dièse aussi,
+           sinon « A A♯ B » se chevauchent */
+        if (st && (n.alt || (cible.alt && Math.abs(st % 12) === 1))) continue;
         const t = el('text', { x, y:yT - 2, 'text-anchor':'middle', 'font-size': st ? 16 : 20 }, graduations);
         t.textContent = n.lettre + (st ? '' : n.alt);
         if (!st) t.setAttribute('fill', '#fff');
@@ -6252,6 +6290,7 @@ const placer = (function(){
   rendreJauge();
   tolSel.addEventListener('change', rendreJauge);
   modeSel.addEventListener('change', rendreJauge);
+  octaveChk.addEventListener('change', rendreJauge);
 
   return creerJeu({
     id:'placer', disqueSource:disque, disqueBut:disque,
@@ -6268,19 +6307,27 @@ const placer = (function(){
     notes: () => [cible.midi],
     cible: () => cible.midi,
     question: () => cible,
-    /* l'écart à la cible, à l'octave près : un C chanté une octave plus bas
-       est un C juste. Le message dit quelle note on chante : on sait d'où
-       l'on part. */
+    /* l'écart à la cible. En octave exacte, c'est l'écart réel ; sinon il
+       est replié à l'octave (un C chanté une octave plus bas est un C juste).
+       La bonne note à la mauvaise octave a son propre message : l'oreille a
+       trouvé la note, il reste à la placer. Le message dit quelle note on
+       chante : on sait d'où l'on part. */
     mesurer(lecture){
       if (!lecture) return null;
-      let d = lecture.midi - cible.midi;
-      d -= 12 * Math.round(d / 12);
+      const brut = lecture.midi - cible.midi;
+      const replie = brut - 12 * Math.round(brut / 12);
+      const oct = Math.round((brut - replie) / 12);
+      const d = octaveExacte() ? brut : replie;
       const cents = Math.round(d * 100);
-      const sens = cents < 0 ? ['Trop bas', 'monte'] : ['Trop haut', 'descends'];
       const chante = nomNote(Math.round(lecture.midi)).en;
-      const message = Math.abs(cents) < 150
-        ? `<b>${sens[0]}</b> — ${sens[1]} un peu.`
-        : `<b>${sens[0]}</b> (tu chantes ${chante}) — ${sens[1]} de ${pluriel(Math.round(Math.abs(cents) / 100), 'demi-ton')}.`;
+      let message;
+      if (octaveExacte() && oct && Math.abs(replie * 100) <= tolerance()) message = mauvaiseOctave(oct, chante);
+      else {
+        const sens = cents < 0 ? ['Trop bas', 'monte'] : ['Trop haut', 'descends'];
+        message = Math.abs(cents) < 150
+          ? `<b>${sens[0]}</b> — ${sens[1]} un peu.`
+          : `<b>${sens[0]}</b> (tu chantes ${chante}) — ${sens[1]} ${deEcart(Math.round(Math.abs(cents) / 100))}.`;
+      }
       return { cents, midi: cible.midi + d, message };
     },
     suivre(e){
@@ -6407,8 +6454,9 @@ const inter = (function(){
     notesIndice: () => [q.root.midi, q.target.midi],
     cible: () => q.target.midi,
     question: () => q,
-    /* la voix est ramenée à l'octave qui la met le plus près du départ ou de
-       l'arrivée — on peut chanter l'intervalle une octave plus bas */
+    /* en octave exacte, l'arrivée se chante à sa vraie hauteur. Sinon la
+       voix est ramenée à l'octave qui la met le plus près du départ ou de
+       l'arrivée — on peut chanter l'intervalle une octave plus bas. */
     mesurer(lecture){
       if (!lecture) return null;
       let k = 0, mieux = Infinity;
@@ -6417,15 +6465,19 @@ const inter = (function(){
         const d = Math.min(Math.abs(m - q.root.midi), Math.abs(m - q.target.midi));
         if (d < mieux - 1e-9){ mieux = d; k = c; }
       }
+      if (octaveExacte()) k = 0;
       const midi = lecture.midi + k, rel = midi - q.root.midi;
       const cents = Math.round((rel - q.st) * 100);
+      const vers = lecture.midi - q.target.midi, oct = Math.round(vers / 12);
       let message;
-      if (Math.abs(rel) < 0.5) message = `Tu es sur le <b>départ</b> — ${q.st > 0 ? 'monte' : 'descends'} ${dUne()}.`;
+      if (octaveExacte() && oct && Math.abs((vers - 12 * oct) * 100) <= tolerance())
+        message = mauvaiseOctave(oct, nomNote(Math.round(lecture.midi)).en);
+      else if (Math.abs(rel) < 0.5) message = `Tu es sur le <b>départ</b> — ${q.st > 0 ? 'monte' : 'descends'} ${dUne()}.`;
       else {
         const sens = cents < 0 ? 'Plus haut' : 'Plus bas';
         message = Math.abs(cents) < 150
           ? `<b>${sens}</b> — tu y es presque.`
-          : `<b>${sens}</b> — encore ${pluriel(Math.round(Math.abs(cents) / 100), 'demi-ton')}.`;
+          : `<b>${sens}</b> — encore ${deEcart(Math.round(Math.abs(cents) / 100)).replace(/^de /, '').replace(/^d'une/, 'une')}.`;
       }
       return { cents, midi, rel, message };
     },

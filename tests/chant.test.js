@@ -265,13 +265,55 @@ test("placer la note : la note joue, puis le micro, puis la note tenue est valid
   win.close();
 });
 
-test("placer la note : la même note une octave plus bas est juste", () => {
+test("octave exacte (par défaut) : la bonne note une octave trop bas ne compte pas, et le message le dit", () => {
   const { doc, win } = load();
   openTab(doc, 'chant');
   const { placer } = win.chant;
+  assert.equal(doc.getElementById('chant-octave').checked, true);
+  placer.lancer(); placer.aToi();
+  const cible = placer.question;
+  chanter(placer, cible.midi - 12, 0, 1500);
+  assert.equal(placer.phase, 'chante');
+  assert.equal(doc.getElementById('placer-msg').textContent,
+    `Bonne note, mauvaise octave — tu chantes ${win.chant.nomNote(cible.midi - 12).en}, monte d'une octave.`);
+  chanter(placer, cible.midi + 24, 1600, 300);
+  assert.match(doc.getElementById('placer-msg').textContent, /mauvaise octave.*descends de 2 octaves/);
+  /* une autre note à plus d'une octave : l'écart est dit en octaves et demi-tons */
+  chanter(placer, cible.midi - 14, 2000, 300);
+  assert.match(doc.getElementById('placer-msg').textContent, /Trop bas.*monte d'une octave et 2 demi-tons/);
+  chanter(placer, cible.midi, 2400, 1200);
+  assert.equal(placer.phase, 'bravo');
+  placer.arreter();
+  win.close();
+});
+
+test("octave libre (décochée) : la même note une octave plus bas est juste", () => {
+  const { doc, win } = load();
+  openTab(doc, 'chant');
+  const { placer } = win.chant;
+  const box = doc.getElementById('chant-octave');
+  box.checked = false;
+  box.dispatchEvent(new win.Event('change'));
   placer.lancer(); placer.aToi();
   chanter(placer, placer.question.midi - 12, 0, 1200);
   assert.equal(placer.phase, 'bravo');
+  placer.arreter();
+  win.close();
+});
+
+test("les intervalles en octave exacte : l'arrivée une octave trop bas est signalée, pas validée", () => {
+  const { doc, win } = load();
+  openTab(doc, 'chant');
+  const { inter, nomNote } = win.chant;
+  inter.lancer(); inter.aToi();
+  const q = inter.question;
+  chanter(inter, q.target.midi - 12, 0, 1500);
+  assert.equal(inter.phase, 'chante');
+  assert.match(doc.getElementById('int-msg').textContent,
+    new RegExp(`mauvaise octave — tu chantes ${nomNote(q.target.midi - 12).en.replace('♯', '.')}, monte d'une octave`));
+  chanter(inter, q.target.midi, 1600, 1200);
+  assert.equal(inter.phase, 'bravo');
+  inter.arreter();
   win.close();
 });
 
@@ -428,22 +470,31 @@ test("pas de bouton partition sans pages — ni pour les rêves, dont la copie i
 
 /* ---------- mode débutant, test du micro, « Trouver ma voix » (4 octobre 2026) ---------- */
 
-test("mode débutant : la jauge couvre l'octave, nomme les notes, et la bille ne colle pas au bord", () => {
+test("mode débutant : la jauge couvre une octave de chaque côté, nomme les notes, et la bille ne colle pas au bord", () => {
   const { doc, win, jsErrors } = load();
   openTab(doc, 'chant');
-  const { placer } = win.chant;
+  const { placer, nomNote } = win.chant;
   placer.lancer(); placer.aToi();
   const cible = placer.question;
   const textes = [...doc.querySelectorAll('#placer-gauge .graduations text')].map(t => t.textContent);
   assert.ok(textes.includes(cible.lettre + cible.alt), 'la cible n\'est pas nommée sur la jauge');
-  assert.equal(doc.querySelectorAll('#placer-gauge .graduations line').length, 13);
-  /* quatre demi-tons trop haut : la bille est à 4/6 de la demi-jauge, pas en butée */
+  /* la même note à l'octave, nommée en entier aux deux bouts */
+  assert.ok(textes.includes(nomNote(cible.midi - 12).en) && textes.includes(nomNote(cible.midi + 12).en), textes.join(' '));
+  assert.equal(doc.querySelectorAll('#placer-gauge .graduations line').length, 25);
+  const billeX = () => +doc.querySelector('#placer-gauge .bille').getAttribute('transform').match(/translate\(([\d.]+)/)[1];
+  /* quatre demi-tons trop haut : la bille est à 4/12 de la demi-jauge, pas en butée */
   chanter(placer, cible.midi + 4, 0, 400);
-  const x = +doc.querySelector('#placer-gauge .bille').getAttribute('transform').match(/translate\(([\d.]+)/)[1];
-  assert.ok(Math.abs(x - (320 + 280 * 4 / 6)) < 1, 'bille à ' + x);
+  assert.ok(Math.abs(billeX() - (320 + 280 * 4 / 12)) < 1, 'bille à ' + billeX());
+  /* octave libre : la jauge revient à ± 6 demi-tons */
+  const box = doc.getElementById('chant-octave');
+  box.checked = false;
+  box.dispatchEvent(new win.Event('change'));
+  assert.equal(doc.querySelectorAll('#placer-gauge .graduations line').length, 13);
+  chanter(placer, cible.midi + 4, 450, 400);
+  assert.ok(Math.abs(billeX() - (320 + 280 * 4 / 6)) < 1, 'bille à ' + billeX());
   assert.match(doc.getElementById('placer-msg').textContent, new RegExp('tu chantes ' + win.chant.nomNote(cible.midi + 4).en.replace('♯', '.')));
   /* un demi-ton de tolérance : 45 cents à côté, c'est juste */
-  chanter(placer, cible.midi + 0.45, 500, 1100);
+  chanter(placer, cible.midi + 0.45, 900, 1100);
   assert.equal(placer.phase, 'bravo');
   placer.arreter();
   assert.deepEqual(jsErrors, []);
@@ -468,7 +519,7 @@ test("mode confirmé : retour à la jauge au cent près et à ± 35 cents", () =
 test("le test du micro et « Trouver ma voix » sont visibles dans les réglages", () => {
   const { doc } = load();
   openTab(doc, 'chant');
-  for (const id of ['chant-mic', 'chant-lu', 'chant-trouver', 'chant-test-msg', 'chant-mode'])
+  for (const id of ['chant-mic', 'chant-lu', 'chant-trouver', 'chant-test-msg', 'chant-mode', 'chant-octave'])
     assert.equal(isVisible(doc.getElementById(id)), true, id + ' pas visible');
 });
 

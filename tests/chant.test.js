@@ -489,10 +489,33 @@ test("« Partition » ouvre la fenêtre avec les pages et le lecteur, la fermer 
   assert.deepEqual(jsErrors, []);
 });
 
-test("pas de bouton partition sans pages — ni pour les rêves, dont la copie interdit le partage", () => {
+test("partitions sous droits : un lien vers la page d'origine, pas de fichier hébergé", () => {
+  const { doc, win } = load();
+  openTab(doc, 'chant');
+  const modal = doc.getElementById('chant-modal');
+  for (const [id, href] of [['siyahamba', 'https://www.8notes.com/scores/15662.asp'],
+      ['white-sand', 'https://www.music-for-music-teachers.com/traditional-kids-songs.html']]){
+    const c = doc.getElementById('chant-' + id);
+    const lien = c.querySelector('a.chant-partition');
+    assert.ok(lien, id + ' sans lien');
+    assert.equal(isVisible(lien), true, id + ' : lien invisible');
+    assert.equal(lien.getAttribute('href'), href);
+    assert.equal(lien.getAttribute('target'), '_blank');
+    assert.match(lien.getAttribute('rel'), /noopener/);
+    assert.equal(c.querySelector('.chant-sans'), null, id);
+    /* le lien ne doit pas ouvrir la fenêtre des pages */
+    lien.addEventListener('click', e => e.preventDefault());
+    lien.click();
+    assert.equal(modal.hasAttribute('open'), false, id + ' : la fenêtre s\'est ouverte');
+  }
+  /* aucun chant ne pointe vers un fichier de partition absent du dépôt */
+  for (const c of win.chant.chants.CHANTS) if (c.source) assert.equal(c.pages, undefined, c.id);
+});
+
+test("pas de bouton partition sans pages ni source — ni pour les rêves, dont la copie interdit le partage", () => {
   const { doc } = load();
   openTab(doc, 'chant');
-  for (const id of ['siyahamba', 'white-sand', 'reves', 'santiano']){
+  for (const id of ['reves', 'santiano']){
     const c = doc.getElementById('chant-' + id);
     assert.equal(c.querySelector('.chant-partition'), null, id);
     assert.ok(c.querySelector('.chant-sans'), id);

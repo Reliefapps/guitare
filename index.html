@@ -961,6 +961,7 @@
     border-radius:999px; padding:7px 14px; cursor:pointer; transition:all .15s ease;
   }
   .chant-partition:hover{border-color:var(--ink);}
+  a.chant-partition{text-decoration:none;}
   .chant-sans{font-family:"Spline Sans Mono",monospace; font-size:12px; color:var(--ink-soft);}
 
   /* la fenêtre partition : le lecteur à gauche, les pages à droite */
@@ -6561,9 +6562,12 @@ const testeur = (function(){
    voix (alto, soprano). Les pages de partition sont des webp tirés du PDF :
    une image s'affiche partout, un PDF dans une iframe non (iPhone). Pas de
    partition pour « Les rêves » : la copie Musescore interdit le partage, et
-   le site est public. */
+   le site est public. Siyahamba (8notes) et White Sand (Music-for-Music-
+   Teachers) sont sous droits : on renvoie à la page d'origine (`source`)
+   au lieu d'héberger le PDF (8 octobre 2026). */
 const CHANTS = [
   { id:'siyahamba', titre:'Siyahamba',
+    source:{ nom:'8notes', href:'https://www.8notes.com/scores/15662.asp' },
     pistes:[ { voix:'Alto', src:'chant/siyahamba-alto.m4a' },
              { voix:'Soprano', src:'chant/siyahamba-soprano.m4a' } ] },
   { id:'anges', titre:'Les anges dans nos campagnes',
@@ -6571,6 +6575,7 @@ const CHANTS = [
              { voix:'Soprano', src:'chant/anges-soprano.m4a' } ],
     pdf:'chant/anges.pdf', pages:['chant/anges-1.webp'] },
   { id:'white-sand', titre:'White Sand',
+    source:{ nom:'Music-for-Music-Teachers', href:'https://www.music-for-music-teachers.com/traditional-kids-songs.html' },
     pistes:[ { voix:'', src:'chant/white-sand.m4a' } ] },
   { id:'reves', titre:'Les rêves sont en nous', sous:'Pierre Rapsat · arr. JMiM',
     pistes:[ { partie:'Partie 1', voix:'Alto', src:'chant/reves-1-alto.m4a' },
@@ -6624,7 +6629,9 @@ function creerChant(chant){
     </div>
     <div class="chant-pied">
       ${chant.pages ? `<button class="chant-partition" type="button">Partition</button>`
-                    : `<span class="chant-sans">pas de partition</span>`}
+        : chant.source ? `<a class="chant-partition" href="${chant.source.href}" target="_blank" rel="noopener"
+                            title="La partition sur ${chant.source.nom}">Partition · ${chant.source.nom} ↗</a>`
+        : `<span class="chant-sans">pas de partition</span>`}
     </div>`;
 
   const commandes = carte.querySelector('.chant-commandes');
@@ -6696,7 +6703,7 @@ function creerChant(chant){
     if (b.dataset.partie) lecteur.choisir('partie', b.dataset.partie);
     else lecteur.choisir('voix', b.dataset.voix);
   });
-  carte.querySelector('.chant-partition')?.addEventListener('click', () => ouvrirPartition(lecteur));
+  carte.querySelector('button.chant-partition')?.addEventListener('click', () => ouvrirPartition(lecteur));
 
   charger();
   return carte;

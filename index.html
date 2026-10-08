@@ -961,7 +961,6 @@
     border-radius:999px; padding:7px 14px; cursor:pointer; transition:all .15s ease;
   }
   .chant-partition:hover{border-color:var(--ink);}
-  a.chant-partition{text-decoration:none;}
   .chant-sans{font-family:"Spline Sans Mono",monospace; font-size:12px; color:var(--ink-soft);}
 
   /* la fenêtre partition : le lecteur à gauche, les pages à droite */
@@ -6560,28 +6559,30 @@ const testeur = (function(){
 /* ---------- les chants de la chorale ----------
    Les enregistrements envoyés par Raphaël le 4 octobre 2026, une piste par
    voix (alto, soprano). Les pages de partition sont des webp tirés du PDF :
-   une image s'affiche partout, un PDF dans une iframe non (iPhone). Pas de
-   partition pour « Les rêves » : la copie Musescore interdit le partage, et
-   le site est public. Siyahamba (8notes) et White Sand (Music-for-Music-
-   Teachers) sont sous droits : on renvoie à la page d'origine (`source`)
-   au lieu d'héberger le PDF (8 octobre 2026). */
+   une image s'affiche partout, un PDF dans une iframe non (iPhone).
+   Siyahamba, White Sand et Les rêves (8 octobre 2026) : seulement des
+   images, sans PDF. Pour Les rêves, les 8 pages scannées de la partition
+   papier avec les accords notés au crayon — pas la copie Musescore
+   nominative. Raphaël a choisi de les publier en connaissant les mentions
+   de droits de Siyahamba (8notes) et White Sand. */
 const CHANTS = [
   { id:'siyahamba', titre:'Siyahamba',
-    source:{ nom:'8notes', href:'https://www.8notes.com/scores/15662.asp' },
     pistes:[ { voix:'Alto', src:'chant/siyahamba-alto.m4a' },
-             { voix:'Soprano', src:'chant/siyahamba-soprano.m4a' } ] },
+             { voix:'Soprano', src:'chant/siyahamba-soprano.m4a' } ],
+    pages:['chant/siyahamba-1.webp'] },
   { id:'anges', titre:'Les anges dans nos campagnes',
     pistes:[ { voix:'Alto', src:'chant/anges-alto.m4a' },
              { voix:'Soprano', src:'chant/anges-soprano.m4a' } ],
     pdf:'chant/anges.pdf', pages:['chant/anges-1.webp'] },
   { id:'white-sand', titre:'White Sand',
-    source:{ nom:'Music-for-Music-Teachers', href:'https://www.music-for-music-teachers.com/traditional-kids-songs.html' },
-    pistes:[ { voix:'', src:'chant/white-sand.m4a' } ] },
+    pistes:[ { voix:'', src:'chant/white-sand.m4a' } ],
+    pages:['chant/white-sand-1.webp'] },
   { id:'reves', titre:'Les rêves sont en nous', sous:'Pierre Rapsat · arr. JMiM',
     pistes:[ { partie:'Partie 1', voix:'Alto', src:'chant/reves-1-alto.m4a' },
              { partie:'Partie 1', voix:'Soprano', src:'chant/reves-1-soprano.m4a' },
              { partie:'Partie 2', voix:'Alto', src:'chant/reves-2-alto.m4a' },
-             { partie:'Partie 2', voix:'Soprano', src:'chant/reves-2-soprano.m4a' } ] },
+             { partie:'Partie 2', voix:'Soprano', src:'chant/reves-2-soprano.m4a' } ],
+    pages:[1, 2, 3, 4, 5, 6, 7, 8].map(n => 'chant/reves_' + n + '.webp') },
   /* envoyé le 8 octobre 2026 : alto, soprano et la voix d'hommes */
   { id:'santiano', titre:'Santiano', sous:'Hugues Aufray',
     pistes:[ { voix:'Alto', src:'chant/santiano-alto.m4a' },
@@ -6629,9 +6630,7 @@ function creerChant(chant){
     </div>
     <div class="chant-pied">
       ${chant.pages ? `<button class="chant-partition" type="button">Partition</button>`
-        : chant.source ? `<a class="chant-partition" href="${chant.source.href}" target="_blank" rel="noopener"
-                            title="La partition sur ${chant.source.nom}">Partition · ${chant.source.nom} ↗</a>`
-        : `<span class="chant-sans">pas de partition</span>`}
+                    : `<span class="chant-sans">pas de partition</span>`}
     </div>`;
 
   const commandes = carte.querySelector('.chant-commandes');
@@ -6703,7 +6702,7 @@ function creerChant(chant){
     if (b.dataset.partie) lecteur.choisir('partie', b.dataset.partie);
     else lecteur.choisir('voix', b.dataset.voix);
   });
-  carte.querySelector('button.chant-partition')?.addEventListener('click', () => ouvrirPartition(lecteur));
+  carte.querySelector('.chant-partition')?.addEventListener('click', () => ouvrirPartition(lecteur));
 
   charger();
   return carte;
@@ -6721,7 +6720,10 @@ function ouvrirPartition(l){
   if (ouvert) rendre();
   ouvert = l;
   document.getElementById('chant-modal-titre').textContent = l.chant.titre;
-  document.getElementById('chant-modal-pdf').href = l.chant.pdf;
+  /* pas de PDF pour les partitions données seulement en images */
+  const lienPdf = document.getElementById('chant-modal-pdf');
+  lienPdf.hidden = !l.chant.pdf;
+  if (l.chant.pdf) lienPdf.href = l.chant.pdf; else lienPdf.removeAttribute('href');
   modalPages.innerHTML = l.chant.pages.map((src, i) =>
     `<img src="${src}" alt="${l.chant.titre} — page ${i + 1}" loading="lazy">`).join('');
   modalLecteur.appendChild(l.commandes);

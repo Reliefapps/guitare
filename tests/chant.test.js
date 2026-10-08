@@ -489,33 +489,42 @@ test("« Partition » ouvre la fenêtre avec les pages et le lecteur, la fermer 
   assert.deepEqual(jsErrors, []);
 });
 
-test("partitions sous droits : un lien vers la page d'origine, pas de fichier hébergé", () => {
-  const { doc, win } = load();
+test("Siyahamba, White Sand et Les rêves : « Partition » ouvre les pages, sans lien PDF (8 octobre 2026)", () => {
+  const { doc, win, jsErrors } = load();
   openTab(doc, 'chant');
   const modal = doc.getElementById('chant-modal');
-  for (const [id, href] of [['siyahamba', 'https://www.8notes.com/scores/15662.asp'],
-      ['white-sand', 'https://www.music-for-music-teachers.com/traditional-kids-songs.html']]){
+  const lienPdf = doc.getElementById('chant-modal-pdf');
+  const reves = [1, 2, 3, 4, 5, 6, 7, 8].map(n => 'chant/reves_' + n + '.webp');
+  for (const [id, titre, pages] of [['siyahamba', 'Siyahamba', ['chant/siyahamba-1.webp']],
+      ['white-sand', 'White Sand', ['chant/white-sand-1.webp']],
+      ['reves', 'Les rêves sont en nous', reves]]){
     const c = doc.getElementById('chant-' + id);
-    const lien = c.querySelector('a.chant-partition');
-    assert.ok(lien, id + ' sans lien');
-    assert.equal(isVisible(lien), true, id + ' : lien invisible');
-    assert.equal(lien.getAttribute('href'), href);
-    assert.equal(lien.getAttribute('target'), '_blank');
-    assert.match(lien.getAttribute('rel'), /noopener/);
+    const btn = c.querySelector('.chant-partition');
+    assert.ok(btn, id + ' sans bouton');
+    assert.equal(isVisible(btn), true, id + ' : bouton invisible');
     assert.equal(c.querySelector('.chant-sans'), null, id);
-    /* le lien ne doit pas ouvrir la fenêtre des pages */
-    lien.addEventListener('click', e => e.preventDefault());
-    lien.click();
-    assert.equal(modal.hasAttribute('open'), false, id + ' : la fenêtre s\'est ouverte');
+    btn.click();
+    assert.equal(isVisible(modal), true, id + ' : fenêtre fermée');
+    assert.equal(doc.getElementById('chant-modal-titre').textContent, titre);
+    const imgs = [...modal.querySelectorAll('.chant-modal-pages img')];
+    assert.deepEqual(imgs.map(i => i.getAttribute('src')), pages);
+    assert.equal(imgs.at(-1).getAttribute('alt'), titre + ' — page ' + pages.length);
+    assert.equal(isVisible(lienPdf), false, id + ' : lien PDF affiché sans PDF');
+    doc.getElementById('chant-modal-fermer').click();
+    if (modal.hasAttribute('open')) modal.dispatchEvent(new win.Event('close'));
+    assert.ok(c.querySelector('.lecteur'), id + ' : le lecteur n\'est pas revenu');
   }
-  /* aucun chant ne pointe vers un fichier de partition absent du dépôt */
-  for (const c of win.chant.chants.CHANTS) if (c.source) assert.equal(c.pages, undefined, c.id);
+  /* Les anges gardent leur PDF : le lien revient */
+  doc.getElementById('chant-anges').querySelector('.chant-partition').click();
+  assert.equal(isVisible(lienPdf), true, 'lien PDF absent pour Les anges');
+  assert.match(lienPdf.getAttribute('href'), /chant\/anges\.pdf$/);
+  assert.deepEqual(jsErrors, []);
 });
 
-test("pas de bouton partition sans pages ni source — ni pour les rêves, dont la copie interdit le partage", () => {
+test("pas de bouton partition sans pages : Santiano n'en a pas encore", () => {
   const { doc } = load();
   openTab(doc, 'chant');
-  for (const id of ['reves', 'santiano']){
+  for (const id of ['santiano']){
     const c = doc.getElementById('chant-' + id);
     assert.equal(c.querySelector('.chant-partition'), null, id);
     assert.ok(c.querySelector('.chant-sans'), id);

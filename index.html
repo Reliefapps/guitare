@@ -1832,7 +1832,8 @@
 
 <!-- ============ 1. LES CHANTS ============ -->
 <!-- Les enregistrements de la chorale, une piste par voix, et la partition
-     quand on l'a. Les fichiers sont dans chant/ (ajoutés le 4 octobre 2026). -->
+     quand on l'a. Les fichiers sont dans chant/ (ajoutés le 4 octobre 2026,
+     Santiano le 8 octobre). -->
 <section id="chants">
   <div class="wrap">
     <div class="sec-head"><span class="sec-num">1</span><h2>Les chants</h2></div>
@@ -6576,6 +6577,10 @@ const CHANTS = [
              { partie:'Partie 1', voix:'Soprano', src:'chant/reves-1-soprano.m4a' },
              { partie:'Partie 2', voix:'Alto', src:'chant/reves-2-alto.m4a' },
              { partie:'Partie 2', voix:'Soprano', src:'chant/reves-2-soprano.m4a' } ] },
+  /* envoyé le 8 octobre 2026 : la voix d'hommes seule ; la voix qui chante
+     au-dessus d'elle viendra s'ajouter en deuxième piste */
+  { id:'santiano', titre:'Santiano', sous:'Hugues Aufray · voix d\'hommes',
+    pistes:[ { voix:'Hommes', src:'chant/santiano-hommes.m4a' } ] },
 ];
 
 const sansDoublon = xs => [...new Set(xs)];

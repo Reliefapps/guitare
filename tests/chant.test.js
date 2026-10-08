@@ -398,12 +398,12 @@ const fs = require('node:fs');
 const path = require('node:path');
 const RACINE = path.join(__dirname, '..');
 
-test("les quatre chants ont leur carte visible et leur lecteur", () => {
+test("les cinq chants ont leur carte visible et leur lecteur", () => {
   const { doc, jsErrors } = load();
   openTab(doc, 'chant');
   const cartes = [...doc.querySelectorAll('#chants-liste .chant-carte')];
   assert.deepEqual(cartes.map(c => c.querySelector('.chant-titre').textContent),
-    ['Siyahamba', 'Les anges dans nos campagnes', 'White Sand', 'Les rêves sont en nous']);
+    ['Siyahamba', 'Les anges dans nos campagnes', 'White Sand', 'Les rêves sont en nous', 'Santiano']);
   for (const c of cartes){
     assert.equal(isVisible(c), true, c.id + ' pas visible');
     assert.equal(isVisible(c.querySelector('.lecteur-jouer')), true, c.id + ' sans bouton lecture');
@@ -446,6 +446,12 @@ test("alto et soprano : un bouton par voix, il change la piste ; les rêves ont 
   const ws = lecteurs.find(l => l.chant.id === 'white-sand');
   assert.equal(ws.carte.querySelector('[data-voix]'), null);
   assert.match(ws.audio.src, /chant\/white-sand\.m4a$/);
+
+  /* Santiano (8 octobre 2026) : la voix d'hommes seule pour l'instant */
+  const santiano = lecteurs.find(l => l.chant.id === 'santiano');
+  assert.equal(santiano.carte.querySelector('[data-voix]'), null);
+  assert.match(santiano.audio.src, /chant\/santiano-hommes\.m4a$/);
+  assert.equal(santiano.carte.querySelector('.chant-sous').textContent, 'Hugues Aufray · voix d\'hommes');
 });
 
 test("« Partition » ouvre la fenêtre avec les pages et le lecteur, la fermer le rend à la carte", () => {
@@ -478,7 +484,7 @@ test("« Partition » ouvre la fenêtre avec les pages et le lecteur, la fermer 
 test("pas de bouton partition sans pages — ni pour les rêves, dont la copie interdit le partage", () => {
   const { doc } = load();
   openTab(doc, 'chant');
-  for (const id of ['siyahamba', 'white-sand', 'reves']){
+  for (const id of ['siyahamba', 'white-sand', 'reves', 'santiano']){
     const c = doc.getElementById('chant-' + id);
     assert.equal(c.querySelector('.chant-partition'), null, id);
     assert.ok(c.querySelector('.chant-sans'), id);

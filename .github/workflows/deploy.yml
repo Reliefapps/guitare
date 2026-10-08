@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.essai.outputs.page_url || steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -31,5 +31,16 @@ jobs:
         with:
           path: .
 
+      # L'artefact met parfois quelques secondes à être visible de l'API :
+      # le 8 octobre 2026, deploy-pages l'a cherché dans la seconde de son
+      # envoi et n'a rien trouvé. On réessaie une fois après une pause.
+      - id: essai
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+
+      - if: steps.essai.outcome == 'failure'
+        run: sleep 20
+
       - id: deployment
+        if: steps.essai.outcome == 'failure'
         uses: actions/deploy-pages@v4

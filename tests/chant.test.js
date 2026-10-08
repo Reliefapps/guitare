@@ -447,11 +447,19 @@ test("alto et soprano : un bouton par voix, il change la piste ; les rêves ont 
   assert.equal(ws.carte.querySelector('[data-voix]'), null);
   assert.match(ws.audio.src, /chant\/white-sand\.m4a$/);
 
-  /* Santiano (8 octobre 2026) : la voix d'hommes seule pour l'instant */
+  /* Santiano (8 octobre 2026) : trois voix, dont celle des hommes */
   const santiano = lecteurs.find(l => l.chant.id === 'santiano');
-  assert.equal(santiano.carte.querySelector('[data-voix]'), null);
+  const sv = [...santiano.carte.querySelectorAll('[data-voix]')];
+  assert.deepEqual(sv.map(b => b.textContent), ['Alto', 'Soprano', 'Hommes']);
+  /* la carte part sur la voix retenue à l'ouverture de l'onglet : Alto */
+  assert.match(santiano.audio.src, /chant\/santiano-alto\.m4a$/);
+  for (const b of sv) assert.equal(isVisible(b), true, b.textContent + ' pas visible');
+  sv[2].click();
   assert.match(santiano.audio.src, /chant\/santiano-hommes\.m4a$/);
-  assert.equal(santiano.carte.querySelector('.chant-sous').textContent, 'Hugues Aufray · voix d\'hommes');
+  assert.equal(sv[2].getAttribute('aria-pressed'), 'true');
+  sv[1].click();
+  assert.match(santiano.audio.src, /chant\/santiano-soprano\.m4a$/);
+  assert.equal(santiano.carte.querySelector('.chant-sous').textContent, 'Hugues Aufray');
 });
 
 test("« Partition » ouvre la fenêtre avec les pages et le lecteur, la fermer le rend à la carte", () => {

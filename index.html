@@ -255,6 +255,39 @@
   .exo-steps b{color:var(--ink);}
   .exo-steps a{color:var(--ink); text-underline-offset:3px;}
 
+  /* ---------- Just Like Heaven ---------- */
+  .jlh-bloc{margin-top:26px; scroll-margin-top:70px;}
+  .jlh-bloc h3{
+    font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:18px;
+    margin-bottom:12px;
+  }
+  /* le voicing (x02220) se lit tel quel, pas en capitales */
+  .jlh-bloc .chord-fr{text-transform:none; letter-spacing:.14em;}
+  .jlh-grille{display:grid; grid-template-columns:repeat(8,1fr); gap:6px; margin-top:14px;}
+  .jlh-cell{
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    padding:8px 2px 10px; border:1px solid var(--line); border-radius:10px; background:var(--paper);
+  }
+  .jlh-cell .compte{font-family:"Spline Sans Mono",monospace; font-size:11px; font-weight:700; color:#C4BAAA;}
+  .jlh-cell.temps .compte{font-size:13px; color:var(--ink-soft);}
+  .jlh-cell .coup{font-size:24px; line-height:1.1; font-weight:700; color:var(--ink); min-height:28px;}
+  /* la main descend à vide : le coup est là, mais il ne touche pas les cordes */
+  .jlh-cell .coup.fantome{color:#C4BAAA; font-size:18px;}
+  .jlh-cell.on{background:var(--ink); border-color:var(--ink);}
+  .jlh-cell.on .compte, .jlh-cell.on .coup{color:var(--paper);}
+  .jlh-cell.on .coup.fantome{color:#9B8F7E;}
+  .measure.on{border-color:var(--ink); box-shadow:0 0 0 2px var(--ink);}
+  .jlh-lecteur{
+    display:flex; align-items:center; gap:12px 18px; flex-wrap:wrap;
+    margin-top:14px; padding:12px 14px; border:1px solid var(--line); border-radius:12px;
+    background:var(--card);
+  }
+  .jlh-tempo{display:inline-flex; align-items:center; gap:8px;
+    font-family:"Spline Sans Mono",monospace; font-size:12.5px; color:var(--ink-soft);}
+  .jlh-tempo input{width:150px; accent-color:var(--ink); cursor:pointer;}
+  .jlh-tempo output{font-weight:700; color:var(--ink); min-width:62px; font-variant-numeric:tabular-nums;}
+  .jlh-tab text{user-select:none;}
+
   footer{
     margin-top:56px; padding:26px 0 40px; border-top:1px solid var(--line);
     color:var(--ink-soft); font-size:13px;
@@ -1078,6 +1111,7 @@
     <a href="#exercices">5 · Les exercices</a>
     <a href="#progressions">6 · Les progressions</a>
     <a href="#arpeges">7 · Les arpèges</a>
+    <a href="#jlh">8 · Just Like Heaven</a>
   </div>
 </nav>
 
@@ -1180,6 +1214,45 @@
     <div id="arp-list"></div>
     <div class="prog-legend" style="margin-top:18px">
       <b>Comment jouer :</b> une mesure par accord, sans t'arrêter entre les accords — c'est là que ça se joue. Commence lentement au métronome et n'accélère que quand le passage d'un accord à l'autre ne fait plus de trou. Le pouce sonne toujours un peu plus fort : c'est lui qui donne l'appui.
+    </div>
+  </div>
+</section>
+
+<!-- ================= 8. JUST LIKE HEAVEN ================= -->
+<section id="jlh">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">8</span><h2>Just Like Heaven — The Cure</h2></div>
+    <p class="hint">L'intro : quatre accords en boucle, <b>A · E · Bm7 · D</b>, une mesure chacun, et la boucle tourne <b>huit fois</b>. Une seule rythmique en 4/4 pour tout le passage, et le riff qui entre à la <b>cinquième</b> répétition. Le lecteur joue la boucle au tempo que tu choisis, pour caler la main droite.</p>
+
+    <div class="jlh-bloc" id="jlh-accords">
+      <h3>Les accords de l'intro</h3>
+      <div class="chords-grid" id="jlh-chords"></div>
+      <div class="prog-line" id="jlh-boucle"></div>
+      <div class="prog-legend" style="margin-top:14px">
+        <b>Bm7</b> en version simplifiée, <b>x20202</b>, à la place du <a href="#chord-Bm">Bm barré</a> que tu ne joues pas encore. Son doigté n'est pas noté : à voir avec le prof.
+      </div>
+    </div>
+
+    <div class="jlh-bloc" id="jlh-rythme">
+      <h3>Le rythme de grattage — 4/4</h3>
+      <p class="hint">On compte <b>« 1 – 2 et – (3) et – 4 »</b>. Temps <b>1</b> : bas (noire). Temps <b>2</b> : bas-haut (deux croches). Temps <b>3</b> : soupir de croche — la main descend dans le vide sans toucher. « et » du 3 : haut. Temps <b>4</b> : bas (noire).</p>
+      <div class="jlh-grille" id="jlh-grille" role="img" aria-label="Rythmique sur huit croches : bas, rien, bas, haut, bas à vide, haut, bas, rien"></div>
+      <div class="jlh-lecteur">
+        <button class="quiz-btn" id="jlh-play" type="button" aria-pressed="false">▶ Jouer</button>
+        <label class="jlh-tempo">Tempo
+          <input type="range" id="jlh-bpm" min="50" max="160" value="80" step="1" aria-label="Tempo en battements par minute">
+          <output id="jlh-bpm-val" for="jlh-bpm">80 bpm</output>
+        </label>
+        <label class="chant-check"><input type="checkbox" id="jlh-metro" checked> <b>Métronome</b></label>
+      </div>
+      <div class="prog-legend" style="margin-top:14px">
+        <b>La main fait bas-haut en continu sans s'arrêter, on touche les cordes ou pas.</b> Le métronome marque les quatre temps, plus aigu sur le 1 ; la case et l'accord en cours s'allument en rythme.
+      </div>
+    </div>
+
+    <div class="jlh-bloc" id="jlh-riff">
+      <h3>Le riff — à la cinquième répétition</h3>
+      <div class="tab-block" id="jlh-tab-block"></div>
     </div>
   </div>
 </section>
@@ -2539,9 +2612,12 @@ function chordSVG(name, ch){
     } else if (!(ch.barre && f === ch.barre.fret)){
       const cy = nutY+(f-off-0.5)*fh;
       el('circle',{cx:x, cy, r:11, fill:'var(--ink)'}, svg);
-      const t = el('text',{x, y:cy+4.5, 'text-anchor':'middle', fill:'#fff',
-        'font-family':'Spline Sans Mono,monospace','font-size':'12.5','font-weight':'700'}, svg);
-      t.textContent = ch.fingers[s];
+      /* un doigté à 0 sur une case jouée : le doigt n'est pas noté, pas de numéro */
+      if (ch.fingers[s]){
+        const t = el('text',{x, y:cy+4.5, 'text-anchor':'middle', fill:'#fff',
+          'font-family':'Spline Sans Mono,monospace','font-size':'12.5','font-weight':'700'}, svg);
+        t.textContent = ch.fingers[s];
+      }
     }
     /* nom de la note sous la corde */
     const isRoot = ch.notes[s] === ch.root;
@@ -2958,6 +3034,290 @@ for (const exo of ARP_EXOS){
 }
 
 /* ============================================================
+   8. Just Like Heaven (The Cure) — l'intro : accords, rythmique, riff
+   Les quatre accords sont ceux du cours ; Bm7 en version simplifiée
+   (x20202), le barré viendra plus tard. Son doigté n'est pas noté.
+   ============================================================ */
+const JLH_ACCORDS = [
+  { id:'A',   root:'A', voicing:'x02220', midi:[45,52,57,61,64],    ch:CHORDS.A },
+  { id:'E',   root:'E', voicing:'022100', midi:[40,47,52,56,59,64], ch:CHORDS.E },
+  { id:'Bm7', root:'B', voicing:'x20202', midi:[47,50,57,59,66],
+    ch:{ root:'B', frets:[-1,2,0,2,0,2], fingers:[0,0,0,0,0,0], notes:['×','B','D','A','B','F#'] } },
+  { id:'D',   root:'D', voicing:'xx0232', midi:[50,57,62,66],       ch:CHORDS.D },
+];
+
+const jlhChords = document.getElementById('jlh-chords');
+const jlhCartes = JLH_ACCORDS.map(a => {
+  const card = document.createElement('article');
+  card.className = 'chord-card';
+  card.id = 'jlh-' + a.id;
+  card.style.setProperty('--flash', NOTE_COLORS[a.root]);
+  card.innerHTML = `<div class="chord-name" style="color:${NOTE_COLORS[a.root]}">${a.id}</div>
+                    <div class="chord-fr">${a.voicing}</div>`;
+  card.appendChild(chordSVG(a.id, a.ch));
+  jlhChords.appendChild(card);
+  return card;
+});
+
+/* la boucle : une mesure par accord, huit fois */
+const jlhBoucle = document.getElementById('jlh-boucle');
+const jlhMesures = JLH_ACCORDS.map(a => {
+  const box = document.createElement('div');
+  box.className = 'measure';
+  const lien = document.createElement('a');
+  lien.className = 'chip';
+  lien.href = '#jlh-' + a.id;
+  lien.style.background = NOTE_COLORS[a.root];
+  lien.textContent = a.id;
+  box.appendChild(lien);
+  jlhBoucle.appendChild(box);
+  return box;
+});
+{
+  const t = document.createElement('span');
+  t.className = 'repeat-tag';
+  t.textContent = '↻ ×8 — le riff à la 5e';
+  jlhBoucle.appendChild(t);
+}
+
+/* la rythmique, sur huit croches :
+   d = bas · u = haut · g = la main descend à vide · . = rien */
+const JLH_PATTERN = 'd.dugud.';
+const JLH_COUPS = { d:'↓', u:'↑', g:'(↓)', '.':'' };
+const jlhGrille = document.getElementById('jlh-grille');
+const jlhCells = [...JLH_PATTERN].map((c, i) => {
+  const cell = document.createElement('div');
+  cell.className = 'jlh-cell' + (i % 2 === 0 ? ' temps' : '');
+  cell.innerHTML = `<span class="compte">${i % 2 === 0 ? i / 2 + 1 : 'et'}</span>
+    <span class="coup${c === 'g' ? ' fantome' : ''}">${JLH_COUPS[c]}</span>`;
+  jlhGrille.appendChild(cell);
+  return cell;
+});
+
+/* le riff, tel que noté à la main par le prof : trois cordes (e, B, G),
+   une colonne par chiffre, aucune durée — le rythme n'est pas écrit.
+   '-' = le tiret de la feuille, rien n'est écrit là. */
+const JLH_CORDES = [ { nom:'e', open:'E' }, { nom:'B', open:'B' }, { nom:'G', open:'G' } ];
+const JLH_RIFF = [
+  [[0,14],[0,14],[0,14],[0,12],[0,12],[0,10],[0,10]],
+  [[0,9],[0,9],[0,9],[0,7],[0,7],[0,5],[0,5]],
+  [[0,3],[0,3],[0,3],[0,2],[0,3]],
+  [[0,0,4],'-',[0,0,2],'-'],
+];
+const jlhNote = (open, fret) => CHROMA[(CHROMA.indexOf(open) + fret) % 12];
+
+function riffSVG(bars){
+  const rowH = 20, top = 22, left = 26, colW = 26, barPad = 10;
+  const widths = bars.map(b => b.length * colW + barPad);
+  const w = left + widths.reduce((a, b) => a + b, 0) + 14;
+  const h = top + 2 * rowH + 16;
+  const svg = document.createElementNS(SVGNS, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  svg.setAttribute('width', w);
+  svg.setAttribute('class', 'jlh-tab');
+  svg.setAttribute('role', 'img');
+  svg.setAttribute('aria-label', 'Tablature du riff, cordes e, B et G, sans durées');
+  JLH_CORDES.forEach((c, s) => {
+    const y = top + s * rowH;
+    el('line', {x1:left - 6, y1:y, x2:w - 10, y2:y, stroke:'#DFD6C6', 'stroke-width':1 + s * 0.25}, svg);
+    const lb = el('text', {x:12, y:y + 4, 'text-anchor':'middle', fill:'var(--ink-soft)',
+      'font-family':'Spline Sans Mono,monospace', 'font-size':'11', 'font-weight':'700'}, svg);
+    lb.textContent = c.nom;
+  });
+  let x = left;
+  bars.forEach((bar, bi) => {
+    el('line', {x1:x - 4, y1:top - 3, x2:x - 4, y2:top + 2 * rowH + 3, stroke:'#C9BFAE',
+      'stroke-width': bi === 0 ? 2 : 1.2, class:'mesure'}, svg);
+    bar.forEach((col, j) => {
+      const px = x + barPad / 2 + j * colW + colW / 2;
+      JLH_CORDES.forEach((c, s) => {
+        const y = top + s * rowH;
+        if (col === '-'){
+          const t = el('text', {x:px, y:y + 4, 'text-anchor':'middle', fill:'#C9BFAE', class:'tiret',
+            'font-family':'Spline Sans Mono,monospace', 'font-size':'12.5', 'font-weight':'700'}, svg);
+          t.textContent = '–';
+          return;
+        }
+        if (col[s] == null) return;
+        const note = jlhNote(c.open, col[s]);
+        el('circle', {cx:px, cy:y, r:9, fill:'var(--card)'}, svg);
+        const t = el('text', {x:px, y:y + 4, 'text-anchor':'middle', fill:NOTE_COLORS[note[0]],
+          class:'case', 'data-corde':c.nom, 'data-note':note,
+          'font-family':'Spline Sans Mono,monospace', 'font-size':'12.5', 'font-weight':'700'}, svg);
+        t.textContent = col[s];
+      });
+    });
+    x += widths[bi];
+  });
+  el('line', {x1:x - 4, y1:top - 3, x2:x - 4, y2:top + 2 * rowH + 3, stroke:'#C9BFAE', 'stroke-width':2, class:'mesure'}, svg);
+  return svg;
+}
+
+const jlhTab = document.getElementById('jlh-tab-block');
+jlhTab.innerHTML = `<div class="tab-head"><span class="tab-title">Le riff</span>
+  <span class="tab-sub">quatre mesures : la corde de e à vide par-dessus une ligne qui descend sur la corde de B</span></div>`;
+{
+  const sc = document.createElement('div');
+  sc.className = 'tab-scroll';
+  sc.appendChild(riffSVG(JLH_RIFF));
+  jlhTab.appendChild(sc);
+  /* la ligne mélodique : la note la plus grave de chaque colonne */
+  const melodie = document.createElement('div');
+  melodie.className = 'tab-note';
+  melodie.innerHTML = 'La ligne qui descend : ' + JLH_RIFF.map(bar => bar.filter(c => c !== '-').map(col => {
+    const s = col.length - 1, note = jlhNote(JLH_CORDES[s].open, col[s]);
+    return `<span class="mono-b" style="color:${NOTE_COLORS[note[0]]}">${note}</span>`;
+  }).join(' ')).join(' <span class="mono-b">|</span> ');
+  jlhTab.appendChild(melodie);
+  const avert = document.createElement('div');
+  avert.className = 'tab-note';
+  avert.innerHTML = `<b>Le rythme n'est pas noté</b> : la feuille ne donne que les cases, pas les durées. Tablature recopiée telle quelle de la feuille du prof — à vérifier avec lui.`;
+  jlhTab.appendChild(avert);
+}
+
+/* ------------------------------------------------------------
+   Le lecteur : la boucle A · E · Bm7 · D à la rythmique, avec un son de
+   guitare synthétisé (Karplus-Strong), un métronome, et la case et
+   l'accord en cours qui s'allument.
+   ------------------------------------------------------------ */
+const jlhPlay = document.getElementById('jlh-play');
+const jlhBpm = document.getElementById('jlh-bpm');
+const jlhBpmVal = document.getElementById('jlh-bpm-val');
+const jlhMetro = document.getElementById('jlh-metro');
+jlhBpm.addEventListener('input', () => { jlhBpmVal.textContent = jlhBpm.value + ' bpm'; });
+
+/* lu au moment de jouer, pas au chargement : certains navigateurs ne l'exposent qu'après un geste */
+const jlhAC = () => window.AudioContext || window.webkitAudioContext;
+let jlhLecture = null;
+
+/* Karplus-Strong : un buffer de bruit de la longueur d'une période, relu
+   en boucle en moyennant deux échantillons voisins. Chaque tour atténue
+   les aigus et le son s'arrondit comme une corde pincée. Calculé une fois
+   par note MIDI, 1,8 s, décroissance 0,997 ; la fin est fondue pour ne
+   pas claquer si le son va jusqu'au bout. */
+function jlhCorde(ctx, midi){
+  const sr = ctx.sampleRate, f = 440 * Math.pow(2, (midi - 69) / 12);
+  const N = Math.round(sr / f), len = Math.round(sr * 1.8), fondu = Math.round(sr * 0.1);
+  const buf = ctx.createBuffer(1, len, sr), out = buf.getChannelData(0);
+  const ring = new Float32Array(N);
+  for (let i = 0; i < N; i++) ring[i] = Math.random() * 2 - 1;
+  let k = 0;
+  for (let i = 0; i < len; i++){
+    const cur = ring[k], nxt = ring[(k + 1) % N];
+    out[i] = cur;
+    ring[k] = 0.997 * 0.5 * (cur + nxt);
+    k = (k + 1) % N;
+  }
+  for (let i = 0; i < fondu; i++) out[len - 1 - i] *= i / fondu;
+  return buf;
+}
+
+function jlhJouer(){
+  const ctx = new (jlhAC())();
+  try { if (ctx.resume) ctx.resume(); } catch (e) {}
+  const sortie = ctx.createGain();
+  sortie.gain.value = 0.9;
+  sortie.connect(ctx.destination);
+  /* un passe-bas vers 2800 Hz adoucit le bruit d'attaque des cordes */
+  const filtre = ctx.createBiquadFilter();
+  filtre.type = 'lowpass';
+  filtre.frequency.value = 2800;
+  filtre.connect(sortie);
+  const cordes = new Map();
+  for (const a of JLH_ACCORDS) for (const m of a.midi) if (!cordes.has(m)) cordes.set(m, jlhCorde(ctx, m));
+
+  /* un coup : les cordes partent avec ~11 ms de décalage. Bas = toutes les
+     cordes de l'accord, du grave à l'aigu ; haut = les quatre aiguës, de
+     l'aigu au grave, un peu moins fort. Le coup précédent s'éteint en
+     30 ms pour ne pas faire de bouillie. */
+  let precedent = null;
+  function coup(t, accord, sens){
+    if (precedent){
+      precedent.gain.gain.setValueAtTime(1, t);
+      precedent.gain.gain.linearRampToValueAtTime(0, t + 0.03);
+      precedent.sources.forEach(s => { try { s.stop(t + 0.05); } catch (e) {} });
+    }
+    const gain = ctx.createGain();
+    gain.gain.value = 1;
+    gain.connect(filtre);
+    const notes = sens === 'd' ? accord.midi : accord.midi.slice(-4).reverse();
+    const vol = sens === 'd' ? 0.2 : 0.14;
+    const sources = notes.map((m, i) => {
+      const src = ctx.createBufferSource();
+      src.buffer = cordes.get(m);
+      const v = ctx.createGain();
+      v.gain.value = vol;
+      src.connect(v); v.connect(gain);
+      src.start(t + i * 0.011);
+      return src;
+    });
+    precedent = { gain, sources };
+  }
+  /* le clic du métronome ; le temps 1 est plus aigu */
+  function clic(t, fort){
+    const o = ctx.createOscillator(), gn = ctx.createGain();
+    o.type = 'square';
+    o.frequency.value = fort ? 1800 : 1200;
+    gn.gain.setValueAtTime(fort ? 0.16 : 0.1, t);
+    gn.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+    o.connect(gn); gn.connect(sortie);
+    o.start(t); o.stop(t + 0.05);
+  }
+  function allumer(k, mesure){
+    jlhCells.forEach((c, j) => c.classList.toggle('on', j === k));
+    jlhMesures.forEach((m, j) => m.classList.toggle('on', j === mesure));
+    jlhCartes.forEach((c, j) => c.classList.toggle('flash', j === mesure));
+  }
+
+  /* l'ordonnanceur : toutes les 25 ms, on programme ce qui tombe dans les
+     120 ms à venir. Tempo et métronome sont relus à chaque croche. */
+  const croche = () => 30 / +jlhBpm.value;
+  let i = 0, suivant = ctx.currentTime + 0.1, timers = [];
+  const plan = (t, fn) => timers.push(setTimeout(fn, Math.max(0, (t - ctx.currentTime) * 1000)));
+  function tick(){
+    const now = ctx.currentTime;
+    /* onglet mis en veille : on ne rattrape pas le retard, on repart d'ici */
+    if (suivant < now - 0.5) suivant = now + 0.05;
+    while (suivant < now + 0.12){
+      const k = i % 8, mesure = Math.floor(i / 8) % JLH_ACCORDS.length, c = JLH_PATTERN[k], t = suivant;
+      if (c === 'd' || c === 'u') coup(t, JLH_ACCORDS[mesure], c);
+      if (k % 2 === 0 && jlhMetro.checked) clic(t, k === 0);
+      plan(t, () => allumer(k, mesure));
+      suivant += croche();
+      i++;
+    }
+  }
+  tick();
+  const horloge = setInterval(tick, 25);
+  return {
+    stop(){
+      clearInterval(horloge);
+      timers.forEach(clearTimeout);
+      try { sortie.disconnect(); } catch (e) {}
+      try { ctx.close(); } catch (e) {}
+      allumer(-1, -1);
+    },
+  };
+}
+
+function jlhArreter(){
+  if (!jlhLecture) return;
+  jlhLecture.stop();
+  jlhLecture = null;
+  jlhPlay.setAttribute('aria-pressed', 'false');
+  jlhPlay.textContent = '▶ Jouer';
+}
+jlhPlay.addEventListener('click', () => {
+  if (jlhLecture){ jlhArreter(); return; }
+  if (!jlhAC()){ jlhPlay.textContent = 'Son indisponible sur ce navigateur'; return; }
+  jlhLecture = jlhJouer();
+  jlhPlay.setAttribute('aria-pressed', 'true');
+  jlhPlay.textContent = '■ Stop';
+});
+/* on coupe le son en changeant d'onglet */
+document.querySelectorAll('.pagetab').forEach(t => t.addEventListener('click', jlhArreter));
+
+/* ============================================================
    Menu latéral — généré depuis les données
    ============================================================ */
 const sideNav = document.getElementById('sidenav-links');
@@ -2995,6 +3355,10 @@ ARP_EXOS.forEach(exo=>{
     exo.accords.map(a=>`<span class="mono-b" style="color:${NOTE_COLORS[CHORDS[a.id].root[0]]}">${CHORDS[a.id].name || a.id}</span>`).join(' · '),
     'lvl2');
 });
+lvl1Links['jlh'] = navLink('#jlh','8 · Just Like Heaven','lvl1');
+navLink('#jlh-accords', 'Les accords de l\'intro', 'lvl2');
+navLink('#jlh-rythme', 'Le rythme de grattage', 'lvl2');
+navLink('#jlh-riff', 'Le riff', 'lvl2');
 
 /* section active pendant le défilement */
 const spy = makeSpy((entries)=>{
@@ -3005,7 +3369,7 @@ const spy = makeSpy((entries)=>{
     }
   }
 }, { rootMargin:'-15% 0px -70% 0px' });
-for (const id of ['manche','accords','barres','rythmiques','exercices','progressions','arpeges']){
+for (const id of ['manche','accords','barres','rythmiques','exercices','progressions','arpeges','jlh']){
   spy.observe(document.getElementById(id));
 }
 

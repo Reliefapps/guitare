@@ -107,11 +107,11 @@ test('les gammes de La sont annoncées dans le sommaire de Théorie, plus dans c
     assert.equal(doc.querySelector('#sidenav-links a[href="#' + pos.id + '"]'), null,
       'lien latéral en trop : ' + pos.id);
   }
-  /* la fiche guitare compte désormais sept sections, numérotées sans trou */
+  /* la fiche guitare compte désormais huit sections, numérotées sans trou */
   assert.deepEqual([...doc.querySelectorAll('#page-guitare nav.sticky a')].map(a => a.getAttribute('href')),
-    ['#manche', '#accords', '#barres', '#rythmiques', '#exercices', '#progressions', '#arpeges']);
+    ['#manche', '#accords', '#barres', '#rythmiques', '#exercices', '#progressions', '#arpeges', '#jlh']);
   assert.deepEqual([...doc.querySelectorAll('#page-guitare .sec-num')].map(n => n.textContent),
-    ['1', '2', '3', '4', '5', '6', '7']);
+    ['1', '2', '3', '4', '5', '6', '7', '8']);
 });
 
 /* ============ l'onglet théorie ============ */

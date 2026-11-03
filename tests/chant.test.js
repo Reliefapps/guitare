@@ -265,6 +265,71 @@ test("placer la note : la note joue, puis le micro, puis la note tenue est valid
   win.close();
 });
 
+test("la note en clé de sol : la bonne ligne, les lignes supplémentaires, l'octave des voix graves", () => {
+  const { win } = load();
+  const { ecritureSol, octavieePour, VOIX } = win.chant;
+  const pas = (m, o) => ecritureSol(m, o).pas;
+  /* clé de sol : E4 sur la ligne du bas, G4 sur la deuxième, F5 sur celle du haut */
+  assert.equal(pas(64, false), 30);
+  assert.equal(pas(67, false), 32);
+  assert.equal(pas(77, false), 38);
+  assert.equal(pas(62, false), 29);                   /* D4 : sous la portée, sans ligne */
+  assert.equal(ecritureSol(62, false).lignes.length, 0);
+  assert.equal(ecritureSol(60, false).lignes.join(), '28');      /* C4 : une ligne */
+  assert.equal(ecritureSol(81, false).lignes.join(), '40');      /* A5 : une ligne au-dessus */
+  assert.equal(ecritureSol(57, false).lignes.join(), '28,26');   /* A3 : deux lignes */
+  const dieze = ecritureSol(61, false);
+  assert.equal(dieze.lettre + dieze.alt, 'C♯');
+  assert.equal(dieze.pas, 28);
+  /* clé de sol octaviée : G3 chanté s'écrit sur la ligne de G, E2 sous trois lignes */
+  assert.equal(pas(55, true), 32);
+  assert.equal(ecritureSol(40, true).lignes.join(), '28,26,24');
+  /* ténors, barytons et basses en clé octaviée ; altos, mezzos, sopranos non */
+  assert.equal(VOIX.map(v => octavieePour(v)).join(), 'true,true,true,false,false,false');
+});
+
+test("placer la note : la note jouée s'écrit sur la portée, en clé de sol", () => {
+  const { doc, win, jsErrors } = load();
+  openTab(doc, 'chant');
+  const { placer, ecritureSol } = win.chant;
+  const portee = doc.getElementById('placer-portee');
+  const cle = doc.getElementById('placer-cle');
+  assert.equal(isVisible(portee), true, 'portée pas visible');
+  assert.equal(portee.querySelectorAll('line.ligne').length, 5);
+  assert.ok(portee.querySelector('.cle path'), 'pas de clé de sol');
+  /* avant de jouer : la portée et la clé, pas encore de note */
+  assert.equal(portee.querySelector('.tete'), null);
+  /* le ténor (par défaut) lit la clé octaviée */
+  assert.equal(cle.textContent, 'clé de sol octaviée');
+  assert.equal(portee.querySelector('.cle .octava').textContent, '8');
+
+  placer.lancer();
+  let cible = placer.question, w = ecritureSol(cible.midi, true);
+  let tete = portee.querySelector('.tete');
+  assert.ok(tete, 'la note jouée n\'est pas sur la portée');
+  assert.equal(+tete.dataset.pas, w.pas);
+  assert.equal(+tete.getAttribute('cy'), 85 - (w.pas - 30) * 5);
+  assert.equal(tete.getAttribute('fill'), cible.couleur);
+  assert.equal(portee.querySelectorAll('line.supp').length, w.lignes.length);
+  assert.equal(!!portee.querySelector('.alt'), !!cible.alt);
+  assert.equal(portee.getAttribute('aria-label'), cible.en + ' sur la portée, en clé de sol octaviée');
+
+  /* une soprano lit la clé de sol telle quelle */
+  const voix = doc.getElementById('chant-voix');
+  voix.value = 'soprano';
+  voix.dispatchEvent(new win.Event('change'));
+  assert.equal(cle.textContent, 'clé de sol');
+  assert.equal(portee.querySelector('.cle .octava'), null);
+  doc.getElementById('placer-next').click();
+  cible = placer.question; w = ecritureSol(cible.midi, false);
+  assert.ok(cible.midi >= 60 && cible.midi <= 79, 'hors de la tessiture de la soprano');
+  assert.equal(+portee.querySelector('.tete').dataset.pas, w.pas);
+  assert.equal(portee.querySelectorAll('.tete').length, 1);
+  placer.arreter();
+  assert.deepEqual(jsErrors, []);
+  win.close();
+});
+
 test("octave exacte (par défaut) : la bonne note une octave trop bas ne compte pas, et le message le dit", () => {
   const { doc, win } = load();
   openTab(doc, 'chant');

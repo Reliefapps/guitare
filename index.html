@@ -816,6 +816,9 @@
     letter-spacing:.12em; text-transform:uppercase; color:#C9BBA9; min-height:20px;
     white-space:nowrap;
   }
+  /* la note écrite sur une portée en clé de sol, à côté du disque */
+  .jeu-portee{width:210px; height:210px; flex:none; overflow:visible;}
+  .jeu-portee .tete{transition:opacity .2s ease;}
   .jeu-saut{text-align:center; max-width:190px;}
   .jeu-saut .nom{
     font-family:"Bricolage Grotesque",sans-serif; font-weight:800;
@@ -1036,6 +1039,7 @@
     .jeu-disque.petit .jeu-lettre{font-size:34px;}
     .jeu-scene{min-height:150px;}
     .jeu-fr{font-size:11px; letter-spacing:.06em;}
+    .jeu-portee{width:140px; height:140px;}
   }
 
   /* Dégradation en escalier de la barre d'onglets. Les seuils sont calculés
@@ -1948,6 +1952,10 @@
             <div class="jeu-lettre" id="placer-note" aria-live="polite">♪</div>
           </div>
           <div class="jeu-fr" id="placer-fr"></div>
+        </div>
+        <div class="jeu-pile">
+          <svg class="jeu-portee" id="placer-portee" viewBox="0 0 150 150" role="img" aria-label="La note sur la portée, en clé de sol"></svg>
+          <div class="jeu-fr" id="placer-cle">clé de sol</div>
         </div>
       </div>
 
@@ -6212,7 +6220,23 @@ function voixMesuree(grave, aigu){
 }
 
 /* exposé pour les tests : les calculs, hors DOM et hors micro */
-window.chant = { nomNote, midiVersFreq, freqVersMidi, detecterHauteur, nomIntervalle, INTERVALLES, INTERVALLES_DEFAUT, Maintien, VOIX, mediane, voixMesuree };
+/* ---------- la note en clé de sol ----------
+   pas = degré diatonique depuis C0 (C4 = 28) ; la ligne du bas de la
+   portée est E4, pas 30, celle du haut F5, pas 38. Les ténors et les
+   basses lisent la clé de sol octaviée, comme sur les partitions de la
+   chorale : la note s'écrit une octave plus haut qu'elle ne sonne, sinon
+   un E2 de basse traînerait sous sept lignes supplémentaires. */
+const octavieePour = v => (v.lo + v.hi) / 2 < 60;
+function ecritureSol(midi, octaviee){
+  const n = nomNote(midi + (octaviee ? 12 : 0));
+  const pas = n.octave * 7 + 'CDEFGAB'.indexOf(n.lettre);
+  const lignes = [];
+  for (let p = 28; p >= pas; p -= 2) lignes.push(p);   /* sous la portée : C4, A3… */
+  for (let p = 40; p <= pas; p += 2) lignes.push(p);   /* au-dessus : A5, C6… */
+  return { pas, lettre: n.lettre, alt: n.alt, lignes };
+}
+
+window.chant = { nomNote, midiVersFreq, freqVersMidi, detecterHauteur, nomIntervalle, INTERVALLES, INTERVALLES_DEFAUT, Maintien, VOIX, mediane, voixMesuree, ecritureSol, octavieePour };
 
 const page = document.getElementById('page-chant');
 if (!page) return;
@@ -6654,6 +6678,40 @@ const placer = (function(){
   }
   rendreJauge();
   tolSel.addEventListener('change', rendreJauge);
+
+  /* la portée : cinq lignes, la clé de sol, et la note jouée — sa tête a
+     la couleur de sa note. Demandé le 3 novembre 2026, pour apprendre où
+     se posent le G, le D… sur la portée. Interligne de 10, la ligne du
+     haut (F5) en y = 45, celle du bas (E4) en y = 85. */
+  const portee = $('placer-portee'), cleEl = $('placer-cle');
+  const ySol = pas => 85 - (pas - 30) * 5;
+  const ENCRE = '#F3EADD', LIGNE = '#8A7562', XN = 102;
+  function rendrePortee(){
+    portee.innerHTML = '';
+    const octaviee = octavieePour(tessiture());
+    for (let i = 0; i < 5; i++) el('line', { x1:2, x2:148, y1:45 + i * 10, y2:45 + i * 10, stroke:LIGNE, 'stroke-width':1.2, class:'ligne' }, portee);
+    /* la clé de sol : la spirale s'enroule autour de la ligne de G */
+    const cle = el('g', { class:'cle', transform:'translate(6 45)' }, portee);
+    el('path', { d:'M19 33 C13 32 13 24 19 23 C26 22 30 29 27 35 C24 41 12 41 9 34 C6 27 12 20 18 13' +
+      ' C23 7 26 -1 24 -8 C22 -14 16 -12 15 -4 C14 6 18 30 21 47 C22 53 17 56 13 52',
+      fill:'none', stroke:ENCRE, 'stroke-width':2.4, 'stroke-linecap':'round', 'stroke-linejoin':'round' }, cle);
+    el('circle', { cx:14, cy:50.5, r:3.2, fill:ENCRE }, cle);
+    if (octaviee){
+      el('text', { x:21, y:68, 'text-anchor':'middle', 'font-size':11, 'font-weight':700, fill:ENCRE, class:'octava' }, cle).textContent = '8';
+    }
+    cleEl.textContent = octaviee ? 'clé de sol octaviée' : 'clé de sol';
+    cleEl.title = octaviee ? 'Le petit 8 sous la clé : la note sonne une octave plus bas que ce qui est écrit, comme sur les partitions de ténor.' : '';
+    if (!cible) return;
+    const w = ecritureSol(cible.midi, octaviee), y = ySol(w.pas);
+    for (const p of w.lignes) el('line', { x1:XN - 13, x2:XN + 13, y1:ySol(p), y2:ySol(p), stroke:LIGNE, 'stroke-width':1.2, class:'supp' }, portee);
+    if (w.alt) el('text', { x:XN - 17, y:y + 6, 'text-anchor':'middle', 'font-size':18, fill:ENCRE, class:'alt',
+      'font-family':'Georgia,"Times New Roman",serif' }, portee).textContent = w.alt;
+    el('ellipse', { cx:XN, cy:y, rx:7.2, ry:5.2, transform:`rotate(-20 ${XN} ${y})`, fill:cible.couleur,
+      stroke:'#fff', 'stroke-width':1, class:'tete', 'data-pas':w.pas }, portee);
+    portee.setAttribute('aria-label', `${cible.en} sur la portée, en ${octaviee ? 'clé de sol octaviée' : 'clé de sol'}`);
+  }
+  rendrePortee();
+  voixSel.addEventListener('change', rendrePortee);
   modeSel.addEventListener('change', rendreJauge);
   octaveChk.addEventListener('change', rendreJauge);
 
@@ -6668,6 +6726,7 @@ const placer = (function(){
       noteEl.innerHTML = htmlNote(cible);
       frEl.textContent = cible.fr;
       rendreJauge();
+      rendrePortee();
     },
     notes: () => [cible.midi],
     cible: () => cible.midi,

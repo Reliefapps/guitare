@@ -463,12 +463,12 @@ const fs = require('node:fs');
 const path = require('node:path');
 const RACINE = path.join(__dirname, '..');
 
-test("les cinq chants ont leur carte visible et leur lecteur", () => {
+test("les six chants ont leur carte visible et leur lecteur", () => {
   const { doc, jsErrors } = load();
   openTab(doc, 'chant');
   const cartes = [...doc.querySelectorAll('#chants-liste .chant-carte')];
   assert.deepEqual(cartes.map(c => c.querySelector('.chant-titre').textContent),
-    ['Siyahamba', 'Les anges dans nos campagnes', 'White Sand', 'Les rêves sont en nous', 'Santiano']);
+    ['Siyahamba', 'Les anges dans nos campagnes', 'White Sand', 'Les rêves sont en nous', 'Santiano', 'I saw three ships']);
   for (const c of cartes){
     assert.equal(isVisible(c), true, c.id + ' pas visible');
     assert.equal(isVisible(c.querySelector('.lecteur-jouer')), true, c.id + ' sans bouton lecture');
@@ -583,6 +583,33 @@ test("Siyahamba, White Sand et Les rêves : « Partition » ouvre les pages, san
   doc.getElementById('chant-anges').querySelector('.chant-partition').click();
   assert.equal(isVisible(lienPdf), true, 'lien PDF absent pour Les anges');
   assert.match(lienPdf.getAttribute('href'), /chant\/anges\.pdf$/);
+  assert.deepEqual(jsErrors, []);
+});
+
+test("I saw three ships (4 novembre 2026) : soprano et graves, la page et le PDF", () => {
+  const { doc, win, jsErrors } = load();
+  openTab(doc, 'chant');
+  const ships = win.chant.chants.lecteurs.find(l => l.chant.id === 'ships');
+  const voix = [...ships.carte.querySelectorAll('[data-voix]')];
+  assert.deepEqual(voix.map(b => b.textContent), ['Soprano', 'Graves']);
+  for (const b of voix) assert.equal(isVisible(b), true, b.textContent + ' pas visible');
+  voix[1].click();
+  assert.match(ships.audio.src, /chant\/ships-graves\.m4a$/);
+  voix[0].click();
+  assert.match(ships.audio.src, /chant\/ships-soprano\.m4a$/);
+  assert.equal(ships.carte.querySelector('.chant-sous').textContent, 'arr. Gian Paolo Dal Dosso');
+
+  const modal = doc.getElementById('chant-modal');
+  const btn = ships.carte.querySelector('.chant-partition');
+  assert.equal(isVisible(btn), true);
+  btn.click();
+  assert.equal(isVisible(modal), true);
+  assert.equal(doc.getElementById('chant-modal-titre').textContent, 'I saw three ships');
+  const imgs = [...modal.querySelectorAll('.chant-modal-pages img')];
+  assert.deepEqual(imgs.map(i => i.getAttribute('src')), ['chant/ships-1.webp']);
+  const lienPdf = doc.getElementById('chant-modal-pdf');
+  assert.equal(isVisible(lienPdf), true);
+  assert.match(lienPdf.getAttribute('href'), /chant\/ships\.pdf$/);
   assert.deepEqual(jsErrors, []);
 });
 

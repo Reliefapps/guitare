@@ -493,7 +493,11 @@ test("alto et soprano : un bouton par voix, il change la piste ; les rêves ont 
   const { lecteurs } = win.chant.chants;
   const siya = lecteurs.find(l => l.chant.id === 'siyahamba');
   const voix = [...siya.carte.querySelectorAll('[data-voix]')];
-  assert.deepEqual(voix.map(b => b.textContent), ['Alto', 'Soprano']);
+  /* 5 novembre 2026 : l'alto seul devient « Alto + Baryton » */
+  assert.deepEqual(voix.map(b => b.textContent), ['Alto + Baryton', 'Soprano']);
+  for (const b of voix) assert.equal(isVisible(b), true, b.textContent + ' pas visible');
+  voix[0].click();
+  assert.match(siya.audio.src, /chant\/siyahamba-alto-baryton\.m4a$/);
   voix[1].click();
   assert.match(siya.audio.src, /chant\/siyahamba-soprano\.m4a$/);
   assert.equal(voix[1].getAttribute('aria-pressed'), 'true');

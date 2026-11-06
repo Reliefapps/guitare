@@ -463,6 +463,18 @@
   .track-meta{font-size:14px; color:var(--ink-soft); flex:1 1 320px;}
   .track-meta b{color:var(--ink); font-weight:600;}
   .track-card .play-link{font-size:12.5px; padding:7px 15px;}
+  /* ---------- sous une partition : de quoi jouer par-dessus ---------- */
+  .tab-piste{display:flex; flex-wrap:wrap; align-items:center; gap:12px 18px; padding:12px 14px 4px;}
+  .tab-piste .play-link{margin-left:0; font-size:12.5px; padding:7px 15px;}
+  .tab-audio{display:grid; gap:4px; flex:1 1 260px; max-width:420px; font-size:12.5px; color:var(--ink-soft);}
+  .tab-audio audio{width:100%; height:36px;}
+  /* ---------- sous-titres à l'intérieur d'une section ---------- */
+  .sous-titre{font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:19px;
+    margin:32px 0 6px;}
+  /* ---------- les voisines d'une note ---------- */
+  .connexions .voisines{white-space:nowrap; font-family:"Spline Sans Mono",monospace;}
+  .connexions .voisines b{font-weight:600;}
+  .connexions .voisines b.cible{font-weight:700; font-size:1.3em;}
 
   /* ---------- les formes d'arpege, cote a cote ---------- */
   .forme-grid{display:grid; gap:14px; grid-template-columns:1fr;}
@@ -1300,6 +1312,8 @@
     <a href="#croches">9 · Croches continues</a>
     <a href="#impro-am">10 · Improviser sur un seul accord</a>
     <a href="#renversements">11 · Les arpèges renversés</a>
+    <a href="#role-basse">12 · Le rôle de la basse</a>
+    <a href="#accompagner">13 · Accompagner un morceau</a>
   </div>
 </nav>
 
@@ -1328,44 +1342,47 @@
 <section id="routine">
   <div class="wrap">
     <div class="sec-head"><span class="sec-num">2</span><h2>La routine quotidienne</h2></div>
-    <p class="hint">Le devoir de la semaine du <b>2 octobre 2026</b>, tel que tu l'as résumé à la fin du cours et que Santiago l'a complété : les formes en <b>Dm</b>, des <b>riffs en Am</b> sur une piste, les <b>arpèges</b> — et, par-dessus, <b>transposer</b> les formes et continuer les patterns. Cette fois le week-end est libre.</p>
+    <p class="hint">Le devoir du cours du <b>6 novembre 2026</b>, après trois semaines sans basse : <b>le chapitre sur le rôle de la basse</b>, les cinq exercices sur leurs pistes et les <b>notes de passage</b>. Avec, en fond, les formes de pentatonique pour la technique. Santiago ne cherche pas la perfection : il veut que tu <b>pratiques la méthode</b>, celle qui sert en répétition.</p>
     <div class="routine-grid">
       <div class="routine-card">
-        <div class="routine-time">les formes</div>
-        <div class="routine-title">Les trois formes en Dm</div>
+        <div class="routine-time">nouveau · la priorité</div>
+        <div class="routine-title">Les exercices sur leurs pistes</div>
         <ul class="focus">
-          <li>Vues en cours une par une, puis avec la batterie. <b>Lis la tablature</b>, ne devine pas : presque les formes de Am, à une différence près.</li>
-          <li><b>Repère la fondamentale</b> avant de partir — ici <b>D</b>, case 5 de la corde de A. C'est toujours elle, le point de départ.</li>
-          <li>Et <b>revois les six formes</b> : en Am, <b>90</b> passe, <b>100</b> pas encore — « assez rapide comme ça ».</li>
+          <li><b>Joues-en quelques-uns</b> : pas besoin de faire les cinq, ni de les mémoriser. Commence par le n° 1, celui du cours.</li>
+          <li>À chaque fois, <b>la même méthode</b> : les fondamentales les plus graves, une deuxième position, puis le rythme de la grosse caisse.</li>
+          <li>Ensuite, <b>change les rythmes</b> sans jamais perdre le pattern principal.</li>
         </ul>
-        <a class="routine-link" href="#pt-a1">Aller aux formes en Dm →</a>
+        <a class="routine-link" href="#accompagner">Aller à la méthode et aux exercices →</a>
       </div>
       <div class="routine-card">
-        <div class="routine-time">nouveau</div>
-        <div class="routine-title">Transposer les formes</div>
+        <div class="routine-time">à mémoriser</div>
+        <div class="routine-title">Les notes de passage sur G Em C D</div>
         <ul class="focus">
-          <li>La même forme, posée sur une autre fondamentale, donne une autre tonalité : la forme n° 1 de Am, partie de <b>G</b>, c'est <b>Gm</b>.</li>
-          <li>À essayer : <b>Gm</b>, <b>Bm</b>, <b>Cm</b>, <b>Em</b>, <b>F♯m</b> — avec toutes les formes.</li>
+          <li>Chaque note a <b>deux voisines</b> dans la gamme. Santiago : apprends <b>les deux chemins</b>, on s'en servira pour improviser.</li>
+          <li>La <b>fondamentale reste le plus important</b> : ajoute les notes de passage petit à petit.</li>
+          <li>Pas sûr de ton chemin ? <b>Reste sur la fondamentale.</b></li>
         </ul>
-        <a class="routine-link" href="#/theorie" data-goto="theorie" data-anchor="transposer">Aller à l'atelier de transposition →</a>
+        <a class="routine-link" href="#connexions">Aller aux notes de passage →</a>
       </div>
       <div class="routine-card">
-        <div class="routine-time">l'improvisation</div>
-        <div class="routine-title">Des riffs en Am, sur une piste</div>
+        <div class="routine-time">à regarder</div>
+        <div class="routine-title">Les deux vidéos de Santiago</div>
         <ul class="focus">
-          <li><b>Prépare tes riffs avant</b>, sans la piste, puis pose-les dessus. Un seul accord, <b>Am</b> ; la <b>fondamentale tous les quatre temps</b>.</li>
-          <li>Continue les <b>patterns en croches</b> : c'est avec eux, et avec la pentatonique, qu'on improvise.</li>
+          <li>Elles reprennent le chapitre, au cas où la lecture de la feuille te bloque.</li>
+          <li>La deuxième ne joue que <b>les fondamentales</b> : c'est le niveau débutant. À toi d'y ajouter les notes de passage.</li>
         </ul>
-        <a class="routine-link" href="#impro-am">Aller à l'improvisation →</a>
+        <a class="routine-link" id="video-role" href="https://www.youtube.com/watch?v=Ug-A2RG8K8Q&amp;list=PLNevnXwZhZDc&amp;index=2" target="_blank" rel="noopener">▶ The Role of the Bass</a>
+        <a class="routine-link" id="video-exos" href="https://www.youtube.com/watch?v=9iHwswTFLRw&amp;list=PLNevnXwZhZDc&amp;index=3" target="_blank" rel="noopener">▶ Basic Accompaniment Exercises</a>
       </div>
       <div class="routine-card">
-        <div class="routine-time">si tu as le temps</div>
-        <div class="routine-title">Les arpèges, deuxième renversement</div>
+        <div class="routine-time">la technique</div>
+        <div class="routine-title">Les formes de pentatonique mineure</div>
         <ul class="focus">
-          <li>La nouvelle feuille de Santiago, <b>Arpeggio Exercises</b> : trois exercices, « pas faciles ».</li>
-          <li>Santiago : <b>essaie de les jouer</b> si tu as un peu plus de temps — sans objectif de tempo.</li>
+          <li>Santiago : <b>continue les formes</b>, toutes, c'est ce qui travaille la technique.</li>
+          <li>Trois semaines sans basse : <b>reprends-les tranquillement</b>.</li>
         </ul>
-        <a class="routine-link" href="#renversements">Aller aux arpèges →</a>
+        <a class="routine-link" href="#pentatonique">Aller aux formes →</a>
+        <a class="routine-link" href="#/theorie" data-goto="theorie" data-anchor="transposer">Les transposer →</a>
       </div>
     </div>
     <div class="callout">
@@ -1538,6 +1555,121 @@
     <div id="renversements-list"></div>
     <div class="callout">
       <b>Pourquoi « deuxième renversement » :</b> un accord est renversé quand sa note la plus grave n'est plus la fondamentale. Au-dessus de la basse, les trois cordes jouent ici <b>quinte · fondamentale · tierce</b> — pour Am : <b>E · A · C</b>, la <b>quinte en bas</b> ; c'est ça, le deuxième renversement. Ce sont les quatre cases des <a href="#fo-min">formes d'arpège</a> de la section 4 : fondamentale, quinte, octave, tierce.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12. LE RÔLE DE LA BASSE ============ -->
+<section id="role-basse">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">12</span><h2>Le rôle de la basse</h2></div>
+    <p class="hint">Cours du <b>6 novembre 2026</b>, et le chapitre I de la méthode de Santiago, <b>The Role of the Bass in Music</b>. Le sujet tombe bien : maintenant que tu joues avec d'autres, il faut savoir quelle place tient chacun.</p>
+    <div class="rule">
+      <b>La basse relie le rythme et l'harmonie.</b> La guitare gratte un motif, la batterie en joue un autre, et ils n'ont pas grand-chose en commun à part le tempo. La basse prend les deux et en fait <b>une seule chose</b>. Et comme il n'y a pas de façon standard de jouer une ligne de basse, c'est aussi là que tu mets quelque chose de personnel.
+    </div>
+    <div class="routine-grid">
+      <div class="routine-card">
+        <div class="routine-time">qui joue quoi</div>
+        <div class="routine-title">La mélodie</div>
+        <ul class="focus">
+          <li>Le chant, le solo ou le riff de guitare, le saxophone : souvent des instruments qui ne jouent <b>qu'une note à la fois</b>.</li>
+          <li>La basse peut le faire, mais ce n'est pas son rôle habituel dans un groupe.</li>
+        </ul>
+      </div>
+      <div class="routine-card">
+        <div class="routine-time">qui joue quoi</div>
+        <div class="routine-title">L'harmonie</div>
+        <ul class="focus">
+          <li>Les <b>accords</b> et leurs enchaînements, parfois différents pour le couplet, le refrain et le pont.</li>
+          <li>Surtout le piano et la guitare rythmique.</li>
+        </ul>
+      </div>
+      <div class="routine-card">
+        <div class="routine-time">qui joue quoi</div>
+        <div class="routine-title">Le rythme</div>
+        <ul class="focus">
+          <li>Tous les instruments en jouent, mais c'est <b>la batterie</b> qui en a la charge.</li>
+        </ul>
+      </div>
+      <div class="routine-card">
+        <div class="routine-time">notre place</div>
+        <div class="routine-title">L'accompagnement</div>
+        <ul class="focus">
+          <li>Harmonie + rythme, sans la mélodie. C'est <b>là que vit la basse</b>, entre les deux.</li>
+        </ul>
+      </div>
+    </div>
+    <h3 class="sous-titre">Comment relier les deux</h3>
+    <ol class="steps">
+      <li><b>La fondamentale sur le premier temps de chaque mesure.</b> C'est le moyen le plus simple et le plus efficace pour que tout le monde entende l'accord. Une autre note à cet endroit peut semer le doute, même si elle appartient à l'accord ou à la gamme.</li>
+      <li><b>Joue avec la grosse caisse.</b> C'est ton alliée. Le même pattern qu'elle, ou presque, et l'accompagnement devient solide.</li>
+      <li><b>Le reste de la mesure est à toi.</b> Après la fondamentale, tu peux ajouter d'autres rythmes et d'autres notes.</li>
+    </ol>
+    <div class="callout">
+      <b>Ce que dit le chapitre sur le rythme.</b>
+      <ul class="focus">
+        <li><b>Reste stable, répète.</b> Changer de rythme tout le temps, ça embrouille. Le refrain se répète, le riff aussi : tu peux reprendre la même ligne et la transposer sur un autre accord.</li>
+        <li><b>Le deuxième temps est à la caisse claire.</b> Sur les exercices, grosse caisse et basse le laissent libre : ça donne de l'air et de la place aux mélodies. Ce n'est pas une règle fixe, la ligne s'adapte à la grosse caisse.</li>
+        <li><b>Le silence fait partie du groove.</b> Savoir quand ne pas jouer compte autant que le choix de la note.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 13. ACCOMPAGNER UN MORCEAU ============ -->
+<section id="accompagner">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">13</span><h2>Accompagner un morceau</h2></div>
+    <p class="hint">Cours du <b>6 novembre 2026</b> : on a fait comme si un copain arrivait en répétition avec une chanson que tu ne connais pas. Cette méthode sert <b>dans toutes les situations</b>. Les exercices sont là pour la pratiquer, pas pour être appris par cœur.</p>
+    <h3 class="sous-titre">La méthode</h3>
+    <ol class="steps">
+      <li><b>Demande les accords.</b></li>
+      <li><b>Demande la durée de chaque accord</b> : une demi-mesure, une mesure, deux mesures ?</li>
+      <li><b>Trouve les fondamentales, les plus graves d'abord.</b> Puis cherche <b>au moins une deuxième position</b>, en changeant d'octave ou de case. Parfois ça marche, parfois non. Sois sûr de tes notes avant de démarrer.</li>
+      <li><b>Écoute la grosse caisse</b> : demande au batteur de jouer le rythme, repère le pattern, et pose les fondamentales dessus.</li>
+      <li><b>Varie le rythme.</b> Toujours les fondamentales, mais ajoute un ou deux coups juste après le pattern. Celui-ci reste, lui ne change pas.</li>
+      <li><b>Ajoute des notes de passage</b> vers l'accord suivant, une fois tout ça en place.</li>
+    </ol>
+    <div class="callout">
+      <b>Deux garde-fous.</b> <b>Pas trop aigu</b> : monter d'une octave passe pour F, G, et A à la rigueur, c'est la limite. Plus haut, ça ne sonne plus comme une basse. <b>Plusieurs doigts</b> : la feuille déconseille de tout jouer avec un seul doigt de la main gauche.
+    </div>
+
+    <h3 class="sous-titre">Les cinq exercices</h3>
+    <p class="hint">La feuille <b>Basic Exercises</b>, avec ses tempos. Chaque exercice a sa piste. Pour chacun, repars de la méthode : ce qui est écrit est une version, à toi d'en trouver une deuxième.</p>
+    <div id="accomp-list"></div>
+    <div class="callout">
+      <b>Les mots de la feuille.</b>
+      <ul class="focus">
+        <li><b>Downbeat</b> : le premier temps de la mesure. En 4/4, le <b>1</b> est fort, le <b>2</b> faible, le <b>3</b> semi-fort, le <b>4</b> faible.</li>
+        <li><b>Offbeat</b> : une note sur la deuxième croche du temps, le « et ».</li>
+        <li><b>Backbeat</b> : l'accent sur le 2 et le 4, là où frappe la caisse claire.</li>
+        <li><b>Syncope</b> : l'accent déplacé vers une partie faible du temps.</li>
+      </ul>
+    </div>
+
+    <h3 class="sous-titre" id="connexions">Les notes de passage</h3>
+    <p class="hint">On ajoute maintenant d'autres notes, avec une méthode simple et efficace : les <b>notes de passage par degrés conjoints</b> (<i>stepwise</i>, <i>grados conjuntos</i>). Le principe : sur un accord, ne pense pas à lui, <b>pense au suivant</b>, et rejoins-le par une note voisine dans la gamme.</p>
+    <div class="track-card">
+      <div class="track-meta"><b>Tonalité de G</b> — ces sept notes sont disponibles : <span id="connexions-gamme"></span>. Chaque note a <b>une voisine de chaque côté</b>. La progression : <b>G | Em | C | D</b>, une mesure chacun.</div>
+    </div>
+    <table class="status-table connexions">
+      <thead><tr><th>Passage</th><th>Autour de l'arrivée</th><th>Comment y aller</th></tr></thead>
+      <tbody id="connexions-corps"></tbody>
+    </table>
+    <p class="hint" style="margin-top:18px">Les deux chemins à mémoriser. Le pattern de la grosse caisse ne bouge pas. La note de passage vient <b>juste après</b> : ici sur le 4, juste avant l'accord suivant. Santiago n'a pas fixé le temps exact, c'est une proposition pour démarrer.</p>
+    <div id="chemins-list"></div>
+
+    <div class="callout" id="accompagner-retour">
+      <b>Le retour du cours du 6 novembre 2026.</b> Santiago : « you did great », il faut juste pratiquer encore un peu.
+      <ul class="focus">
+        <li><b>Tes accords étaient trop courts.</b> Les notes étaient bonnes, mais tu en jouais deux par mesure. Chaque accord dure <b>une mesure</b> : 1, 2, 3, 4 sur G, puis 1, 2, 3, 4 sur Em.</li>
+        <li><b>C♯ entre C et D ?</b> Pas dans la gamme de G. Les chromatismes servent parfois, mais attention : pour l'instant, on reste dans la tonalité.</li>
+        <li><b>B entre C et D ?</b> Ce n'est pas faux, mais B et D n'ont pas de lien ici. <b>A</b>, lui, appartient à l'accord de D. Tout dépend du contexte : pour cet exercice, on reste sur les voisines.</li>
+        <li><b>Pas tout le temps.</b> Des notes de passage partout, ça finit par sonner ennuyeux ou enfantin. Une fois que la méthode est claire, tu la doses.</li>
+      </ul>
+    </div>
+    <div class="rule" style="margin-top:18px;margin-bottom:0">
+      <b>En répétition, reste simple.</b> Si tu hésites sur le passage vers l'accord suivant, reste sur la fondamentale : mieux vaut jouer très simple que rater la note, et faire perdre du temps aux autres en reprenant le morceau. Tu tenteras autre chose au tour suivant. Ici, en cours, tu peux te tromper autant que tu veux.
     </div>
   </div>
 </section>
@@ -4146,14 +4278,26 @@ const CHROMA_BEMOL = ['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭'
 function barArp(chord, txt, o){
   const opt = o || {};
   const noms = opt.bemols ? CHROMA_BEMOL : CHROMA_PAT;
+  /* « R » = un demi-soupir, « R*2 » = un soupir ; accords = { 4:'E' } pose un
+     second accord sur la 5ᵉ croche de la mesure */
+  const accords = opt.accords || {};
+  let k = 0;
   const events = txt.trim().split(/\s+/).map((tok, i) => {
+    const r = /^R(?:\*(\d))?$/.exec(tok);
+    if (r){
+      const n = r[1] ? +r[1] : 1;
+      k += n;
+      return { rest:true, n, chord:'' };
+    }
     const m = /^([EADG])(\d+)(?::(\d))?(?:\*(\d))?(~)?$/.exec(tok);
     if (!m) throw new Error('mesure illisible : ' + tok);
     const s = m[1], f = +m[2], n = m[4] ? +m[4] : 1;
-    return { chord: i === 0 ? chord : '', s, f, n, lie: !!m[5],
+    const accord = i === 0 ? chord : (accords[k] || '');
+    k += n;
+    return { chord: accord, s, f, n, lie: !!m[5],
       note: noms[(CORDE_DEMI[s] + f + 4) % 12], fg: m[3] ? +m[3] : undefined };
   });
-  return { chord, events };
+  return { chord: [chord, ...Object.values(accords)].join(' '), events };
 }
 /* le signe « % » de la feuille : on rejoue la mesure précédente */
 const SIMILE = { simile:true, chord:'', events:[] };
@@ -4171,8 +4315,9 @@ const PAS_LETTRE = { C:0, D:1, E:2, F:3, G:4, A:5, B:6 };
 /* les cordes à vide telles qu'on les écrit en clé de fa, en demi-tons
    depuis C0 : E2, A2, D3, G3 */
 const CORDE_ECRITE = { E:28, A:33, D:38, G:43 };
-/* où se pose chaque bémol de l'armure, en clé de fa (pas depuis C0) */
-const ARMURE_PAS = { B:20, E:23, A:19, D:22, G:18 };
+/* où se pose chaque altération de l'armure, en clé de fa (pas depuis C0) :
+   les bémols B E A D G, les dièses F C */
+const ARMURE_PAS = { B:20, E:23, A:19, D:22, G:18, F:24, C:21 };
 /* hauteur écrite d'une note : pas = degré diatonique depuis C0, une ligne
    ou un interligne par pas ; la ligne du bas de la portée est G2, pas 18 */
 function hauteurEcrite(ev){
@@ -4236,7 +4381,7 @@ function partitionSVG(bars, opts){
     t.textContent = txt;
     return t;
   };
-  armure.forEach((n, i) => signe('♭', xArmure + i*10, yDe(ARMURE_PAS[n[0]]), 'armure'));
+  armure.forEach((n, i) => signe(n.includes('♯') ? '♯' : '♭', xArmure + i*10, yDe(ARMURE_PAS[n[0]]), 'armure'));
   if (o.chiffrage){
     for (const y of [y0 + g, y0 + 3*g]){
       const t = el('text',{x:xChiffre+6, y:y+6, 'text-anchor':'middle', fill:ENCRE, class:'chiffrage',
@@ -4260,6 +4405,22 @@ function partitionSVG(bars, opts){
   if (o.debut){ barre(left - 14, 3.2); barre(left - 9); points(left - 4); }
   else barre(left - 2);
 
+  /* un silence, sur la portée et sur la tablature, comme sur la feuille :
+     demi-soupir pour une croche, soupir pour une noire */
+  const silence = (px, n) => {
+    for (const [cy, cls] of [[y0 + 2*g, 'silence'], [tabTop + 1.5*rowH, 'silence-tab']]){
+      const s = el('g',{class:cls, 'data-croches':n}, svg);
+      if (n === 1){
+        el('circle',{cx:px-3, cy:cy-5, r:2.1, fill:ENCRE}, s);
+        el('path',{d:`M${px-3} ${cy-3.5} Q${px+1} ${cy-2} ${px+4} ${cy-6} L${px-1} ${cy+9}`, fill:'none',
+          stroke:ENCRE,'stroke-width':1.5,'stroke-linecap':'round','stroke-linejoin':'round'}, s);
+      } else {
+        el('path',{d:`M${px-3} ${cy-11} L${px+3} ${cy-4} L${px-2} ${cy+1} L${px+3} ${cy+6} C${px-1} ${cy+4} ${px-4} ${cy+7} ${px} ${cy+11}`,
+          fill:'none', stroke:ENCRE,'stroke-width':2,'stroke-linecap':'round','stroke-linejoin':'round'}, s);
+      }
+    }
+  };
+
   let x = left;
   bars.forEach((bar, bi) => {
     const fin = bi === bars.length - 1;
@@ -4277,6 +4438,7 @@ function partitionSVG(bars, opts){
       const notes = [];
       let k = 0;
       for (const ev of bar.events){
+        if (ev.rest){ silence(pxDe(k), ev.n); k += ev.n; continue; }
         const px = pxDe(k), hp = hauteurEcrite(ev), Y = yDe(hp.pas);
         const col = NOTE_COLORS[ev.note[0]] || ENCRE;
         const prec = notes[notes.length - 1];
@@ -4290,12 +4452,17 @@ function partitionSVG(bars, opts){
         for (let p = 16; p >= hp.pas; p -= 2) el('line',{x1:px-8.5, y1:yDe(p), x2:px+8.5, y2:yDe(p), stroke:'#B5A996','stroke-width':1, class:'ligne-sup'}, svg);
         /* l'altération ne s'écrit que si l'armure ne la donne pas déjà */
         const cle = ev.note[0] + hp.octave;
-        const acquis = cle in dieses ? dieses[cle] : (armure.includes(ev.note[0] + '♭') ? -1 : 0);
+        const acquis = cle in dieses ? dieses[cle] :
+          armure.includes(ev.note[0] + '♭') ? -1 : armure.includes(ev.note[0] + '♯') ? 1 : 0;
         if (hp.alt !== acquis){
           signe(hp.alt > 0 ? '♯' : hp.alt < 0 ? '♭' : '♮', px - 12, Y, 'alteration');
           dieses[cle] = hp.alt;
         }
-        el('ellipse',{cx:px, cy:Y, rx:5.2, ry:3.7, transform:`rotate(-20 ${px} ${Y})`, fill:col, class:'tete',
+        /* la blanche a la tête creuse, cerclée de la couleur de la note */
+        const blanche = ev.n === 4;
+        el('ellipse',{cx:px, cy:Y, rx:5.2, ry:3.7, transform:`rotate(-20 ${px} ${Y})`,
+          fill: blanche ? 'var(--card)' : col, stroke: blanche ? col : 'none', 'stroke-width': blanche ? 1.8 : 0,
+          class: blanche ? 'tete blanche' : 'tete',
           'data-note':ev.note, 'data-octave':hp.octave, 'data-pas':hp.pas}, svg);
         /* le point de la noire pointée, dans l'interligne */
         if (ev.n === 3) el('circle',{cx:px+10, cy: Y - (hp.pas % 2 === 0 ? g/2 : 0), r:1.7, fill:ENCRE, class:'point'}, svg);
@@ -4329,11 +4496,13 @@ function partitionSVG(bars, opts){
       }
 
       /* ---- le rythme : les croches se ligaturent par deux temps, comme
-         sur la feuille ; une noire ou une noire pointée reste seule ---- */
+         sur la feuille ; une noire ou une noire pointée reste seule, et un
+         silence coupe la ligature ---- */
       const groupes = [];
       for (const n of notes){
         const dernier = groupes[groupes.length - 1];
         if (n.ev.n === 1 && dernier && dernier[0].ev.n === 1 &&
+            dernier[dernier.length - 1].k + 1 === n.k &&
             Math.floor(dernier[0].k / 4) === Math.floor(n.k / 4)) dernier.push(n);
         else groupes.push([n]);
       }
@@ -4425,9 +4594,11 @@ function sequenceRythme(rendu){
     const cases = [...svg.querySelectorAll('text.case')];
     let i = 0, prec = [];
     for (const bar of bars){
-      const evs = bar.simile ? prec : bar.events.map(ev => ({ ev, x: +cases[i++].getAttribute('x') }));
+      const evs = bar.simile ? prec : bar.events.map(ev =>
+        ev.rest ? { ev } : { ev, x: +cases[i++].getAttribute('x') });
       prec = evs;
       for (const { ev, x } of evs){
+        if (ev.rest){ t += ev.n; continue; }
         if (ev.lie && seq.length) seq[seq.length - 1].n += ev.n;
         /* la hauteur écrite sur la portée, en note MIDI (C0 = 12) */
         else seq.push({ t, n: ev.n, midi: CORDE_ECRITE[ev.s] + ev.f + 12, svg, x });
@@ -4520,63 +4691,96 @@ function jouerRythme(rendu, bpm){
 /* on coupe le son en changeant d'onglet */
 document.querySelectorAll('.pagetab').forEach(t => t.addEventListener('click', arreterRythme));
 
-const arpegesList = document.getElementById('renversements-list');
-for (const ar of ARPEGES){
-  const block = document.createElement('div');
-  block.className = 'tab-block';
-  block.id = 'ar-' + ar.id;
-  block.innerHTML = `<div class="tab-head"><span class="tab-title">${ar.titre}</span>
-    <span class="tab-sub">${ar.sub}</span>
-    <span class="rythme">
-      <button class="quiz-btn rythme-play" type="button" aria-pressed="false">▶ Écouter le rythme</button>
-      <label class="quiz-choix">Tempo
-        <select class="quiz-select rythme-tempo">${RYTHME_TEMPOS.map(b => `<option value="${b}">${b} bpm</option>`).join('')}</select>
-      </label>
-    </span></div>`;
-  ar.rendu = [];
-  for (const ligne of ar.lignes){
-    const sc = document.createElement('div');
-    sc.className = 'tab-scroll';
-    const svg = partitionSVG(ligne.bars, ligne.o);
-    sc.appendChild(svg);
-    ar.rendu.push({ bars: ligne.bars, svg });
-    block.appendChild(sc);
-    /* la légende nomme les notes attaquées : une note liée ne se rejoue pas */
-    const lg = document.createElement('div');
-    lg.className = 'tab-note';
-    lg.innerHTML = ligne.bars.filter(b => !b.simile).map(b =>
-      accordSeq(b.chord, b.events.filter(e => !e.lie).map(e => e.note))).join('');
-    block.appendChild(lg);
-  }
-  const nt = document.createElement('div');
-  nt.className = 'tab-note';
-  nt.innerHTML = ar.note;
-  block.appendChild(nt);
-  arpegesList.appendChild(block);
+/* une liste d'exercices en partition : tête (titre, écoute du rythme, tempo),
+   lignes, légende et note ; prefixe fait l'ancre de chaque carte.
+   Options d'un exercice : tempo (celui de la feuille, présélectionné) ;
+   notesUniques (la légende ne répète pas une note jouée plusieurs fois) ;
+   piste et audio (de quoi jouer par-dessus) */
+function rendreExercices(liste, conteneur, prefixe){
+  for (const ar of liste){
+    const block = document.createElement('div');
+    block.className = 'tab-block';
+    block.id = prefixe + ar.id;
+    const tempos = [...new Set([...RYTHME_TEMPOS, ...(ar.tempo ? [ar.tempo] : [])])].sort((a, b) => a - b);
+    block.innerHTML = `<div class="tab-head"><span class="tab-title">${ar.titre}</span>
+      <span class="tab-sub">${ar.sub}</span>
+      <span class="rythme">
+        <button class="quiz-btn rythme-play" type="button" aria-pressed="false">▶ Écouter le rythme</button>
+        <label class="quiz-choix">Tempo
+          <select class="quiz-select rythme-tempo">${tempos.map(b => `<option value="${b}"${b === ar.tempo ? ' selected' : ''}>${b} bpm</option>`).join('')}</select>
+        </label>
+      </span></div>`;
+    ar.rendu = [];
+    for (const ligne of ar.lignes){
+      const sc = document.createElement('div');
+      sc.className = 'tab-scroll';
+      const svg = partitionSVG(ligne.bars, ligne.o);
+      sc.appendChild(svg);
+      ar.rendu.push({ bars: ligne.bars, svg });
+      block.appendChild(sc);
+      /* la légende nomme les notes attaquées : une note liée ne se rejoue pas */
+      const lg = document.createElement('div');
+      lg.className = 'tab-note';
+      lg.innerHTML = ligne.bars.filter(b => !b.simile).map(b => {
+        const noms = b.events.filter(e => !e.lie && !e.rest).map(e => e.note);
+        return accordSeq(b.chord, ar.notesUniques ? [...new Set(noms)] : noms);
+      }).join('');
+      block.appendChild(lg);
+    }
+    const nt = document.createElement('div');
+    nt.className = 'tab-note';
+    nt.innerHTML = ar.note;
+    block.appendChild(nt);
+    if (ar.piste || ar.audio){
+      const pied = document.createElement('div');
+      pied.className = 'tab-piste';
+      if (ar.piste){
+        const a = document.createElement('a');
+        a.className = 'play-link';
+        a.href = ar.piste.url;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.textContent = '▶ ' + ar.piste.titre;
+        enFenetre(a);
+        pied.appendChild(a);
+      }
+      if (ar.audio){
+        const lab = document.createElement('label');
+        lab.className = 'tab-audio';
+        lab.textContent = ar.audio.titre;
+        const au = document.createElement('audio');
+        au.controls = true;
+        au.preload = 'none';
+        au.src = ar.audio.src;
+        lab.appendChild(au);
+        pied.appendChild(lab);
+      }
+      block.appendChild(pied);
+    }
+    conteneur.appendChild(block);
 
-  /* ▶ / ■ : lancer, arrêter, et repartir au nouveau tempo si on le change */
-  const bouton = block.querySelector('.rythme-play'), tempo = block.querySelector('.rythme-tempo');
-  const eteindre = () => { bouton.setAttribute('aria-pressed', 'false'); bouton.textContent = '▶ Écouter le rythme'; };
-  function lancer(){
-    arreterRythme();
-    const lecture = jouerRythme(ar.rendu, +tempo.value);
-    if (!lecture){ bouton.textContent = 'Son indisponible sur ce navigateur'; return; }
-    bouton.setAttribute('aria-pressed', 'true');
-    bouton.textContent = '■ Arrêter';
-    rythmeEnCours = { stop(){ lecture.stop(); eteindre(); } };
+    /* ▶ / ■ : lancer, arrêter, et repartir au nouveau tempo si on le change */
+    const bouton = block.querySelector('.rythme-play'), tempo = block.querySelector('.rythme-tempo');
+    const eteindre = () => { bouton.setAttribute('aria-pressed', 'false'); bouton.textContent = '▶ Écouter le rythme'; };
+    function lancer(){
+      arreterRythme();
+      const lecture = jouerRythme(ar.rendu, +tempo.value);
+      if (!lecture){ bouton.textContent = 'Son indisponible sur ce navigateur'; return; }
+      bouton.setAttribute('aria-pressed', 'true');
+      bouton.textContent = '■ Arrêter';
+      rythmeEnCours = { stop(){ lecture.stop(); eteindre(); } };
+    }
+    bouton.addEventListener('click', () => {
+      if (bouton.getAttribute('aria-pressed') === 'true') arreterRythme(); else lancer();
+    });
+    tempo.addEventListener('change', () => {
+      if (bouton.getAttribute('aria-pressed') === 'true') lancer();
+    });
   }
-  bouton.addEventListener('click', () => {
-    if (bouton.getAttribute('aria-pressed') === 'true') arreterRythme(); else lancer();
-  });
-  tempo.addEventListener('change', () => {
-    if (bouton.getAttribute('aria-pressed') === 'true') lancer();
-  });
-}
-/* toutes les lignes à la même échelle, la plus longue remplissant la
-   largeur : on voit l'exercice entier sans faire défiler. Sur un écran
-   étroit, une largeur plancher garde les chiffres lisibles. */
-{
-  const svgs = ARPEGES.flatMap(ar => ar.rendu.map(r => r.svg));
+  /* toutes les lignes à la même échelle, la plus longue remplissant la
+     largeur : on voit l'exercice entier sans faire défiler. Sur un écran
+     étroit, une largeur plancher garde les chiffres lisibles. */
+  const svgs = liste.flatMap(ar => ar.rendu.map(r => r.svg));
   const larges = svgs.map(s => +s.getAttribute('width'));
   const ref = Math.max(...larges);
   svgs.forEach((s, i) => {
@@ -4589,6 +4793,98 @@ for (const ar of ARPEGES){
     s.style.maxWidth = Math.round(larges[i] * 1.35) + 'px';
   });
 }
+rendreExercices(ARPEGES, document.getElementById('renversements-list'), 'ar-');
+
+/* ------------------------------------------------------------
+   Accompagner — le chapitre I de la méthode de Santiago, cours du 6 novembre
+   2026. Les cinq exercices viennent de sa feuille, chacun avec sa piste de la
+   playlist « Basic Bass Backing Tracks ».
+   ------------------------------------------------------------ */
+const PISTE_ACCOMP = (id, i) => `https://www.youtube.com/watch?v=${id}&list=PLKcaQFXWRRFk&index=${i}`;
+const ACCOMP = [
+  { id:'1', titre:'Exercice 1', sub:'G · Em · C · D — celui du cours', tempo:96, notesUniques:true,
+    piste:{ url:PISTE_ACCOMP('FqXbtpsHWdg', 1), titre:'Rock Pop · G Em C D' },
+    audio:{ src:'basse/batterie-96.mp3', titre:'La batterie seule, celle du cours · 96 bpm' },
+    lignes:[{ o:{ debut:true, fin:true, chiffrage:true, armure:['F♯'] }, bars:[
+      barArp('G',  'E3*2 R E3 E3*2 R*2'),
+      barArp('Em', 'E0*2 R E0 E0*2 R*2'),
+      barArp('C',  'A3*2 R A3 A3*2 R*2'),
+      barArp('D',  'A5*2 R A5 A5*2 R*2') ]}],
+    note:`Un accord par mesure, et le pattern de la grosse caisse : <b>1</b>, le <b>« et » du 2</b>, <b>3</b>. C'est exactement ce que joue la piste de batterie. Le deuxième temps reste vide : il est à la caisse claire. Compte bien <b>quatre temps</b> sur chaque accord.` },
+  { id:'2', titre:'Exercice 2', sub:'Am · C · Bm · D E — deux accords à la fin', tempo:75, notesUniques:true,
+    piste:{ url:PISTE_ACCOMP('w9K8tJjq1-c', 2), titre:'Rock Slow · Am C Bm D E' },
+    lignes:[{ o:{ debut:true, fin:true, chiffrage:true, armure:['F♯'] }, bars:[
+      barArp('Am', 'E5*2 R E5 E5*2 R*2'),
+      barArp('C',  'E8*2 R E8 E8*2 R*2'),
+      barArp('Bm', 'E7*2 R E7 E7*2 R*2'),
+      barArp('D',  'A5*2 R A0 A7*2 R*2', { accords:{ 4:'E' } }) ]}],
+    note:`Même pattern, plus lent. La dernière mesure change : <b>D</b> sur le 1, <b>E</b> sur le 3, chacun pour deux temps. Entre les deux, sur le « et » du 2, la feuille écrit <b>A</b> à vide : une note de l'accord de D.` },
+  { id:'3', titre:'Exercice 3', sub:'Em · Am · G · B — une blanche, puis des croches', tempo:110, notesUniques:true,
+    piste:{ url:PISTE_ACCOMP('RNT2wYxGe20', 3), titre:'Indie Pop · Em Am G B' },
+    lignes:[{ o:{ debut:true, fin:true, chiffrage:true, armure:['F♯'] }, bars:[
+      barArp('Em', 'E0*4 E0 E0 E0*2~'),
+      barArp('Am', 'E5*4 E5 E5 E5*2~'),
+      barArp('G',  'E3*4 E3 E3 E3*2~'),
+      barArp('B',  'A2*4 A2 A2 A2*2~') ]}],
+    note:`Un autre rythme : une <b>blanche</b> sur les deux premiers temps, puis deux croches, la seconde <b>liée</b> au quatrième temps. L'arc indique qu'on laisse sonner, on ne rejoue pas la note.` },
+  { id:'4', titre:'Exercice 4', sub:'Bm · D · F♯m · E — le pattern, puis des croches', tempo:90, notesUniques:true,
+    piste:{ url:PISTE_ACCOMP('hT7p56MRRNc', 4), titre:'Pop Ballad · Bm D F♯m E' },
+    lignes:[{ o:{ debut:true, fin:true, chiffrage:true, armure:['F♯','C♯'] }, bars:[
+      barArp('Bm',  'A2*2 R A2 A2 A2 A2~ A2'),
+      barArp('D',   'A5*2 R A5 A5 A5 A5~ A5'),
+      barArp('F♯m', 'D4*2 R D4 D4 D4 D4~ D4'),
+      barArp('E',   'D2*2 R D2 D2 D2 D2~ D2') ]}],
+    note:`Le début est le même, sauf qu'on enchaîne sur des croches. La note du « et » du 3 est <b>liée</b> au 4 : c'est la <b>syncope</b> que la feuille signale. F♯m et E se jouent sur la corde de <b>D</b>.` },
+  { id:'5', titre:'Exercice 5', sub:'F · Gm · B♭ · C — deux accords par mesure', tempo:100, notesUniques:true,
+    piste:{ url:PISTE_ACCOMP('TB_UVcWfw-8', 5), titre:'Pop · F Gm B♭ C' },
+    lignes:[{ o:{ debut:true, fin:true, chiffrage:true, armure:['B♭'] }, bars:[
+      barArp('F',  'E1 E1 R E1 E3 E3 R*2', { accords:{ 4:'Gm' } }),
+      barArp('B♭', 'A1 A1 R A1 A3 A3 R*2', { accords:{ 4:'C' }, bemols:true }),
+      barArp('F',  'E1 E1 R E1 E3 E3 R*2', { accords:{ 4:'Gm' } }),
+      barArp('B♭', 'A1 A1 R A1 A3 A3 R*2', { accords:{ 4:'C' }, bemols:true }) ]}],
+    note:`Tout en croches, avec deux accords par mesure : le second arrive sur le 3. Le deuxième temps tombe encore dans un silence, et la feuille marque l'<b>offbeat</b> sur le « et » du 2. La feuille écrit G−, c'est-à-dire <b>Gm</b>.` },
+];
+rendreExercices(ACCOMP, document.getElementById('accomp-list'), 'ac-');
+
+/* G Em C D : pour chaque enchaînement, les deux voisines de l'accord d'arrivée
+   dans la gamme de G — la photo envoyée par Santiago pendant le cours */
+const CONNEXIONS = [
+  { de:'G',  vers:'Em', voisines:['D','E','F♯'], cible:'E',
+    note:`<b>F♯</b> case 2, pour descendre du G grave vers le E. Ou <b>D</b> case 5 de la corde de A, juste à côté du E case 7.` },
+  { de:'Em', vers:'C',  voisines:['B','C','D'], cible:'C',
+    note:`Depuis le E case 7 : <b>D</b>, « c'est plus joli ». Depuis le E à vide, <b>B</b> marche mieux.` },
+  { de:'C',  vers:'D',  voisines:['C','D','E'], cible:'D',
+    note:`<b>C</b> est déjà voisin du D : tu peux simplement rester dessus. Sinon, <b>E</b>, de l'autre côté.` },
+  { de:'D',  vers:'G',  voisines:['F♯','G','A'], cible:'G',
+    note:`<b>F♯</b> ou <b>A</b>. Prends l'une à un tour, l'autre au suivant : ça fait vivre la ligne.` },
+];
+document.getElementById('connexions-gamme').innerHTML = noteSeq(['G','A','B','C','D','E','F♯']);
+document.getElementById('connexions-corps').innerHTML = CONNEXIONS.map(c => {
+  const voisines = c.voisines.map(n => n === c.cible
+    ? `<b class="cible" style="color:${NOTE_COLORS[n[0]]}">${n}</b>`
+    : `<b style="color:${NOTE_COLORS[n[0]]}">${n}</b>`).join(' ');
+  return `<tr><td>${c.de} → ${c.vers}</td><td class="voisines">${voisines}</td><td>${c.note}</td></tr>`;
+}).join('');
+
+/* les deux chemins : la note de passage sur le 4, juste avant l'accord suivant.
+   La feuille ne les écrit pas ; le cours dit seulement « juste après » le pattern. */
+const CHEMINS = [
+  { id:'grave', titre:'Chemin n° 1', sub:'les fondamentales les plus graves', tempo:96, notesUniques:true,
+    lignes:[{ o:{ debut:true, fin:true, chiffrage:true, armure:['F♯'] }, bars:[
+      barArp('G',  'E3*2 R E3 E3*2 E2*2'),
+      barArp('Em', 'E0*2 R E0 E0*2 A2*2'),
+      barArp('C',  'A3*2 R A3 A3*2 A3*2'),
+      barArp('D',  'A5*2 R A5 A5*2 E2*2') ]}],
+    note:`Mesure après mesure : <b>F♯</b> vers le E, <b>B</b> vers le C, on <b>reste sur C</b> vers le D, <b>F♯</b> vers le G.` },
+  { id:'haut', titre:'Chemin n° 2', sub:'la deuxième option, G case 10 et E case 7', tempo:96, notesUniques:true,
+    lignes:[{ o:{ debut:true, fin:true, chiffrage:true, armure:['F♯'] }, bars:[
+      barArp('G',  'A10*2 R A10 A10*2 A5*2'),
+      barArp('Em', 'A7*2 R A7 A7*2 A5*2'),
+      barArp('C',  'A3*2 R A3 A3*2 A7*2'),
+      barArp('D',  'A5*2 R A5 A5*2 A9*2') ]}],
+    note:`Tout sur la corde de A : <b>D</b> vers le E, <b>D</b> vers le C, <b>E</b> vers le D, <b>F♯</b> vers le G. Santiago préfère cette option : « elle a plus de corps ».` },
+];
+rendreExercices(CHEMINS, document.getElementById('chemins-list'), 'ch-');
 
 /* ------------------------------------------------------------
    Menu latéral + scrollspy
@@ -4618,6 +4914,10 @@ CROCHES.forEach(s=> navLink('#cr-'+s.id, s.titre, 'lvl2'));
 lvl1['impro-am'] = navLink('#impro-am','10 · Improviser sur un seul accord','lvl1');
 lvl1['renversements'] = navLink('#renversements','11 · Les arpèges renversés','lvl1');
 ARPEGES.forEach(a=> navLink('#ar-'+a.id, a.titre + ' · ' + a.sub.split(' — ')[0], 'lvl2'));
+lvl1['role-basse'] = navLink('#role-basse','12 · Le rôle de la basse','lvl1');
+lvl1['accompagner'] = navLink('#accompagner','13 · Accompagner un morceau','lvl1');
+ACCOMP.forEach(a=> navLink('#ac-'+a.id, a.titre + ' · ' + a.sub.split(' — ')[0], 'lvl2'));
+navLink('#connexions','Les notes de passage','lvl2');
 
 const spy = makeSpy((entries)=>{
   for (const e of entries){
@@ -4627,7 +4927,7 @@ const spy = makeSpy((entries)=>{
     }
   }
 }, { rootMargin:'-15% 0px -70% 0px' });
-for (const id of ['notes-manche','routine','pluck-avance','impro','pentatonique','u2','patterns','stooges','croches','impro-am','renversements']) spy.observe(document.getElementById(id));
+for (const id of ['notes-manche','routine','pluck-avance','impro','pentatonique','u2','patterns','stooges','croches','impro-am','renversements','role-basse','accompagner']) spy.observe(document.getElementById(id));
 
 })();
 </script>

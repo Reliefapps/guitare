@@ -9,21 +9,23 @@ test('la routine affiche ses quatre cartes et leurs liens internes', () => {
   const cartes = [...doc.querySelectorAll('#routine .routine-card')];
   assert.equal(cartes.length, 4);
   cartes.forEach(c => assert.equal(isVisible(c), true));
-  /* l'ordre des cartes est celui du devoir du 2 octobre 2026 : les formes
-     en Dm, la transposition, les riffs en Am sur une piste, les arpèges si
-     le temps */
+  /* l'ordre des cartes est celui du devoir du 6 novembre 2026 : les exercices
+     sur leurs pistes, les notes de passage, les vidéos, la technique */
   const liens = [...doc.querySelectorAll('#routine .routine-link')].map(a => a.getAttribute('href'));
-  assert.deepEqual(liens, ['#pt-a1', '#/theorie', '#impro-am', '#renversements']);
-  assert.match(doc.querySelector('#routine .hint').textContent, /2 octobre 2026/);
-  /* la première carte porte les consignes du cours sur les formes en Dm */
-  assert.match(cartes[0].textContent, /Lis la tablature/);
-  assert.match(cartes[0].textContent, /Repère la fondamentale/);
-  /* les arpèges restent facultatifs, comme Santiago l'a dit */
-  assert.match(cartes[3].querySelector('.routine-time').textContent, /si tu as le temps/);
-  liens.filter(h => !h.startsWith('#/'))
+  assert.deepEqual(liens, ['#accompagner', '#connexions',
+    'https://www.youtube.com/watch?v=Ug-A2RG8K8Q&list=PLNevnXwZhZDc&index=2',
+    'https://www.youtube.com/watch?v=9iHwswTFLRw&list=PLNevnXwZhZDc&index=3',
+    '#pentatonique', '#/theorie']);
+  assert.match(doc.querySelector('#routine .hint').textContent, /6 novembre 2026/);
+  /* Santiago n'exige ni les cinq exercices ni de les mémoriser */
+  assert.match(cartes[0].textContent, /Joues-en quelques-uns/);
+  assert.match(cartes[0].textContent, /pas besoin de faire les cinq/);
+  /* les formes de pentatonique continuent, pour la technique */
+  assert.match(cartes[3].querySelector('.routine-time').textContent, /technique/);
+  liens.filter(h => h.startsWith('#') && !h.startsWith('#/'))
     .forEach(h => assert.ok(doc.getElementById(h.slice(1)), h + ' ne mène nulle part'));
   /* la transposition vit dans la fiche théorie : la carte y emmène, section ouverte */
-  const versTheorie = cartes[1].querySelector('.routine-link');
+  const versTheorie = cartes[3].querySelector('.routine-link[data-goto]');
   assert.equal(versTheorie.dataset.goto, 'theorie');
   assert.equal(versTheorie.dataset.anchor, 'transposer');
   versTheorie.click();

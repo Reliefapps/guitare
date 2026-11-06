@@ -14,7 +14,7 @@ const SOLFEGE = /^(do|ré|re|mi|fa|sol|la|si)$/i;
 const NOUVEAU = ['#routine', '#pluck-avance', '#impro', '#notes-manche', '#triades',
                  '#gammes', '#pentatonique', '#u2', '#penta', '#boites', '#jeu',
                  '#patterns', '#stooges', '#impro-am', '#renversements', '#transposer',
-                 '#jlh'];
+                 '#jlh', '#role-basse', '#accompagner'];
 
 /* hauteur d'un nom de note écrit, altérations comprises */
 function hauteur(nom){
@@ -66,6 +66,7 @@ test('les noms de cordes et de notes des SVG basse sont des lettres', () => {
   const svgs = [...doc.querySelectorAll('#pluck-list svg'), ...doc.querySelectorAll('#forme-list svg'),
                 ...doc.querySelectorAll('#penta-list svg'), ...doc.querySelectorAll('#u2-tab svg'),
                 ...doc.querySelectorAll('#renversements-list svg'),
+                ...doc.querySelectorAll('#accomp-list svg'), ...doc.querySelectorAll('#chemins-list svg'),
                 doc.getElementById('fretboard-basse')];
   const suspects = [];
   for (const svg of svgs){

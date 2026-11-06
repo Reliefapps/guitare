@@ -30,7 +30,8 @@ page, les styles et le JavaScript. Aucune dépendance, aucune étape de build,
 rien à installer. Les partitions sont embarquées dans le fichier ; les seules
 ressources externes sont Google Fonts et une vidéo YouTube d'illustration.
 Seule exception : les enregistrements et les partitions de la chorale, trop
-lourds pour être embarqués, sont à côté dans [`chant/`](chant/).
+lourds pour être embarqués, sont à côté dans [`chant/`](chant/). La piste de batterie
+du cours de basse est dans [`basse/`](basse/).
 
 Pour travailler dessus, il suffit d'ouvrir le fichier dans un navigateur :
 

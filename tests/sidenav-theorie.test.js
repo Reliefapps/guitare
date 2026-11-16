@@ -5,7 +5,7 @@ const { load, isVisible, openTab } = require('./helpers');
 
 /* ============ le sommaire latéral de l'onglet théorie, comme ceux de la guitare et de la basse ============ */
 
-const SECTIONS = ['construire', 'gammes', 'triades', 'penta', 'boites', 'jeu', 'transposer'];
+const SECTIONS = ['construire', 'gammes', 'triades', 'penta', 'boites', 'jeu', 'transposer', 'octaves'];
 
 test('le menu latéral de la théorie existe, dans sa page, et ne se mélange pas aux autres', () => {
   const { doc } = load();
@@ -44,6 +44,7 @@ test('le second niveau mène aux gammes, aux deux jeux de la pentatonique et aux
     '#rel-zone', '#box-zone',
     '#boite-1', '#boite-4', '#boite-5', '#boites-technique',
     '#tr-zone', '#trq-zone', '#tr-methode',
+    '#oc-zone', '#ocq-zone', '#oc-exos',
   ]);
   /* chaque sous-entrée est rangée sous la bonne section */
   const liens = [...doc.querySelectorAll('#sidenav-links-theorie a')];

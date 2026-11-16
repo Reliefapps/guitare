@@ -1757,6 +1757,7 @@
     <a href="#boites">5 · Les boîtes 1, 4 et 5</a>
     <a href="#jeu">6 · Le jeu</a>
     <a href="#transposer">7 · Transposer</a>
+    <a href="#octaves">8 · Trois octaves</a>
   </div>
 </nav>
 
@@ -2001,6 +2002,71 @@
     </div>
     <div class="callout">
       <b>La suite annoncée :</b> encore quelques semaines, peut-être un mois, pour maîtriser ça — « et tu peux tout jouer ». Viendront ensuite les <b>pentatoniques majeures</b>. C'est « la moitié du chemin » ; l'autre, c'est la technique.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. TROIS OCTAVES, TROIS PAIRES DE CORDES ============ -->
+<section id="octaves">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">8</span><h2>Trois octaves, trois paires de cordes</h2></div>
+    <p class="hint">Le cours de guitare du <b>16 novembre 2026</b>. Un petit motif joué sur les deux cordes graves, <b>E</b> et <b>A</b>, se rejoue tel quel sur les deux cordes d'en dessous, <b>D</b> et <b>G</b> : on décale juste de <b>deux cases</b>, et on retrouve le <b>A</b>, une octave plus haut. On descend encore sur <b>B</b> et <b>E</b> : cette fois on décale de <b>trois cases</b>, et c'est le même motif une octave plus haut encore. Trois paires de cordes, <b>trois octaves</b>, un seul dessin. Le prof : en solo, c'est « hyper pratique ».</p>
+    <div class="rule">
+      <b>La règle :</b> cordes <b>E–A</b> → cordes <b>D–G</b> : <b>+2 cases</b> · cordes <b>D–G</b> → cordes <b>B–E</b> : <b>+3 cases</b>. Le <b>A</b> de la corde de E grave en case 5 devient le <b>A</b> de la corde de D en case 7, puis le <b>A</b> de la corde de B en case 10. « Descendre » de cordes, c'est aller vers le sol : vers les cordes aiguës. Et c'est bien de <b>cases</b> qu'on parle : deux cases font un ton, trois cases un ton et demi.
+    </div>
+    <div class="callout">
+      <b>Pourquoi une case de plus pour B–E :</b> d'une corde à la suivante, il y a cinq cases — sauf entre <b>G</b> et <b>B</b>, accordées à quatre cases l'une de l'autre. Le passage de D–G à B–E franchit cet écart : il manque une case, on la rattrape en décalant de trois. À l'intérieur de chaque paire, en revanche, l'écart est toujours de cinq cases — c'est pour ça que le motif garde exactement <b>le même dessin</b> sur les trois paires.
+    </div>
+
+    <p class="hint" id="oc-intro"><b>L'atelier.</b> Choisis un motif et une tonalité : il s'affiche sur les trois paires de cordes, fondamentale <b>cerclée</b>, avec sa tablature à jouer d'un trait, de l'octave grave à l'aiguë. Les motifs sortent des cours : la fondamentale seule, la quinte <b>A–E</b>, et les quatre notes de la <a href="#boites">boîte 1</a> sur ses deux cordes graves, <b>A · C · D · E</b>.</p>
+    <div class="prog-card" id="oc-zone">
+      <div class="prog-title" id="oc-titre"></div>
+      <div class="quiz-actions">
+        <label class="quiz-choix">Motif
+          <select class="quiz-select" id="oc-motif"></select>
+        </label>
+      </div>
+      <div class="quiz-palette" id="oc-palette" role="group" aria-label="Tonalité"></div>
+      <div class="board-panel">
+        <div class="board-scroll">
+          <svg id="oc-fb" xmlns="http://www.w3.org/2000/svg" role="img"></svg>
+        </div>
+      </div>
+      <div class="tab-note oc-info" id="oc-info"></div>
+      <div class="board-panel" id="oc-tab-panel">
+        <div class="board-scroll" id="oc-tab"></div>
+      </div>
+    </div>
+
+    <p class="hint" id="ocq-intro"><b>L'entraînement.</b> Un motif est posé sur une paire de cordes ; une autre paire est annoncée. Clique, sur sa corde grave, la case où le motif recommence. Dans un sens <b>+2</b> ou <b>+3</b>, dans l'autre <b>−2</b> ou <b>−3</b>, et <b>±5</b> quand on saute directement de E–A à B–E.</p>
+    <div class="prog-card" id="ocq-zone">
+      <div class="prog-title" id="ocq-prompt"></div>
+      <div class="board-panel">
+        <div class="board-scroll">
+          <svg id="ocq-fb" xmlns="http://www.w3.org/2000/svg" role="img"></svg>
+        </div>
+      </div>
+      <div class="quiz-actions">
+        <button class="quiz-btn" type="button" id="ocq-new">Nouvelle question →</button>
+        <span class="quiz-score" id="ocq-score"></span>
+      </div>
+      <div class="tab-note" id="ocq-feedback"></div>
+    </div>
+
+    <div class="prog-legend exo-consignes" id="oc-exos">
+      <strong>Les petits exercices, la guitare dans les mains :</strong>
+      <ol class="exo-steps">
+        <li><b>La fondamentale, trois fois.</b> <b>A</b> sur la corde de E grave en case 5, puis sur la corde de D en case 7, puis sur la corde de B en case 10. Redescends. Le geste à sentir : deux cases, puis trois.</li>
+        <li><b>La quinte A–E.</b> Le <b>A</b> en case 5 et le <b>E</b> de la corde de A en case 7 ; la même paire de notes en cases 7 et 9 sur D–G ; puis en cases 10 et 12 sur B–E. C'est le <b>A, E et A</b> du cours : le <b>A</b> de la paire suivante est l'octave du premier.</li>
+        <li><b>Le motif A · C · D · E en montant.</b> Joue-le sur E–A, enchaîne sur D–G, finis sur B–E : trois octaves d'affilée, sans t'arrêter entre les paires. La tablature de l'atelier l'écrit d'un trait.</li>
+        <li><b>Le même en descendant, puis en aller-retour.</b> <b>E · D · C · A</b>, puis <b>A · C · D · E · D · C · A</b>, toujours sur les trois paires.</li>
+        <li><b>Dans une autre tonalité.</b> Choisis <b>G</b>, <b>C</b>, <b>D</b> ou <b>E</b> dans l'atelier : la case de départ change, les décalages <b>+2</b> et <b>+3</b>, jamais.</li>
+        <li><b>En solo.</b> Sur la <a href="#boites-track">piste d'improvisation en A mineur</a> de la section 5 : invente une petite phrase sur E–A, puis rejoue-la une octave au-dessus sur D–G, puis encore au-dessus sur B–E. C'est l'usage que le prof en a donné.</li>
+      </ol>
+      <div style="margin-top:8px">Pas de tempo imposé : la vitesse vient toute seule quand le décalage ne demande plus de réfléchir.</div>
+    </div>
+    <div class="callout">
+      <b>Seulement ces trois paires :</b> E–A, D–G et B–E. Une paire à cheval, comme A–D → G–B, ne garde pas son dessin : sa corde grave décale de deux cases, sa corde aiguë de trois, parce que l'écart G–B tombe au milieu de la paire.
     </div>
   </div>
 </section>
@@ -6074,6 +6140,242 @@ function trPoser(m, forme, root, muet){
   nouvelle();
 })();
 
+/* ============================================================
+   8. Trois octaves, trois paires de cordes — cours de guitare du
+   16 novembre 2026. Un motif écrit sur deux cordes voisines se rejoue
+   tel quel sur la paire d'en dessous : E–A → D–G = +2 cases,
+   D–G → B–E = +3 cases (l'écart G–B n'est que de quatre cases).
+   Cordes numérotées comme le manche partagé : 0 = E aigu … 5 = E grave.
+   ============================================================ */
+const OC_FRETS = 19;   /* E♭ en case 11, + 5 pour B–E, + 3 pour le motif */
+const OC_PAIRES = [
+  { id:'EA', nom:'E–A', grave:5, aigue:4, decalage:0 },
+  { id:'DG', nom:'D–G', grave:3, aigue:2, decalage:2 },
+  { id:'BE', nom:'B–E', grave:1, aigue:0, decalage:5 },
+];
+/* un motif = les notes dans l'ordre où on les joue :
+   [0 = corde grave de la paire / 1 = corde aiguë, écart en cases, degré] */
+const OC_MONTE = [[0,0,'1'], [0,3,'♭3'], [1,0,'4'], [1,2,'5']];
+const OC_MOTIFS = [
+  { id:'fond', titre:'La fondamentale seule', notes:[[0,0,'1']] },
+  { id:'quinte', titre:'La quinte (A–E en A)', notes:[[0,0,'1'], [1,2,'5']] },
+  { id:'monte', titre:'Boîte 1, deux cordes · en montant', notes:OC_MONTE },
+  { id:'descend', titre:'Boîte 1, deux cordes · en descendant', notes:[...OC_MONTE].reverse() },
+  { id:'aller', titre:'Boîte 1, deux cordes · aller-retour', notes:[...OC_MONTE, ...OC_MONTE.slice(0, 3).reverse()] },
+];
+const OC_CORDES = ['E aigu', 'B', 'G', 'D', 'A', 'E grave'];
+const OC_NOMS_CORDES = ['e', 'B', 'G', 'D', 'A', 'E'];
+/* la case de la fondamentale sur la corde de E grave (0 à 11) */
+function ocCase(root){ return (hauteur(root) - hauteur('E') + 12) % 12; }
+/* la case de la fondamentale sur la corde grave d'une paire */
+function ocCaseSur(root, paire){ return ocCase(root) + paire.decalage; }
+/* les notes jouées, paire après paire : { paire, corde, fret, deg, nom } */
+function ocJouer(motif, root, paires){
+  const out = [];
+  for (const p of paires || OC_PAIRES){
+    const f0 = ocCaseSur(root, p);
+    for (const [c, d, deg] of motif.notes){
+      out.push({ paire:p.id, corde: c ? p.aigue : p.grave, fret: f0 + d, deg, nom: trNom(root, deg) });
+    }
+  }
+  return out;
+}
+
+function ocManche(svgId, label){
+  const fb = window.buildFretboard({ svg:svgId, frets:OC_FRETS, gut:30, label,
+    strings:TR_INSTR.guitare.cordes });
+  if (!fb) return null;
+  const L = OC_FRETS + 1;
+  const pastilles = fb.notes.map((n, k) => ({ ...n, corde: Math.floor(k / L), fret: k % L }));
+  return {
+    svg: fb.svg, pastilles,
+    at(corde, fret){ return fret < 0 || fret >= L ? null : pastilles[corde * L + fret]; },
+    vider(){
+      for (const p of pastilles){
+        p.g.style.display = 'none';
+        p.g.classList.remove('cible');
+        delete p.g.dataset.box;
+        delete p.g.dataset.deg;
+        delete p.g.dataset.paire;
+      }
+    },
+  };
+}
+/* peint les notes d'un motif sur les paires demandées */
+function ocPoser(m, motif, root, paires){
+  for (const n of ocJouer(motif, root, paires)){
+    const p = m.at(n.corde, n.fret);
+    if (!p) continue;
+    peindreBoite(p, n.nom, n.deg, 'oc-' + motif.id);
+    p.g.dataset.paire = n.paire;
+  }
+}
+
+/* la tablature : six lignes, une mesure par paire de cordes */
+function ocTabSVG(motif, root){
+  const rowH = 18, top = 34, left = 30, pas = 34, pad = 14;
+  const largeur = Math.max(pad * 2 + motif.notes.length * pas, 116);
+  const w = left + OC_PAIRES.length * largeur + 12;
+  const h = top + 5 * rowH + 18;
+  const svg = document.createElementNS(SVGNS, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  svg.setAttribute('width', w);
+  svg.setAttribute('role', 'img');
+  svg.setAttribute('aria-label', `Tablature : ${motif.titre}, en ${root}, sur les cordes E–A, D–G puis B–E`);
+  svg.classList.add('oc-tab-svg');
+  OC_NOMS_CORDES.forEach((nom, s) => {
+    const y = top + s * rowH;
+    el('line', { x1:left - 6, y1:y, x2:w - 10, y2:y, stroke:'#DFD6C6', 'stroke-width':1 + s * 0.2 }, svg);
+    const lb = el('text', { x:14, y:y + 4, 'text-anchor':'middle', fill:'var(--ink-soft)',
+      'font-family':'Spline Sans Mono,monospace', 'font-size':'11', 'font-weight':'700' }, svg);
+    lb.textContent = nom;
+  });
+  const notes = ocJouer(motif, root);
+  OC_PAIRES.forEach((p, i) => {
+    const x0 = left + i * largeur;
+    el('line', { x1:x0 - 4, y1:top - 3, x2:x0 - 4, y2:top + 5 * rowH + 3, stroke:'#C9BFAE', 'stroke-width': i ? 1.2 : 2 }, svg);
+    const tt = el('text', { x:x0 + 4, y:top - 14, fill:'var(--ink-soft)',
+      'font-family':'Spline Sans Mono,monospace', 'font-size':'11', 'font-weight':'700' }, svg);
+    tt.textContent = `${p.nom} · case ${ocCaseSur(root, p)}`;
+    notes.filter(n => n.paire === p.id).forEach((n, j) => {
+      const px = x0 + pad + j * pas + pas / 2 - 4, y = top + n.corde * rowH;
+      el('circle', { cx:px, cy:y, r:9, fill:'var(--card)' }, svg);
+      const t = el('text', { x:px, y:y + 4, 'text-anchor':'middle', fill:NOTE_COLORS[n.nom[0]],
+        'font-family':'Spline Sans Mono,monospace', 'font-size':'12.5', 'font-weight':'700',
+        class:'oc-tab-note', 'data-corde':n.corde, 'data-case':n.fret, 'data-note':n.nom, 'data-paire':n.paire }, svg);
+      t.textContent = n.fret;
+    });
+  });
+  const xf = left + OC_PAIRES.length * largeur - 4;
+  el('line', { x1:xf, y1:top - 3, x2:xf, y2:top + 5 * rowH + 3, stroke:'#C9BFAE', 'stroke-width':2 }, svg);
+  return svg;
+}
+
+/* 8.1 — l'atelier : un motif, une tonalité, les trois paires */
+(function(){
+  const zone = document.getElementById('oc-zone');
+  if (!zone) return;
+  const titreEl = document.getElementById('oc-titre');
+  const selMotif = document.getElementById('oc-motif');
+  const paletteEl = document.getElementById('oc-palette');
+  const infoEl = document.getElementById('oc-info');
+  const tabEl = document.getElementById('oc-tab');
+  const m = ocManche('oc-fb', `Le manche de la guitare, cases 0 à ${OC_FRETS} : un motif sur trois paires de cordes`);
+  if (!m) return;
+  /* les douze tonalités, rangées par case sur la corde de E grave */
+  const tons = [...RACINES_PENTA.mineur].sort((a, b) => ocCase(a) - ocCase(b));
+  let motif = OC_MOTIFS.find(x => x.id === 'monte'), root = 'A';
+  selMotif.replaceChildren(...OC_MOTIFS.map(x => {
+    const o = document.createElement('option');
+    o.value = x.id; o.textContent = x.titre; o.selected = x === motif;
+    return o;
+  }));
+  selMotif.addEventListener('change', () => { motif = OC_MOTIFS.find(x => x.id === selMotif.value); rendre(); });
+
+  function rendre(){
+    paletteEl.replaceChildren(...tons.map(r => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'quiz-note-btn ton' + (r === root ? ' on' : '');
+      b.style.background = NOTE_COLORS[r[0]];
+      b.textContent = r;
+      b.dataset.ton = r;
+      b.setAttribute('aria-pressed', r === root);
+      b.addEventListener('click', () => { root = r; rendre(); });
+      return b;
+    }));
+    m.vider();
+    ocPoser(m, motif, root);
+    zone.dataset.motif = motif.id;
+    zone.dataset.root = root;
+    titreEl.innerHTML = `${motif.titre} — en ${nomColore(root)}`;
+    const noms = [...new Set(motif.notes.map(n => trNom(root, n[2])))];
+    infoEl.innerHTML = OC_PAIRES.map((p, i) => {
+      const d = i ? p.decalage - OC_PAIRES[i - 1].decalage : 0;
+      return `<b>${p.nom}</b> : case ${ocCaseSur(root, p)}` + (i ? ` (+${d})` : '');
+    }).join(' &nbsp;→&nbsp; ') +
+      `<br>Les notes : ${noteSeq(noms)} — trois fois les mêmes, chaque fois <b>une octave</b> plus haut.`;
+    tabEl.replaceChildren(ocTabSVG(motif, root));
+  }
+  rendre();
+})();
+
+let ocQuestion = null;   /* exposé aux tests : poser une question imposée */
+/* 8.2 — l'entraînement : où le motif recommence-t-il sur l'autre paire ? */
+(function(){
+  const zone = document.getElementById('ocq-zone');
+  if (!zone) return;
+  const promptEl = document.getElementById('ocq-prompt');
+  const feedback = document.getElementById('ocq-feedback');
+  const scoreEl = document.getElementById('ocq-score');
+  const m = ocManche('ocq-fb', `Le manche de la guitare, cases 0 à ${OC_FRETS} : où le motif recommence`);
+  if (!m) return;
+  let q = null, done = false, essais = 0, bons = 0, total = 0;
+
+  for (const p of m.pastilles){
+    p.g.addEventListener('click', () => {
+      if (done || !q || p.corde !== q.cible.grave) return;
+      essais++;
+      if (p.fret === q.attendu){
+        done = true;
+        total++;
+        if (essais === 1) bons++;
+        ocPoser(m, q.motif, q.root, [q.cible]);
+        const d = q.cible.decalage - q.source.decalage;
+        const octaves = Math.abs(d) === 5 ? 'deux octaves' : 'une octave';
+        feedback.innerHTML = `✓ Case ${q.attendu} : ${d > 0 ? '+' : '−'}${Math.abs(d)} cases depuis ${q.source.nom}. Les mêmes notes, ${octaves} plus ${d > 0 ? 'haut' : 'bas'}.`;
+        feedback.className = 'tab-note ' + (essais === 1 ? 'juste' : 'faux');
+        scoreEl.textContent = bons + ' / ' + total;
+      } else {
+        p.c.setAttribute('fill', NOTE_COLORS.F);
+        const octave = (p.fret - q.attendu) % 12 === 0
+          ? ' La bonne note, mais pas la bonne octave : cherche plus près.' : ' Cherche encore.';
+        feedback.innerHTML = `✗ Case ${p.fret}, c'est ${p.note.replace('#', '♯')}.${octave}`;
+        feedback.className = 'tab-note faux';
+      }
+    });
+  }
+
+  /* fixe = une question imposée { source, cible, motif, root } — pour les tests */
+  function nouvelle(fixe){
+    const f = fixe || {};
+    const source = OC_PAIRES.find(p => p.id === f.source) || tirage(OC_PAIRES);
+    const cible = OC_PAIRES.find(p => p.id === f.cible) || tirage(OC_PAIRES.filter(p => p !== source));
+    const motif = OC_MOTIFS.find(x => x.id === f.motif) || tirage(OC_MOTIFS.filter(x => x.id !== 'fond'));
+    const root = f.root || tirage(RACINES_PENTA.mineur);
+    q = { source, cible, motif, root, attendu: ocCaseSur(root, cible) };
+    done = false;
+    essais = 0;
+    m.vider();
+    ocPoser(m, motif, root, [source]);
+    /* la corde grave de la paire visée répond au clic */
+    for (const p of m.pastilles){
+      if (p.corde !== cible.grave || p.g.dataset.box) continue;
+      p.g.style.display = '';
+      p.g.classList.add('cible');
+      p.g.dataset.note = p.note;
+      p.c.setAttribute('fill', '#6B5B4B');
+      p.c.setAttribute('r', 12);
+      p.c.setAttribute('stroke', 'none');
+      p.t.style.display = 'none';
+    }
+    zone.dataset.source = source.id;
+    zone.dataset.cible = cible.id;
+    zone.dataset.motif = motif.id;
+    zone.dataset.root = root;
+    zone.dataset.attendu = q.attendu;
+    promptEl.innerHTML = `${motif.titre} en ${nomColore(root)}, posé sur ${source.nom} (case ${ocCaseSur(root, source)}) — où recommence-t-il sur <b>${cible.nom}</b> ? Clique la case sur la corde de ${OC_CORDES[cible.grave]}.`;
+    feedback.textContent = '';
+    feedback.className = 'tab-note';
+    /* on repart du sillet : la question précédente a pu faire défiler le manche */
+    const sc = m.svg.closest('.board-scroll');
+    if (sc) sc.scrollLeft = 0;
+  }
+  document.getElementById('ocq-new').addEventListener('click', () => nouvelle());
+  nouvelle();
+  ocQuestion = nouvelle;
+})();
+
 /* ------------------------------------------------------------
    Menu latéral + scrollspy — la même mécanique que les fiches guitare et
    basse : un lien de premier niveau par section (numéroté comme le sommaire
@@ -6111,6 +6413,10 @@ lvl1['transposer'] = navLink('#transposer','7 · Transposer','lvl1');
 navLink('#tr-zone', 'L\'atelier', 'lvl2');
 navLink('#trq-zone', 'L\'entraînement', 'lvl2');
 navLink('#tr-methode', 'Comment s\'en servir', 'lvl2');
+lvl1['octaves'] = navLink('#octaves','8 · Trois octaves','lvl1');
+navLink('#oc-zone', 'L\'atelier', 'lvl2');
+navLink('#ocq-zone', 'L\'entraînement', 'lvl2');
+navLink('#oc-exos', 'Les petits exercices', 'lvl2');
 
 const spy = makeSpy((entries)=>{
   for (const e of entries){
@@ -6120,11 +6426,13 @@ const spy = makeSpy((entries)=>{
     }
   }
 }, { rootMargin:'-15% 0px -70% 0px' });
-for (const id of ['construire','gammes','triades','penta','boites','jeu','transposer']) spy.observe(document.getElementById(id));
+for (const id of ['construire','gammes','triades','penta','boites','jeu','transposer','octaves']) spy.observe(document.getElementById(id));
 
 /* exposé pour les tests : les recettes, hors DOM */
 window.theorie = { penta, epeler, gammeMineure, gammeMajeure, gammeDe, hauteur,
-  transposer:{ FORMES:TR_FORMES, INSTR:TR_INSTR, caseDe:trCase, nom:trNom, tons:trTons } };
+  transposer:{ FORMES:TR_FORMES, INSTR:TR_INSTR, caseDe:trCase, nom:trNom, tons:trTons },
+  octaves:{ PAIRES:OC_PAIRES, MOTIFS:OC_MOTIFS, FRETS:OC_FRETS, caseSur:ocCaseSur, jouer:ocJouer,
+    question:(f) => ocQuestion && ocQuestion(f) } };
 
 
 })();

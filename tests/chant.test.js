@@ -590,18 +590,20 @@ test("Siyahamba, White Sand et Les rêves : « Partition » ouvre les pages, san
   assert.deepEqual(jsErrors, []);
 });
 
-test("I saw three ships (4 novembre 2026) : soprano et graves, la page et le PDF", () => {
+test("I saw three ships (18 novembre 2026) : trois voix, les cinq pages et le PDF", () => {
   const { doc, win, jsErrors } = load();
   openTab(doc, 'chant');
   const ships = win.chant.chants.lecteurs.find(l => l.chant.id === 'ships');
   const voix = [...ships.carte.querySelectorAll('[data-voix]')];
-  assert.deepEqual(voix.map(b => b.textContent), ['Soprano', 'Graves']);
+  assert.deepEqual(voix.map(b => b.textContent), ['Soprano', 'Voix du milieu', 'Graves']);
   for (const b of voix) assert.equal(isVisible(b), true, b.textContent + ' pas visible');
-  voix[1].click();
+  voix[2].click();
   assert.match(ships.audio.src, /chant\/ships-graves\.m4a$/);
+  voix[1].click();
+  assert.match(ships.audio.src, /chant\/ships-milieu\.m4a$/);
   voix[0].click();
   assert.match(ships.audio.src, /chant\/ships-soprano\.m4a$/);
-  assert.equal(ships.carte.querySelector('.chant-sous').textContent, 'arr. Gian Paolo Dal Dosso');
+  assert.equal(ships.carte.querySelector('.chant-sous').textContent, 'arr. Stephen Barker');
 
   const modal = doc.getElementById('chant-modal');
   const btn = ships.carte.querySelector('.chant-partition');
@@ -610,7 +612,8 @@ test("I saw three ships (4 novembre 2026) : soprano et graves, la page et le PDF
   assert.equal(isVisible(modal), true);
   assert.equal(doc.getElementById('chant-modal-titre').textContent, 'I saw three ships');
   const imgs = [...modal.querySelectorAll('.chant-modal-pages img')];
-  assert.deepEqual(imgs.map(i => i.getAttribute('src')), ['chant/ships-1.webp']);
+  assert.deepEqual(imgs.map(i => i.getAttribute('src')),
+    [1, 2, 3, 4, 5].map(n => `chant/ships-${n}.webp`));
   const lienPdf = doc.getElementById('chant-modal-pdf');
   assert.equal(isVisible(lienPdf), true);
   assert.match(lienPdf.getAttribute('href'), /chant\/ships\.pdf$/);

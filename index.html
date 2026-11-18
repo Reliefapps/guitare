@@ -2108,7 +2108,8 @@
 <!-- ============ 1. LES CHANTS ============ -->
 <!-- Les enregistrements de la chorale, une piste par voix, et la partition
      quand on l'a. Les fichiers sont dans chant/ (ajoutés le 4 octobre 2026,
-     Santiano le 8 octobre, I saw three ships le 4 novembre). -->
+     Santiano le 8 octobre, I saw three ships le 4 novembre,
+     remplacé le 18 novembre par l'arrangement à trois voix). -->
 <section id="chants">
   <div class="wrap">
     <div class="sec-head"><span class="sec-num">1</span><h2>Les chants</h2></div>
@@ -7623,10 +7624,12 @@ const CHANTS = [
              { voix:'Hommes', src:'chant/santiano-hommes.m4a' } ] },
   /* envoyé le 4 novembre 2026 : soprano et voix graves, avec le PDF
      (une page, « 2018 © I Madrigalisti Anonimi » en pied de page) */
-  { id:'ships', titre:'I saw three ships', sous:'arr. Gian Paolo Dal Dosso',
+  { id:'ships', titre:'I saw three ships', sous:'arr. Stephen Barker',
     pistes:[ { voix:'Soprano', src:'chant/ships-soprano.m4a' },
+             { voix:'Voix du milieu', src:'chant/ships-milieu.m4a' },
              { voix:'Graves', src:'chant/ships-graves.m4a' } ],
-    pdf:'chant/ships.pdf', pages:['chant/ships-1.webp'] },
+    pdf:'chant/ships.pdf',
+    pages:['chant/ships-1.webp','chant/ships-2.webp','chant/ships-3.webp','chant/ships-4.webp','chant/ships-5.webp'] },
 ];
 
 const sansDoublon = xs => [...new Set(xs)];
